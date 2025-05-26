@@ -9,6 +9,64 @@ export const DocumentInterface = ({
   isGeneratingComments,
   clearComments
 }) => {
+  const renderDocumentWithHighlights = () => {
+    if (comments.length === 0) {
+      return documentContent;
+    }
+
+    // Sort comments by position and resolve overlaps
+    const sortedComments = [...comments]
+      .sort((a, b) => a.textPosition - b.textPosition)
+      .filter((comment, index, arr) => {
+        // Remove overlapping comments (keep the first one)
+        if (index === 0) return true;
+        const prev = arr[index - 1];
+        return comment.textPosition >= prev.textPosition + prev.textLength;
+      });
+    
+    let result = [];
+    let lastIndex = 0;
+
+    sortedComments.forEach((comment, index) => {
+      // Add text before this comment
+      if (comment.textPosition > lastIndex) {
+        result.push(
+          <span key={`text-${index}`}>
+            {documentContent.substring(lastIndex, comment.textPosition)}
+          </span>
+        );
+      }
+
+      // Add highlighted text for this comment
+      const highlightColor = 'bg-purple-200 border-purple-400';
+      
+      const endPosition = Math.min(comment.textPosition + comment.textLength, documentContent.length);
+      
+      result.push(
+        <span
+          key={`highlight-${comment.id}`}
+          className={`${highlightColor} border rounded px-1 cursor-pointer transition-all duration-200 hover:shadow-md hover:ring-2 hover:ring-purple-400`}
+          title={`${comment.author}: ${comment.text}`}
+        >
+          {documentContent.substring(comment.textPosition, endPosition)}
+        </span>
+      );
+
+      lastIndex = endPosition;
+    });
+
+    // Add remaining text
+    if (lastIndex < documentContent.length) {
+      result.push(
+        <span key="remaining-text">
+          {documentContent.substring(lastIndex)}
+        </span>
+      );
+    }
+
+    return result;
+  };
+
   return (
     <div className="flex h-full relative">
       {/* Document Editor */}
@@ -49,6 +107,21 @@ export const DocumentInterface = ({
               )}
             </div>
           </div>
+          {comments.length > 0 && (
+            <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-blue-800">
+                  📝 Review Mode - Hover over highlights to see comments
+                </span>
+                <button
+                  onClick={clearComments}
+                  className="text-xs bg-blue-200 hover:bg-blue-300 px-2 py-1 rounded border border-blue-400 text-blue-800"
+                >
+                  ✏️ Edit Document
+                </button>
+              </div>
+            </div>
+          )}
           <div className="flex gap-2 mt-2 flex-wrap">
             <span className="px-2 md:px-3 py-1 bg-green-200 border border-green-400 rounded-full text-xs font-bold text-green-800">
               ✨ Draft
@@ -63,12 +136,20 @@ export const DocumentInterface = ({
         
         <div className="flex-1 p-3 md:p-6 overflow-y-auto">
           <div className="bg-white rounded-lg border-4 border-orange-300 shadow-xl p-3 md:p-6 h-full">
-            <textarea
-              value={documentContent}
-              onChange={(e) => setDocumentContent(e.target.value)}
-              className="w-full h-full p-3 md:p-4 border-2 border-gray-300 rounded-lg focus:border-orange-500 focus:outline-none resize-none font-mono text-xs md:text-sm"
-              placeholder="Start writing your PRD..."
-            />
+            {comments.length > 0 ? (
+              <div className="w-full h-full overflow-y-auto">
+                <div className="prose max-w-none font-mono text-xs md:text-sm leading-relaxed whitespace-pre-wrap">
+                  {renderDocumentWithHighlights()}
+                </div>
+              </div>
+            ) : (
+              <textarea
+                value={documentContent}
+                onChange={(e) => setDocumentContent(e.target.value)}
+                className="w-full h-full p-3 md:p-4 border-2 border-gray-300 rounded-lg focus:border-orange-500 focus:outline-none resize-none font-mono text-xs md:text-sm"
+                placeholder="Start writing your PRD..."
+              />
+            )}
           </div>
         </div>
       </div>
@@ -117,6 +198,17 @@ export const DocumentInterface = ({
                 )}
                 
                 <p className="text-sm text-gray-700">{comment.text}</p>
+                <div className="flex gap-2 mt-2">
+                  <button className="text-xs bg-green-200 hover:bg-green-300 px-2 py-1 rounded border border-green-400">
+                    ✓ Resolve
+                  </button>
+                  <button 
+                    onClick={generateComments}
+                    className="text-xs bg-orange-200 hover:bg-orange-300 px-2 py-1 rounded border border-orange-400"
+                  >
+                    🔄 More Feedback
+                  </button>
+                </div>
               </div>
             ))
           )}
