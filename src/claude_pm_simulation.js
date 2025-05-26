@@ -41,7 +41,7 @@ Implement a personalized, widget-based dashboard that allows users to customize 
   const [comments, setComments] = useState([]);
   const [showComments, setShowComments] = useState(false);
   const [isGeneratingComments, setIsGeneratingComments] = useState(false);
-  // Removed highlightedCommentId state to prevent scroll interference
+  const [hoveredCommentId, setHoveredCommentId] = useState(null);
   const scrollPositionRef = useRef(0);
   const mobileCommentsRef = useRef(null);
   const desktopCommentsRef = useRef(null);
@@ -427,17 +427,20 @@ ${documentContent}`;
       }
 
       // Add highlighted text for this comment
-      const highlightColor = comment.concernLevel === 'high' ? 'bg-red-200 border-red-400' :
-                            comment.concernLevel === 'low' ? 'bg-blue-200 border-blue-400' :
-                            'bg-yellow-200 border-yellow-400';
+      const isHovered = hoveredCommentId === comment.id;
+      const highlightColor = isHovered 
+        ? 'bg-purple-200 border-purple-400 ring-2 ring-purple-300 shadow-lg' 
+        : 'bg-blue-100 border-blue-300 hover:bg-blue-200 hover:border-blue-400';
       
       const endPosition = Math.min(comment.textPosition + comment.textLength, documentContent.length);
       
       result.push(
         <span
           key={`highlight-${comment.id}`}
-          className={`${highlightColor} border rounded px-1 cursor-pointer transition-all duration-200 hover:shadow-md hover:ring-2 hover:ring-purple-400`}
+          className={`${highlightColor} border rounded px-1 cursor-pointer transition-all duration-200`}
           title={`${comment.author}: ${comment.text}`}
+          onMouseEnter={() => setHoveredCommentId(comment.id)}
+          onMouseLeave={() => setHoveredCommentId(null)}
         >
           {documentContent.substring(comment.textPosition, endPosition)}
         </span>
@@ -660,33 +663,24 @@ ${documentContent}`;
           <div className="bg-white rounded-lg border-4 border-orange-300 shadow-xl p-3 md:p-6 h-full">
             {comments.length > 0 ? (
               <div className="w-full h-full overflow-y-auto">
-                <div className="mb-4 p-2 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-blue-800">
-                      📝 Review Mode - Hover over highlights to see comments
+                    <span className="text-sm font-semibold text-blue-800">
+                      📝 Review Mode - Hover over highlights to see connections
                     </span>
                     <button
                       onClick={() => {
                         setComments([]);
-                        // Highlighting removed
+                        setHoveredCommentId(null);
                       }}
                       className="text-xs bg-blue-200 hover:bg-blue-300 px-2 py-1 rounded border border-blue-400 text-blue-800"
                     >
                       ✏️ Edit Document
                     </button>
                   </div>
-                  <div className="mt-2 flex gap-2 text-xs">
-                    <span className="flex items-center gap-1">
-                      <div className="w-3 h-3 bg-red-200 border border-red-400 rounded"></div>
-                      High Priority
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <div className="w-3 h-3 bg-yellow-200 border border-yellow-400 rounded"></div>
-                      Medium Priority
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <div className="w-3 h-3 bg-blue-200 border border-blue-400 rounded"></div>
-                      Low Priority
+                  <div className="mt-2">
+                    <span className="text-xs text-blue-600">
+                      💡 Hover over highlighted text or comments to see their connections
                     </span>
                   </div>
                 </div>
@@ -752,14 +746,17 @@ ${documentContent}`;
             ) : (
               <>
                 {comments.map(comment => {
-                  const priorityColor = comment.concernLevel === 'high' ? 'border-red-300 bg-red-50' :
-                                       comment.concernLevel === 'low' ? 'border-blue-300 bg-blue-50' :
-                                       'border-yellow-300 bg-yellow-50';
+                  const isHovered = hoveredCommentId === comment.id;
+                  const commentStyle = isHovered 
+                    ? 'border-purple-300 bg-purple-50 ring-2 ring-purple-200 shadow-lg' 
+                    : 'border-blue-200 bg-blue-50 hover:border-blue-300 hover:bg-blue-100';
                   
                   return (
                     <div 
                       key={comment.id} 
-                      className={`${priorityColor} bg-white p-3 rounded-lg border-2 shadow-md transition-all duration-200 hover:ring-2 hover:ring-purple-400 hover:shadow-lg`}
+                      className={`${commentStyle} bg-white p-3 rounded-lg border-2 shadow-md transition-all duration-200`}
+                      onMouseEnter={() => setHoveredCommentId(comment.id)}
+                      onMouseLeave={() => setHoveredCommentId(null)}
                     >
                       <div className="flex items-center gap-2 mb-2">
                         {comment.avatar && (
@@ -769,15 +766,6 @@ ${documentContent}`;
                         {comment.perspective && (
                           <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded">
                             {comment.perspective}
-                          </span>
-                        )}
-                        {comment.concernLevel && (
-                          <span className={`text-xs px-2 py-0.5 rounded font-semibold ${
-                            comment.concernLevel === 'high' ? 'bg-red-100 text-red-700' :
-                            comment.concernLevel === 'low' ? 'bg-blue-100 text-blue-700' :
-                            'bg-yellow-100 text-yellow-700'
-                          }`}>
-                            {comment.concernLevel}
                           </span>
                         )}
                         <span className="text-xs text-gray-400 ml-auto">just now</span>
@@ -854,14 +842,17 @@ ${documentContent}`;
             ) : (
               <>
                 {comments.map(comment => {
-                  const priorityColor = comment.concernLevel === 'high' ? 'border-red-300 bg-red-50' :
-                                       comment.concernLevel === 'low' ? 'border-blue-300 bg-blue-50' :
-                                       'border-yellow-300 bg-yellow-50';
+                  const isHovered = hoveredCommentId === comment.id;
+                  const commentStyle = isHovered 
+                    ? 'border-purple-300 bg-purple-50 ring-2 ring-purple-200 shadow-lg' 
+                    : 'border-blue-200 bg-blue-50 hover:border-blue-300 hover:bg-blue-100';
                   
                   return (
                     <div 
                       key={comment.id} 
-                      className={`${priorityColor} bg-white p-3 rounded-lg border-2 shadow-md transition-all duration-200 hover:ring-2 hover:ring-purple-400 hover:shadow-lg`}
+                      className={`${commentStyle} bg-white p-3 rounded-lg border-2 shadow-md transition-all duration-200`}
+                      onMouseEnter={() => setHoveredCommentId(comment.id)}
+                      onMouseLeave={() => setHoveredCommentId(null)}
                     >
                       <div className="flex items-center gap-2 mb-2">
                         {comment.avatar && (
@@ -873,15 +864,6 @@ ${documentContent}`;
                             {comment.perspective && (
                               <span className="text-xs bg-blue-100 text-blue-600 px-1 py-0.5 rounded">
                                 {comment.perspective}
-                              </span>
-                            )}
-                            {comment.concernLevel && (
-                              <span className={`text-xs px-1 py-0.5 rounded font-semibold ${
-                                comment.concernLevel === 'high' ? 'bg-red-100 text-red-700' :
-                                comment.concernLevel === 'low' ? 'bg-blue-100 text-blue-700' :
-                                'bg-yellow-100 text-yellow-700'
-                              }`}>
-                                {comment.concernLevel}
                               </span>
                             )}
                           </div>
