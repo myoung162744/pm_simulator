@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import ProductManagerSimulator from './claude_pm_simulation';
+import StudyHal from './StudyHal';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ProductManagerSimulator />
+    <StudyHal />
   </React.StrictMode>
 ); 
