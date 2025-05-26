@@ -937,8 +937,8 @@ ${documentContent}`;
       <div className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 p-3 md:p-4 border-b-4 border-blue-600 shadow-xl flex-shrink-0">
         <div className="flex items-center justify-between">
           <h1 className="text-lg md:text-2xl font-bold text-white drop-shadow-lg">
-            🚀 <span className="hidden sm:inline">PM Simulator 2025</span>
-            <span className="sm:hidden">PM Sim</span>
+            🚀 <span className="hidden sm:inline">StudyHal</span>
+            <span className="sm:hidden">StudyHal</span>
           </h1>
           <div className="flex items-center gap-2 md:gap-4 text-white">
             <div className="flex items-center gap-1 md:gap-2">
