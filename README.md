@@ -1,14 +1,26 @@
-# Claude PM Simulator
+# StudyHal - PM Simulator
 
-A Product Manager simulation app with Claude AI integration that lets you practice PM skills by chatting with AI-powered team members.
+A Product Manager simulation app with Claude AI integration that lets you practice PM skills by chatting with AI-powered team members and collaborating on documents with interactive feedback.
 
 ## 🚀 Features
 
-- **AI-Powered Team Members**: Chat with 5 different team members, each with unique personalities powered by Claude AI
-- **Configurable Agent Personalities**: Customize how each team member responds using the Agent Config tab
-- **Real-time Chat**: Natural conversations with AI team members that respond in character
-- **Document Collaboration**: Work on Product Requirements Documents with team feedback
-- **Responsive Design**: Works on desktop and mobile devices
+### 💬 **AI-Powered Team Chat**
+- **5 Unique Team Members**: Chat with AI personalities powered by Claude, each with distinct expertise and communication styles
+- **Real-time Conversations**: Natural chat interface with typing indicators and message history
+- **Role-Based Responses**: Each team member responds from their professional perspective
+- **Responsive Design**: Seamless experience on desktop and mobile devices
+
+### 📋 **Interactive Document Collaboration**
+- **PRD Editor**: Write and edit Product Requirements Documents
+- **AI-Generated Comments**: Get feedback from multiple team members on specific text sections
+- **Interactive Highlighting**: Click on highlighted text to see corresponding comments, and vice versa
+- **Visual Connections**: Clear visual feedback showing which comments relate to which document sections
+- **Multi-Round Reviews**: Generate additional feedback rounds to refine your documents
+
+### 🏗️ **Modern Architecture**
+- **Modular Component Structure**: Clean separation of concerns with custom hooks and services
+- **Responsive UI**: Mobile-first design with collapsible sidebar and touch-friendly controls
+- **Real-time State Management**: Efficient handling of chat history, comments, and document state
 
 ## 🏃‍♂️ Getting Started
 
@@ -18,20 +30,25 @@ A Product Manager simulation app with Claude AI integration that lets you practi
 
 ### Installation
 
-1. Clone or download this project
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/myoung162744/pm_simulator.git
+   cd pm_simulator
+   ```
+
 2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. Make sure your `.env` file contains your Anthropic API key:
+3. Create a `.env` file with your Anthropic API key:
    ```
    ANTHROPIC_API_KEY=your_api_key_here
    ```
 
 ### Running the Application
 
-You need to run both the backend server and frontend:
+Start both servers (backend and frontend):
 
 1. **Start the backend server** (in one terminal):
    ```bash
@@ -47,112 +64,185 @@ You need to run both the backend server and frontend:
 
 3. **Open your browser** and go to http://localhost:3000
 
-## 🎭 Team Members
+## 🎭 Meet Your Team
 
-The simulator includes 5 AI-powered team members:
+The simulator includes 5 AI-powered team members from **InnovateTech Solutions**:
 
-- **👩‍💼 Sarah Chen** - Product Manager: Collaborative, user-focused, data-driven
-- **👨‍💻 Mike Rodriguez** - Senior Developer: Technical, practical, solution-oriented
-- **👩‍🎨 Lisa Kim** - UX Designer: Creative, user-experience focused, design-thinking
-- **📊 Alex Thompson** - Data Analyst: Analytical, metrics-driven, evidence-based
-- **📈 Jen Wilson** - Marketing Lead: Strategic, growth-focused, market-oriented
+- **👩‍💼 Sarah Chen** - Product Manager
+  - *Collaborative, user-focused, data-driven strategic thinker*
+  
+- **👨‍💻 Mike Rodriguez** - Senior Developer  
+  - *Technical expert, practical problem-solver, architecture-focused*
+  
+- **👩‍🎨 Lisa Kim** - UX Designer
+  - *Creative, user-experience advocate, design-thinking specialist*
+  
+- **📊 Alex Thompson** - Data Analyst
+  - *Analytical, metrics-driven, evidence-based decision maker*
+  
+- **📈 Jen Wilson** - Marketing Lead
+  - *Strategic, growth-focused, market-oriented communicator*
 
-## ⚙️ Configuring Agents
+## 💬 Chat Interface
 
-1. Click on the **Agent Config** tab
-2. Edit the personality prompt for each team member
-3. Click **Save** to apply changes
-4. Use **Reset Defaults** to restore original personalities
+### How to Chat
+1. **Select a team member** from the sidebar (shows online status)
+2. **Type your message** in the input field
+3. **Send** by pressing Enter or clicking the send button
+4. **Watch for typing indicators** as the AI responds
+5. **Continue naturally** - the AI maintains conversation context
 
-### Tips for Good Prompts:
-- Define their role and expertise clearly
-- Specify their communication style (formal, casual, etc.)
-- Include what topics they care about most
-- Mention how they typically contribute to discussions
-
-## 💬 Using the Chat
-
-1. Select a team member from the sidebar
-2. Type your message and press Enter or click Send
-3. Wait for the AI response (you'll see a "typing" indicator)
-4. Continue the conversation naturally
-
-**Example conversations:**
+### Example Conversations
 - "What do you think about this new feature idea?"
-- "How should we prioritize our roadmap?"
-- "What metrics should we track for success?"
-- "Can you review this PRD draft?"
+- "How should we prioritize our roadmap for Q2?"
+- "What metrics should we track for user engagement?"
+- "Can you help me think through this technical approach?"
+- "What are the market implications of this strategy?"
 
 ## 📋 Document Collaboration
 
-1. Switch to the **Documents** tab
-2. Write your Product Requirements Document in the editor
-3. Click **"Get Feedback"** to generate AI-powered comments from your team
-4. Review highlighted text sections - each team member can comment on multiple specific parts
-5. Hover over highlights in the document to see which comments relate to which text
-6. Use the sidebar to read detailed feedback with priority levels
-7. Click **"Edit Document"** to return to editing mode
-8. Click **"Get More Feedback"** to receive additional rounds of review
+### Writing & Editing
+1. **Switch to Documents tab** to access the PRD editor
+2. **Write your document** using the full-screen editor
+3. **Use the draft interface** for iterative writing
 
-### Advanced Comment Features
-- **Text-Specific Comments**: Each comment is tied to a specific section of your document
-- **Multiple Comments per Person**: Team members can provide feedback on several different areas
-- **Priority Levels**: Comments are color-coded (red=high, yellow=medium, blue=low priority)
-- **Interactive Highlights**: Hover over highlighted text or comments to see connections
-- **Role-Based Feedback**: Each team member focuses on areas relevant to their expertise
+### Getting AI Feedback
+1. **Click "Get Feedback"** to generate AI-powered comments
+2. **Review highlighted sections** - each highlight corresponds to a specific comment
+3. **Click on highlights** to see the related comment in the sidebar
+4. **Click on comments** to jump to the related text in the document
+5. **Use visual connections** to understand feedback relationships
 
-### Comment Generation
-Comments are generated by individual team members using their existing personality prompts from the `agentPrompts` object in `src/claude_pm_simulation.js` (around line 11). Each team member analyzes the document and identifies 1-3 specific areas where they have feedback from their professional perspective.
+### Interactive Features
+- **Smart Highlighting**: Text sections are automatically highlighted based on AI analysis
+- **Click Navigation**: Seamless movement between document sections and comments
+- **Visual Selection**: Selected comment-highlight pairs are visually emphasized
+- **Multi-Perspective Reviews**: Each team member provides feedback from their expertise area
+- **Comment Management**: Clear comments to return to edit mode or generate additional rounds
+
+### Advanced Collaboration
+- **Role-Based Feedback**: Comments reflect each team member's professional perspective
+- **Contextual Analysis**: AI understands document structure and content relationships
+- **Iterative Reviews**: Generate multiple rounds of feedback as you refine your PRD
+- **Professional Standards**: Comments follow PM best practices and industry standards
+
+## 🏗️ Architecture
+
+### Project Structure
+```
+src/
+├── components/           # React components
+│   ├── Header.js        # App header with branding
+│   ├── TabNavigation.js # Chat/Documents switcher
+│   ├── ContactsList.js  # Team members sidebar
+│   ├── ChatInterface.js # Complete chat functionality
+│   └── DocumentInterface.js # Document editor & comments
+├── hooks/               # Custom React hooks
+│   ├── useResponsive.js # Mobile/desktop detection
+│   ├── useChat.js       # Chat state management
+│   └── useComments.js   # Comments functionality
+├── services/            # API and business logic
+│   ├── api.js          # Claude API interactions
+│   └── commentsService.js # Comment generation
+├── config/              # Configuration
+│   └── promptConfig.js  # AI prompts and personas
+└── StudyHal.js         # Main app component
+```
+
+### Backend
+- **Express.js server** handling Claude API integration
+- **Environment-based configuration** for API keys
+- **CORS enabled** for local development
+- **Error handling** and response formatting
+
+### Frontend
+- **React 18** with functional components and hooks
+- **Tailwind CSS** for responsive styling
+- **Modular architecture** with custom hooks and services
+- **State management** using React hooks and context
 
 ## 🛠️ Technical Details
 
-### Backend API
-- **Endpoint**: `POST /api/claude`
-- **Port**: 4000
-- **Payload**: 
+### API Endpoints
+- **POST /api/claude** - Send messages to Claude AI
   ```json
   {
     "message": "Your message",
     "history": [...],
     "systemPrompt": "Agent personality",
-    "characterName": "Team member name",
+    "characterName": "Team member name", 
     "characterRole": "Their role"
   }
   ```
 
-### Frontend
-- React 18 with functional components and hooks
-- Tailwind CSS for styling (loaded via CDN)
-- Responsive design with mobile support
-- Real-time chat interface
+### Configuration
+- **Dynamic prompts** generated from `promptConfig.js`
+- **Global variables** for company/project context
+- **Personality-driven responses** for each team member
+- **Contextual system prompts** for role-appropriate behavior
 
 ## 🔧 Scripts
 
-- `npm start` - Start React development server
-- `npm run server` - Start Express backend server
+- `npm start` - Start React development server (port 3000)
+- `npm run server` - Start Express backend server (port 4000)
 - `npm run dev` - Start backend with nodemon (auto-restart)
 - `npm run build` - Build React app for production
 
 ## 🐛 Troubleshooting
 
-**Port conflicts**: If ports 3000 or 4000 are in use:
-- Kill existing processes: `lsof -ti:3000,4000 | xargs kill`
-- Or change ports in the configuration
+### Common Issues
+- **Port conflicts**: Kill existing processes with `lsof -ti:3000,4000 | xargs kill`
+- **API errors**: Verify your `.env` file contains the correct Anthropic API key
+- **Chat not working**: Ensure both servers are running
+- **Comments not generating**: Check backend server logs for API errors
 
-**API errors**: Check your `.env` file has the correct Anthropic API key
-
-**Chat not working**: Ensure both servers are running and the backend API is accessible
+### Development Tips
+- **Hot reload**: Frontend auto-refreshes on changes
+- **Backend restart**: Use `npm run dev` for auto-restart on server changes
+- **Browser console**: Check for JavaScript errors if UI isn't responding
+- **Network tab**: Monitor API requests if chat seems slow
 
 ## 🎯 Learning Objectives
 
 This simulator helps you practice:
-- Cross-functional team communication
-- Product prioritization discussions
-- Technical feasibility conversations
-- User experience considerations
-- Data-driven decision making
-- Stakeholder management
+
+### Product Management Skills
+- **Cross-functional collaboration** with engineering, design, marketing, and data teams
+- **Requirements gathering** and PRD writing
+- **Stakeholder communication** across different functions
+- **Data-driven decision making** with metrics and analytics input
+
+### Professional Communication
+- **Role-based discussions** with different team members
+- **Technical feasibility** conversations with developers
+- **User experience** considerations with designers
+- **Market strategy** alignment with marketing
+
+### Document Collaboration
+- **Professional writing** for technical and business audiences
+- **Iterative feedback incorporation** from multiple perspectives
+- **Structured thinking** about product requirements
+- **Industry best practices** for PM documentation
+
+## 🌟 Recent Updates
+
+### v2.0 - Interactive Collaboration
+- ✨ **Interactive comment highlighting** with click navigation
+- 🏗️ **Modular architecture** with custom hooks and services
+- 📱 **Enhanced responsive design** for mobile users
+- 🎨 **Visual feedback systems** for better user experience
+- 🔄 **Improved state management** across components
+
+### v1.0 - Core Features
+- 💬 Multi-agent chat simulation
+- 📋 Document collaboration system
+- 🤖 Claude AI integration
+- 🎭 Personality-driven responses
 
 ## 📝 License
 
-MIT License - feel free to modify and use for learning purposes! 
+MIT License - Feel free to modify and use for learning purposes!
+
+---
+
+**StudyHal** - Empowering the next generation of Product Managers through AI-powered simulation and practice. 
