@@ -234,7 +234,7 @@ Implement a personalized, widget-based dashboard that allows users to customize 
       
       // Generate comments from each selected reviewer
       for (const reviewer of selectedReviewers) {
-        const reviewPrompt = `${agentPrompts[reviewer.id]}
+        const reviewPrompt = `${getAgentPrompt(reviewer.id)}
 
 You are reviewing a Product Requirements Document. Analyze the document and identify 1-3 specific areas where you have feedback from your professional perspective.
 
