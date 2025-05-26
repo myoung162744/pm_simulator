@@ -41,7 +41,7 @@ Implement a personalized, widget-based dashboard that allows users to customize 
   const [comments, setComments] = useState([]);
   const [showComments, setShowComments] = useState(false);
   const [isGeneratingComments, setIsGeneratingComments] = useState(false);
-  const [hoveredCommentId, setHoveredCommentId] = useState(null);
+  // Removed highlightedCommentId state to prevent scroll interference
   const scrollPositionRef = useRef(0);
   const mobileCommentsRef = useRef(null);
   const desktopCommentsRef = useRef(null);
@@ -244,8 +244,7 @@ Respond ONLY with valid JSON in this exact format (no additional text):
   "comments": [
     {
       "text_excerpt": "exact text from document (5-20 words)",
-      "comment": "your specific feedback (1-2 sentences)",
-      "concern_level": "low|medium|high"
+      "comment": "your specific feedback (1-2 sentences)"
     }
   ]
 }
@@ -317,7 +316,7 @@ ${documentContent}`;
                       textExcerpt: actualExcerpt,
                       textPosition: textPosition,
                       textLength: actualExcerpt.length,
-                      concernLevel: commentData.concern_level || 'medium',
+
                       perspective: reviewer.role,
                       resolved: false,
                       avatar: reviewer.avatar
@@ -333,7 +332,7 @@ ${documentContent}`;
                   textExcerpt: documentContent.substring(0, 50) + '...',
                   textPosition: 0,
                   textLength: 50,
-                  concernLevel: 'medium',
+
                   perspective: reviewer.role,
                   resolved: false,
                   avatar: reviewer.avatar
@@ -349,7 +348,7 @@ ${documentContent}`;
                 textExcerpt: documentContent.substring(0, 50) + '...',
                 textPosition: 0,
                 textLength: 50,
-                concernLevel: 'medium',
+
                 perspective: reviewer.role,
                 resolved: false,
                 avatar: reviewer.avatar
@@ -427,20 +426,15 @@ ${documentContent}`;
       }
 
       // Add highlighted text for this comment
-      const isHovered = hoveredCommentId === comment.id;
-      const highlightColor = isHovered 
-        ? 'bg-purple-200 border-purple-400 ring-2 ring-purple-300 shadow-lg' 
-        : 'bg-blue-100 border-blue-300 hover:bg-blue-200 hover:border-blue-400';
+      const highlightColor = 'bg-purple-200 border-purple-400';
       
       const endPosition = Math.min(comment.textPosition + comment.textLength, documentContent.length);
       
       result.push(
         <span
           key={`highlight-${comment.id}`}
-          className={`${highlightColor} border rounded px-1 cursor-pointer transition-all duration-200`}
+          className={`${highlightColor} border rounded px-1 cursor-pointer transition-all duration-200 hover:shadow-md hover:ring-2 hover:ring-purple-400`}
           title={`${comment.author}: ${comment.text}`}
-          onMouseEnter={() => setHoveredCommentId(comment.id)}
-          onMouseLeave={() => setHoveredCommentId(null)}
         >
           {documentContent.substring(comment.textPosition, endPosition)}
         </span>
@@ -663,26 +657,22 @@ ${documentContent}`;
           <div className="bg-white rounded-lg border-4 border-orange-300 shadow-xl p-3 md:p-6 h-full">
             {comments.length > 0 ? (
               <div className="w-full h-full overflow-y-auto">
-                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="mb-4 p-2 bg-blue-50 border border-blue-200 rounded-lg">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-blue-800">
-                      📝 Review Mode - Hover over highlights to see connections
+                    <span className="text-xs font-semibold text-blue-800">
+                      📝 Review Mode - Hover over highlights to see comments
                     </span>
                     <button
                       onClick={() => {
                         setComments([]);
-                        setHoveredCommentId(null);
+                        // Highlighting removed
                       }}
                       className="text-xs bg-blue-200 hover:bg-blue-300 px-2 py-1 rounded border border-blue-400 text-blue-800"
                     >
                       ✏️ Edit Document
                     </button>
                   </div>
-                  <div className="mt-2">
-                    <span className="text-xs text-blue-600">
-                      💡 Hover over highlighted text or comments to see their connections
-                    </span>
-                  </div>
+
                 </div>
                 <div className="prose max-w-none font-mono text-xs md:text-sm leading-relaxed whitespace-pre-wrap">
                   {renderDocumentWithHighlights()}
@@ -746,17 +736,10 @@ ${documentContent}`;
             ) : (
               <>
                 {comments.map(comment => {
-                  const isHovered = hoveredCommentId === comment.id;
-                  const commentStyle = isHovered 
-                    ? 'border-purple-300 bg-purple-50 ring-2 ring-purple-200 shadow-lg' 
-                    : 'border-blue-200 bg-blue-50 hover:border-blue-300 hover:bg-blue-100';
-                  
                   return (
                     <div 
                       key={comment.id} 
-                      className={`${commentStyle} bg-white p-3 rounded-lg border-2 shadow-md transition-all duration-200`}
-                      onMouseEnter={() => setHoveredCommentId(comment.id)}
-                      onMouseLeave={() => setHoveredCommentId(null)}
+                      className="bg-white p-3 rounded-lg border-2 border-purple-300 shadow-md transition-all duration-200 hover:ring-2 hover:ring-purple-400 hover:shadow-lg"
                     >
                       <div className="flex items-center gap-2 mb-2">
                         {comment.avatar && (
@@ -842,17 +825,10 @@ ${documentContent}`;
             ) : (
               <>
                 {comments.map(comment => {
-                  const isHovered = hoveredCommentId === comment.id;
-                  const commentStyle = isHovered 
-                    ? 'border-purple-300 bg-purple-50 ring-2 ring-purple-200 shadow-lg' 
-                    : 'border-blue-200 bg-blue-50 hover:border-blue-300 hover:bg-blue-100';
-                  
                   return (
                     <div 
                       key={comment.id} 
-                      className={`${commentStyle} bg-white p-3 rounded-lg border-2 shadow-md transition-all duration-200`}
-                      onMouseEnter={() => setHoveredCommentId(comment.id)}
-                      onMouseLeave={() => setHoveredCommentId(null)}
+                      className="bg-white p-3 rounded-lg border-2 border-purple-300 shadow-md transition-all duration-200 hover:ring-2 hover:ring-purple-400 hover:shadow-lg"
                     >
                       <div className="flex items-center gap-2 mb-2">
                         {comment.avatar && (
