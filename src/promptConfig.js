@@ -12,7 +12,8 @@ export const globalVariables = {
     timeline: "8 weeks",
     budget: "$120K",
     priority: "High",
-    stakeholders: "Product, Engineering, Design, Marketing, Data"
+    stakeholders: "Product, Engineering, Design, Marketing, Data",
+    desiredOutcome: "Increase daily active users on the dashboard by 25% within 8 weeks of launch."
   },
   communication: {
     style: "professional but friendly",
