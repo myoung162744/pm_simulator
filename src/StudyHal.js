@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { generatePrompt, getStrictDataMode, toggleStrictDataMode } from './promptConfig';
+import { generatePrompt, getStrictDataMode, toggleStrictDataMode, getSharedDocuments, shareDocument } from './promptConfig';
 import { useResponsive } from './hooks/useResponsive';
 import { useChat } from './hooks/useChat';
 import { useComments } from './hooks/useComments';
@@ -8,10 +8,13 @@ import { TabNavigation } from './components/TabNavigation';
 import { ContactsList } from './components/ContactsList';
 import { ChatInterface } from './components/ChatInterface';
 import { DocumentInterface } from './components/DocumentInterface';
+import { InboxInterface } from './components/InboxInterface';
 
 const StudyHal = () => {
   const [activeTab, setActiveTab] = useState('chat');
   const [strictDataMode, setStrictDataMode] = useState(getStrictDataMode());
+  const [sharedDocuments, setSharedDocuments] = useState(getSharedDocuments());
+  const [showInboxNotification, setShowInboxNotification] = useState(false);
   const [documentContent, setDocumentContent] = useState(`# Product Requirements Document: User Dashboard Enhancement
 
 ## Overview
@@ -47,7 +50,28 @@ Implement a personalized, widget-based dashboard that allows users to customize 
     setStrictDataMode(newMode);
   };
   
-  const chatHook = useChat(contacts, getAgentPrompt);
+  // Handle document sharing
+  const handleDocumentSharing = (message) => {
+    const shareDocRegex = /\[SHARE_DOCUMENT:([^\]]+)\]/;
+    const match = message.match(shareDocRegex);
+    
+    if (match && match[1]) {
+      const agentId = match[1];
+      const updatedSharedDocs = shareDocument(agentId);
+      
+      if (updatedSharedDocs) {
+        setSharedDocuments([...updatedSharedDocs]);
+        setShowInboxNotification(true);
+        
+        // Remove the marker from the message
+        return message.replace(shareDocRegex, '');
+      }
+    }
+    
+    return message;
+  };
+  
+  const chatHook = useChat(contacts, getAgentPrompt, handleDocumentSharing);
   const commentsHook = useComments(documentContent, contacts, getAgentPrompt);
 
   // Auto-scroll for chat messages
@@ -91,30 +115,63 @@ Implement a personalized, widget-based dashboard that allows users to customize 
     chatHook.selectContact(contactId, isMobile, setIsSidebarOpen);
   };
 
+  // Clear inbox notification when switching to inbox tab
+  useEffect(() => {
+    if (activeTab === 'inbox') {
+      setShowInboxNotification(false);
+    }
+  }, [activeTab]);
+  
   return (
     <div className="h-screen bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex flex-col">
       <Header />
-      <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+      <TabNavigation 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        sharedDocuments={sharedDocuments} 
+      />
       
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
         {activeTab === 'chat' ? (
-          <ChatInterface
-            {...chatHook}
-            contacts={contacts}
-            isMobile={isMobile}
-            isSidebarOpen={isSidebarOpen}
-            setIsSidebarOpen={setIsSidebarOpen}
-            onSelectContact={handleSelectContact}
-            strictDataMode={strictDataMode}
-            onToggleStrictDataMode={handleToggleStrictDataMode}
-          />
-        ) : (
+          <>
+            <ChatInterface
+              {...chatHook}
+              contacts={contacts}
+              isMobile={isMobile}
+              isSidebarOpen={isSidebarOpen}
+              setIsSidebarOpen={setIsSidebarOpen}
+              onSelectContact={handleSelectContact}
+              strictDataMode={strictDataMode}
+              onToggleStrictDataMode={handleToggleStrictDataMode}
+            />
+            {showInboxNotification && (
+              <div className="fixed bottom-4 right-4 bg-indigo-100 border-2 border-indigo-400 rounded-lg p-3 shadow-lg animate-bounce">
+                <div className="flex items-center gap-2">
+                  <span className="text-indigo-800 font-bold text-sm">New document shared!</span>
+                  <button 
+                    onClick={() => {
+                      setActiveTab('inbox');
+                      setShowInboxNotification(false);
+                    }}
+                    className="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded text-xs font-bold"
+                  >
+                    View in Inbox
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        ) : activeTab === 'docs' ? (
           <DocumentInterface
             documentContent={documentContent}
             setDocumentContent={setDocumentContent}
             {...commentsHook}
             isMobile={isMobile}
+          />
+        ) : (
+          <InboxInterface
+            sharedDocuments={sharedDocuments}
           />
         )}
       </div>

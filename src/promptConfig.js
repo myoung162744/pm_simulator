@@ -1,6 +1,7 @@
-// Configuration for Strict Data mode
+// Configuration for Strict Data mode and document sharing
 export const configOptions = {
-  strictDataMode: true // Default to true - agents only respond with their own data or redirect
+  strictDataMode: true, // Default to true - agents only respond with their own data or redirect
+  sharedDocuments: [] // Array to track documents that have been shared with the user
 };
 
 // Function to toggle strict data mode
@@ -12,6 +13,38 @@ export const toggleStrictDataMode = () => {
 // Function to get current strict data mode state
 export const getStrictDataMode = () => {
   return configOptions.strictDataMode;
+};
+
+// Function to share a document with the user
+export const shareDocument = (agentId) => {
+  const agent = agentConfigs[agentId];
+  const document = documentConfigs[agentId];
+  
+  if (!agent || !document) return null;
+  
+  // Check if document is already shared
+  const isAlreadyShared = configOptions.sharedDocuments.some(doc => doc.id === agentId);
+  if (isAlreadyShared) return configOptions.sharedDocuments;
+  
+  // Add document to shared documents
+  const sharedDocument = {
+    id: agentId,
+    name: document.documentName,
+    author: agent.personalInfo.name,
+    authorRole: agent.personalInfo.role,
+    summary: document.documentSummary,
+    path: document.documentPath,
+    content: document.documentContent, // Use the imported content directly
+    sharedAt: new Date().toISOString()
+  };
+  
+  configOptions.sharedDocuments.push(sharedDocument);
+  return configOptions.sharedDocuments;
+};
+
+// Function to get all shared documents
+export const getSharedDocuments = () => {
+  return configOptions.sharedDocuments;
 };
 
 // Global variables that can be shared across all agents
@@ -37,6 +70,8 @@ export const globalVariables = {
     tools: "Slack, Figma, Jira, GitHub"
   }
 };
+
+
 
 // Document information for each agent
 export const documentConfigs = {
@@ -219,7 +254,9 @@ export const generatePrompt = (agentId) => {
 - If asked about information outside your document, politely redirect the user to the appropriate team member
 - You can mention the names and summaries of documents you're aware of when redirecting
 - Never make up information that isn't in your document
-- If asked to share your entire document, you may provide it in full
+- If asked to share your entire document, DO NOT share the full document in chat
+- Instead, if a user asks for your document, respond with: "I've shared my ${document.documentName} with you. You can now access it in the Inbox tab."
+- Then add a special marker at the end of your message: "[SHARE_DOCUMENT:${agentId}]" (the app will remove this marker)
 - Always stay in character as ${agent.personalInfo.name}`;
   }
   

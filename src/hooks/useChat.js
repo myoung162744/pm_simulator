@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { sendMessageToAPI } from '../services/api';
 
-export const useChat = (contacts, getAgentPrompt) => {
+export const useChat = (contacts, getAgentPrompt, processMessage = null) => {
   const [selectedContact, setSelectedContact] = useState('sarah-chen');
   const [isLoadingResponse, setIsLoadingResponse] = useState(false);
   const [currentMessage, setCurrentMessage] = useState('');
@@ -73,6 +73,9 @@ export const useChat = (contacts, getAgentPrompt) => {
           characterRole: contactInfo?.role
         });
         
+        // Process the response if needed (e.g., for document sharing)
+        const processedResponse = processMessage ? processMessage(response) : response;
+        
         // Add Claude's response to chat
         setChatMessages(prev => ({
           ...prev,
@@ -80,7 +83,7 @@ export const useChat = (contacts, getAgentPrompt) => {
             ...(prev[selectedContact] || []),
             { 
               sender: contactInfo?.name || 'Unknown', 
-              message: response, 
+              message: processedResponse, 
               time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), 
               isUser: false 
             }
