@@ -1,3 +1,19 @@
+// Configuration for Strict Data mode
+export const configOptions = {
+  strictDataMode: true // Default to true - agents only respond with their own data or redirect
+};
+
+// Function to toggle strict data mode
+export const toggleStrictDataMode = () => {
+  configOptions.strictDataMode = !configOptions.strictDataMode;
+  return configOptions.strictDataMode;
+};
+
+// Function to get current strict data mode state
+export const getStrictDataMode = () => {
+  return configOptions.strictDataMode;
+};
+
 // Global variables that can be shared across all agents
 export const globalVariables = {
   company: {
@@ -20,6 +36,44 @@ export const globalVariables = {
     meetingCadence: "daily standups, weekly planning",
     tools: "Slack, Figma, Jira, GitHub"
   }
+};
+
+// Document information for each agent
+export const documentConfigs = {
+  'sarah-chen': {
+    documentPath: '/documents/sarah_chen_product_requirements.md',
+    documentName: 'Product Requirements Document',
+    documentSummary: 'Comprehensive PRD outlining the dashboard enhancement project, including user research, feature requirements, success metrics, and implementation roadmap.'
+  },
+  'mike-dev': {
+    documentPath: '/documents/mike_rodriguez_technical_architecture.md',
+    documentName: 'Technical Architecture Document',
+    documentSummary: 'Detailed technical architecture for the dashboard enhancement, covering frontend and backend design, widget system, performance optimization, and implementation phases.'
+  },
+  'lisa-design': {
+    documentPath: '/documents/lisa_kim_ux_design_spec.md',
+    documentName: 'UX Design Specification',
+    documentSummary: 'UX design approach for the dashboard project, including user research, personas, journey maps, design system, interaction design, and accessibility considerations.'
+  },
+  'alex-data': {
+    documentPath: '/documents/alex_thompson_data_analysis.md',
+    documentName: 'Data Analysis Report',
+    documentSummary: 'Analysis of current dashboard usage patterns with recommendations for improvements based on user segmentation, feature impact, A/B testing, and predictive modeling.'
+  },
+  'jen-marketing': {
+    documentPath: '/documents/jen_wilson_marketing_strategy.md',
+    documentName: 'Marketing & Adoption Strategy',
+    documentSummary: 'Strategy for driving awareness, adoption, and engagement with the new dashboard, including market analysis, go-to-market plan, and measurement framework.'
+  }
+};
+
+// Document awareness - which agents know about which other documents
+export const documentAwareness = {
+  'sarah-chen': ['mike-dev', 'lisa-design', 'alex-data', 'jen-marketing'], // PM knows about all documents
+  'mike-dev': ['sarah-chen', 'lisa-design'], // Developer knows about PM and Design docs
+  'lisa-design': ['sarah-chen', 'alex-data'], // Designer knows about PM and Data Analysis docs
+  'alex-data': ['sarah-chen', 'jen-marketing'], // Data Analyst knows about PM and Marketing docs
+  'jen-marketing': ['sarah-chen', 'alex-data'] // Marketing knows about PM and Data Analysis docs
 };
 
 // Agent-specific configurations
@@ -140,8 +194,34 @@ export const agentConfigs = {
 export const generatePrompt = (agentId) => {
   const agent = agentConfigs[agentId];
   const global = globalVariables;
+  const document = documentConfigs[agentId];
+  const strictMode = configOptions.strictDataMode;
   
   if (!agent) return 'You are a helpful team member.';
+  
+  // Build the list of documents this agent is aware of
+  let documentAwarenessText = '';
+  if (documentAwareness[agentId] && documentAwareness[agentId].length > 0) {
+    documentAwarenessText = '\n\nYOU ARE AWARE OF THESE TEAM DOCUMENTS:\n';
+    documentAwareness[agentId].forEach(otherAgentId => {
+      const otherDoc = documentConfigs[otherAgentId];
+      const otherAgent = agentConfigs[otherAgentId];
+      if (otherDoc && otherAgent) {
+        documentAwarenessText += `- "${otherDoc.documentName}" by ${otherAgent.personalInfo.name} (${otherAgent.personalInfo.role}): ${otherDoc.documentSummary}\n`;
+      }
+    });
+  }
+  
+  // Add strict data mode instructions if enabled
+  let strictDataText = '';
+  if (strictMode) {
+    strictDataText = `\n\nSTRICT DATA MODE IS ENABLED:\n- You can only provide information from your own document "${document.documentName}"
+- If asked about information outside your document, politely redirect the user to the appropriate team member
+- You can mention the names and summaries of documents you're aware of when redirecting
+- Never make up information that isn't in your document
+- If asked to share your entire document, you may provide it in full
+- Always stay in character as ${agent.personalInfo.name}`;
+  }
   
   return `You are ${agent.personalInfo.name}, a ${agent.personalInfo.role} at ${global.company.name}.
 
@@ -170,6 +250,9 @@ CURRENT PROJECT:
 - Budget: ${global.project.budget}
 - Priority: ${global.project.priority}
 - Stakeholders: ${global.project.stakeholders}
+- Desired Outcome: ${global.project.desiredOutcome}
+
+YOUR DOCUMENT:\n"${document.documentName}": ${document.documentSummary}${documentAwarenessText}${strictDataText}
 
 COMMUNICATION STYLE:
 - Keep responses ${global.communication.style}

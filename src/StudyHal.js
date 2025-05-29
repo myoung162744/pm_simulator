@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { generatePrompt } from './promptConfig';
+import { generatePrompt, getStrictDataMode, toggleStrictDataMode } from './promptConfig';
 import { useResponsive } from './hooks/useResponsive';
 import { useChat } from './hooks/useChat';
 import { useComments } from './hooks/useComments';
@@ -11,6 +11,7 @@ import { DocumentInterface } from './components/DocumentInterface';
 
 const StudyHal = () => {
   const [activeTab, setActiveTab] = useState('chat');
+  const [strictDataMode, setStrictDataMode] = useState(getStrictDataMode());
   const [documentContent, setDocumentContent] = useState(`# Product Requirements Document: User Dashboard Enhancement
 
 ## Overview
@@ -39,6 +40,12 @@ Implement a personalized, widget-based dashboard that allows users to customize 
   // Custom hooks
   const { isMobile, isSidebarOpen, setIsSidebarOpen } = useResponsive();
   const getAgentPrompt = (agentId) => generatePrompt(agentId);
+  
+  // Handle strict data mode toggle
+  const handleToggleStrictDataMode = () => {
+    const newMode = toggleStrictDataMode();
+    setStrictDataMode(newMode);
+  };
   
   const chatHook = useChat(contacts, getAgentPrompt);
   const commentsHook = useComments(documentContent, contacts, getAgentPrompt);
@@ -99,6 +106,8 @@ Implement a personalized, widget-based dashboard that allows users to customize 
             isSidebarOpen={isSidebarOpen}
             setIsSidebarOpen={setIsSidebarOpen}
             onSelectContact={handleSelectContact}
+            strictDataMode={strictDataMode}
+            onToggleStrictDataMode={handleToggleStrictDataMode}
           />
         ) : (
           <DocumentInterface

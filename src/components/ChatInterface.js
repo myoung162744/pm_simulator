@@ -1,5 +1,5 @@
 import React from 'react';
-import { Send, Menu, Clock } from 'lucide-react';
+import { Send, Menu, Clock, Database, Lock, Unlock } from 'lucide-react';
 import { ContactsList } from './ContactsList';
 
 export const ChatInterface = ({
@@ -15,7 +15,9 @@ export const ChatInterface = ({
   isMobile,
   isSidebarOpen,
   setIsSidebarOpen,
-  onSelectContact
+  onSelectContact,
+  strictDataMode,
+  onToggleStrictDataMode
 }) => {
   const selectedContactInfo = contacts.find(c => c.id === selectedContact);
 
@@ -60,6 +62,31 @@ export const ChatInterface = ({
               <p className="text-xs md:text-sm text-purple-600 truncate">
                 {selectedContactInfo?.role}
               </p>
+            </div>
+            
+            {/* Strict Data Mode Toggle */}
+            <div className="flex items-center">
+              <button 
+                onClick={onToggleStrictDataMode}
+                className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all ${
+                  strictDataMode 
+                    ? 'bg-blue-100 text-blue-800 border border-blue-300 hover:bg-blue-200' 
+                    : 'bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200'
+                }`}
+                title={strictDataMode ? "Strict Data Mode: ON - Agents only use their own documents" : "Strict Data Mode: OFF - Agents can be more creative"}
+              >
+                {strictDataMode ? (
+                  <>
+                    <Lock size={12} />
+                    <span className="hidden sm:inline">Strict Data</span>
+                  </>
+                ) : (
+                  <>
+                    <Unlock size={12} />
+                    <span className="hidden sm:inline">Creative Mode</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>
