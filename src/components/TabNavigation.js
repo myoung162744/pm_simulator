@@ -5,49 +5,89 @@ export const TabNavigation = ({ activeTab, setActiveTab, sharedDocuments = [] })
   const hasSharedDocuments = sharedDocuments.length > 0;
   
   return (
-    <div className="bg-gradient-to-r from-purple-300 to-blue-300 border-b-4 border-purple-500 flex-shrink-0">
-      <div className="flex">
+    <div className="pokemon-panel--header flex-shrink-0" style={{
+      backgroundColor: 'var(--gb-dark-beige)',
+      padding: 'var(--spacing-md) var(--spacing-lg)'
+    }}>
+      <div className="flex gap-3">
         <button
           onClick={() => setActiveTab('chat')}
-          className={`flex-1 md:flex-none px-4 md:px-6 py-2 md:py-3 font-bold text-xs md:text-sm border-r-2 border-purple-400 transition-all duration-200 ${
-            activeTab === 'chat'
-              ? 'bg-gradient-to-b from-yellow-200 to-orange-200 text-orange-800 shadow-inner'
-              : 'text-purple-800 hover:bg-purple-200'
+          className={`flex-1 md:flex-none pokemon-button transition-all duration-200 ${
+            activeTab === 'chat' ? 'pokemon-button--secondary' : ''
           }`}
+          style={{
+            fontFamily: "'Press Start 2P', monospace",
+            fontSize: 'var(--pixel-sm)',
+            backgroundColor: activeTab === 'chat' ? 'var(--gb-yellow)' : 'var(--gb-light-beige)',
+            color: 'var(--gb-dark-text)',
+            boxShadow: activeTab === 'chat' 
+              ? 'inset 1px 1px 0px var(--gb-white)' 
+              : '1px 1px 0px var(--gb-darker-beige)',
+            padding: 'var(--spacing-md) var(--spacing-lg)',
+            minHeight: '44px',
+            transform: activeTab === 'chat' ? 'translate(1px, 1px)' : 'none'
+          }}
         >
-          <MessageSquare className="inline mr-1 md:mr-2" size={14} />
-          <span className="hidden sm:inline">Team </span>Chat
+          💬 <span className="hidden sm:inline ml-2">TEAM </span>
+          <span className="sm:hidden">CHAT</span>
+          <span className="hidden sm:inline">CHAT</span>
         </button>
+        
         <button
           onClick={() => setActiveTab('docs')}
-          className={`flex-1 md:flex-none px-4 md:px-6 py-2 md:py-3 font-bold text-xs md:text-sm border-r-2 border-purple-400 transition-all duration-200 ${
-            activeTab === 'docs'
-              ? 'bg-gradient-to-b from-yellow-200 to-orange-200 text-orange-800 shadow-inner'
-              : 'text-purple-800 hover:bg-purple-200'
+          className={`flex-1 md:flex-none pokemon-button transition-all duration-200 ${
+            activeTab === 'docs' ? 'pokemon-button--secondary' : ''
           }`}
+          style={{
+            fontFamily: "'Press Start 2P', monospace",
+            fontSize: 'var(--pixel-sm)',
+            backgroundColor: activeTab === 'docs' ? 'var(--gb-yellow)' : 'var(--gb-light-beige)',
+            color: 'var(--gb-dark-text)',
+            boxShadow: activeTab === 'docs' 
+              ? 'inset 1px 1px 0px var(--gb-white)' 
+              : '1px 1px 0px var(--gb-darker-beige)',
+            padding: 'var(--spacing-md) var(--spacing-lg)',
+            minHeight: '44px',
+            transform: activeTab === 'docs' ? 'translate(1px, 1px)' : 'none'
+          }}
         >
-          <FileText className="inline mr-1 md:mr-2" size={14} />
-          Document
+          📄 <span className="ml-2">DOCUMENT</span>
         </button>
-        {hasSharedDocuments && (
-          <button
-            onClick={() => setActiveTab('inbox')}
-            className={`flex-1 md:flex-none px-4 md:px-6 py-2 md:py-3 font-bold text-xs md:text-sm transition-all duration-200 ${
-              activeTab === 'inbox'
-                ? 'bg-gradient-to-b from-yellow-200 to-orange-200 text-orange-800 shadow-inner'
-                : 'text-purple-800 hover:bg-purple-200'
-            }`}
-          >
-            <Inbox className="inline mr-1 md:mr-2" size={14} />
-            <span className="hidden sm:inline">Inbox</span>
-            <span className="inline sm:hidden">Inbox</span>
-            {hasSharedDocuments && (
-              <span className="ml-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-blue-500 rounded-full">
-                {sharedDocuments.length}
-              </span>
-            )}
-          </button>
-        )}
+        
+        <button
+          onClick={() => setActiveTab('inbox')}
+          className={`flex-1 md:flex-none pokemon-button transition-all duration-200 relative ${
+            activeTab === 'inbox' ? 'pokemon-button--secondary' : ''
+          }`}
+          style={{
+            fontFamily: "'Press Start 2P', monospace",
+            fontSize: 'var(--pixel-sm)',
+            backgroundColor: activeTab === 'inbox' ? 'var(--gb-yellow)' : 'var(--gb-light-beige)',
+            color: 'var(--gb-dark-text)',
+            boxShadow: activeTab === 'inbox' 
+              ? 'inset 1px 1px 0px var(--gb-white)' 
+              : '1px 1px 0px var(--gb-darker-beige)',
+            padding: 'var(--spacing-md) var(--spacing-lg)',
+            minHeight: '44px',
+            transform: activeTab === 'inbox' ? 'translate(1px, 1px)' : 'none'
+          }}
+        >
+          📮 <span className="hidden sm:inline ml-2">INBOX</span>
+          <span className="inline sm:hidden ml-2">INBOX</span>
+          {hasSharedDocuments && (
+            <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full" style={{
+              backgroundColor: 'var(--gb-red)',
+              color: 'var(--gb-white)',
+              border: '1px solid var(--gb-black)',
+              fontSize: 'var(--pixel-xs)',
+              fontFamily: "'Press Start 2P', monospace",
+              minWidth: '20px',
+              fontWeight: 'normal'
+            }}>
+              {sharedDocuments.length}
+            </span>
+          )}
+        </button>
       </div>
     </div>
   );

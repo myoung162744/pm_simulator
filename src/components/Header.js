@@ -5,41 +5,67 @@ import { ProjectDetails } from './ProjectDetails';
 export const Header = () => {
   const [showProjectPopover, setShowProjectPopover] = useState(false);
   return (
-    <div className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 p-3 md:p-4 border-b-4 border-blue-600 shadow-xl flex-shrink-0">
+    <div className="pokemon-panel--header shadow-lg flex-shrink-0" style={{
+      backgroundColor: 'var(--gb-medium-beige)',
+      padding: 'var(--spacing-lg) var(--spacing-xl)'
+    }}>
       <div className="flex items-center justify-between">
-        <h1 className="text-lg md:text-2xl font-bold text-white drop-shadow-lg">
-          🚀 <span className="hidden sm:inline">StudyHal</span>
-          <span className="sm:hidden">StudyHal</span>
+        <h1 className="font-bold text-primary" style={{
+          fontFamily: "'Press Start 2P', monospace",
+          fontSize: 'var(--pixel-lg)',
+          letterSpacing: '1px'
+        }}>
+          <span className="hidden sm:inline">STUDYHAL</span>
+          <span className="sm:hidden">STUDYHAL</span>
         </h1>
-        <div className="flex items-center gap-2 md:gap-4 text-white">
-          <div className="flex items-center gap-1 md:gap-2">
-            <div className="w-2 md:w-3 h-2 md:h-3 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-xs md:text-sm font-semibold">
+        <div className="flex items-center gap-4 md:gap-6">
+          <div className="flex items-center gap-2 pokemon-textbox" style={{
+            padding: 'var(--spacing-xs) var(--spacing-md)',
+            backgroundColor: 'var(--gb-white)',
+            minHeight: '32px'
+          }}>
+            <div className="w-3 h-3 rounded-full animate-pulse" style={{
+              backgroundColor: 'var(--gb-red)'
+            }}></div>
+            <span className="font-bold text-primary" style={{
+              fontFamily: "'Press Start 2P', monospace",
+              fontSize: 'var(--pixel-sm)'
+            }}>
               <span className="hidden sm:inline">{globalVariables.company.name}</span>
-              <span className="sm:hidden">Company</span>
+              <span className="sm:hidden">COMPANY</span>
             </span>
           </div>
           <div className="relative">
-            <div 
-              className="bg-white bg-opacity-20 px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-bold cursor-pointer hover:bg-opacity-30 transition-all"
+            <button 
+              className="pokemon-button--secondary transition-all hover:scale-105"
+              style={{
+                fontFamily: "'Press Start 2P', monospace",
+                fontSize: 'var(--pixel-xs)',
+                padding: 'var(--spacing-xs) var(--spacing-sm)'
+              }}
               onMouseEnter={() => setShowProjectPopover(true)}
               onMouseLeave={() => setShowProjectPopover(false)}
             >
-              🎯 <span className="hidden sm:inline">{globalVariables.project.name}</span>
-              <span className="sm:hidden">Project</span>
-            </div>
+              🎯 <span className="hidden sm:inline ml-2">{globalVariables.project.name}</span>
+              <span className="sm:hidden ml-2">PROJECT</span>
+            </button>
             
             {/* Project Popover */}
             {showProjectPopover && (
               <div 
-                className="absolute right-0 mt-2 w-72 md:w-96 bg-white rounded-lg shadow-xl z-50 transform origin-top-right"
+                className="absolute right-0 mt-2 w-80 md:w-96 pokemon-panel--content rounded-lg shadow-xl z-50 transform origin-top-right"
+                style={{
+                  backgroundColor: 'var(--gb-cream)',
+                  padding: 'var(--spacing-lg)'
+                }}
                 onMouseEnter={() => setShowProjectPopover(true)}
                 onMouseLeave={() => setShowProjectPopover(false)}
               >
-                <div className="p-4">
-                  <h3 className="text-lg font-bold text-purple-800 mb-2">{globalVariables.project.name}</h3>
-                  <ProjectDetails compact={true} />
-                </div>
+                <h3 className="font-bold mb-3 text-primary" style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: 'var(--pixel-lg)'
+                }}>{globalVariables.project.name}</h3>
+                <ProjectDetails compact={true} />
               </div>
             )}
           </div>

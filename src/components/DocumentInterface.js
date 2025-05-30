@@ -85,9 +85,16 @@ export const DocumentInterface = ({
 
       // Add highlighted text for this comment
       const isSelected = selectedCommentId === comment.id;
-      const highlightColor = isSelected 
-        ? 'bg-purple-300 border-purple-600 ring-2 ring-purple-400' 
-        : 'bg-purple-200 border-purple-400';
+      const highlightStyle = isSelected 
+        ? {
+            backgroundColor: 'var(--gb-yellow)',
+            border: '2px solid var(--gb-black)',
+            boxShadow: '2px 2px 0px var(--gb-darker-beige)'
+          }
+        : {
+            backgroundColor: 'var(--gb-light-beige)',
+            border: '2px solid var(--gb-darker-beige)'
+          };
       
       const endPosition = Math.min(comment.textPosition + comment.textLength, documentContent.length);
       
@@ -95,7 +102,13 @@ export const DocumentInterface = ({
         <span
           key={`highlight-${comment.id}`}
           id={`highlight-${comment.id}`}
-          className={`highlight-item ${highlightColor} border rounded px-1 cursor-pointer transition-all duration-200 hover:shadow-md hover:ring-2 hover:ring-purple-400 ${isSelected ? 'shadow-lg' : ''}`}
+          className="highlight-item cursor-pointer transition-all duration-200 hover:scale-105"
+          style={{
+            ...highlightStyle,
+            padding: 'var(--spacing-xs)',
+            borderRadius: 'var(--spacing-xs)',
+            fontFamily: "'Press Start 2P', monospace"
+          }}
           title={`${comment.author}: ${comment.text}`}
           onClick={() => handleHighlightClick(comment.id)}
         >
@@ -121,75 +134,135 @@ export const DocumentInterface = ({
   return (
     <div className="flex h-full relative">
       {/* Document Editor */}
-      <div className="flex-1 bg-gradient-to-br from-yellow-50 to-orange-50 flex flex-col">
-        <div className="p-3 md:p-4 border-b-4 border-orange-300 bg-gradient-to-r from-yellow-200 to-orange-200 flex-shrink-0">
+      <div className="flex-1 flex flex-col" style={{ backgroundColor: 'var(--gb-cream)' }}>
+        <div className="pokemon-panel--header flex-shrink-0" style={{
+          backgroundColor: 'var(--gb-dark-beige)',
+          padding: 'var(--spacing-lg) var(--spacing-xl)',
+          borderBottom: '2px solid var(--gb-black)'
+        }}>
           <div className="flex items-center justify-between">
-            <h2 className="font-bold text-base md:text-lg text-orange-800 flex items-center gap-2">
-              <FileText size={16} className="md:w-5 md:h-5" />
-              <span className="hidden sm:inline">Product Requirements Document</span>
-              <span className="sm:hidden">PRD</span>
-            </h2>
-            <div className="flex gap-2">
+            <div className="pokemon-textbox" style={{
+              backgroundColor: 'var(--gb-yellow)',
+              padding: 'var(--spacing-sm) var(--spacing-lg)',
+              borderLeft: '4px solid var(--gb-black)'
+            }}>
+              <h2 className="font-bold flex items-center gap-3 text-primary" style={{
+                fontFamily: "'Press Start 2P', monospace",
+                fontSize: 'var(--pixel-lg)',
+                margin: 0
+              }}>
+                📄 <span className="hidden sm:inline">USER DASHBOARD ENHANCEMENT</span>
+                <span className="sm:hidden">PRD</span>
+              </h2>
+            </div>
+            <div className="flex gap-3">
               <button
                 onClick={generateComments}
                 disabled={isGeneratingComments || !documentContent.trim()}
-                className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 ${
+                className={`pokemon-button transition-all ${
                   isGeneratingComments || !documentContent.trim()
-                    ? 'bg-gray-200 border border-gray-400 text-gray-500 cursor-not-allowed'
-                    : 'bg-blue-200 hover:bg-blue-300 border border-blue-400 text-blue-800'
+                    ? ''
+                    : 'pokemon-button--primary hover:scale-105'
                 }`}
+                style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: 'var(--pixel-xs)',
+                  backgroundColor: isGeneratingComments || !documentContent.trim() 
+                    ? 'var(--gb-darker-beige)' 
+                    : 'var(--gb-blue)',
+                  color: 'var(--gb-white)'
+                }}
               >
                 {isGeneratingComments ? (
                   <>
-                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600"></div>
-                    Reviewing...
+                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 mr-2" style={{
+                      borderColor: 'var(--gb-white)'
+                    }}></div>
+                    REVIEWING...
                   </>
                 ) : (
-                  '📝 Get Feedback'
+                  '📝 GET FEEDBACK'
                 )}
               </button>
               {comments.length > 0 && (
                 <button
                   onClick={clearComments}
-                  className="px-3 py-1 bg-red-200 border border-red-400 rounded-full text-xs font-bold text-red-800"
+                  className="pokemon-button--danger"
+                  style={{
+                    fontFamily: "'Press Start 2P', monospace",
+                    fontSize: 'var(--pixel-xs)'
+                  }}
                 >
-                  Clear Comments
+                  CLEAR
                 </button>
               )}
             </div>
           </div>
           {comments.length > 0 && (
-            <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="pokemon-textbox" style={{
+              marginTop: 'var(--spacing-md)',
+              backgroundColor: 'var(--gb-white)'
+            }}>
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-blue-800">
-                  📝 Review Mode - Click highlights or comments to see connections
+                <span className="text-primary" style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: 'var(--pixel-sm)'
+                }}>
+                  📝 REVIEW MODE - CLICK HIGHLIGHTS OR COMMENTS
                 </span>
                 <button
                   onClick={clearComments}
-                  className="text-xs bg-blue-200 hover:bg-blue-300 px-2 py-1 rounded border border-blue-400 text-blue-800"
+                  className="pokemon-button"
+                  style={{
+                    fontFamily: "'Press Start 2P', monospace",
+                    fontSize: 'var(--pixel-xs)',
+                    padding: 'var(--spacing-xs) var(--spacing-sm)'
+                  }}
                 >
-                  ✏️ Edit Document
+                  ✏️ EDIT
                 </button>
               </div>
             </div>
           )}
-          <div className="flex gap-2 mt-2 flex-wrap">
-            <span className="px-2 md:px-3 py-1 bg-green-200 border border-green-400 rounded-full text-xs font-bold text-green-800">
-              ✨ Draft
+          <div className="flex gap-2 flex-wrap" style={{ marginTop: 'var(--spacing-md)' }}>
+            <span className="pokemon-textbox" style={{
+              padding: 'var(--spacing-xs) var(--spacing-sm)',
+              backgroundColor: 'var(--gb-yellow)',
+              fontFamily: "'Press Start 2P', monospace",
+              fontSize: 'var(--pixel-xs)',
+              color: 'var(--gb-dark-text)'
+            }}>
+              ✨ DRAFT
             </span>
             {comments.length > 0 && (
-              <span className="px-2 md:px-3 py-1 bg-purple-200 border border-purple-400 rounded-full text-xs font-bold text-purple-800">
-                💬 {comments.length} Comments
+              <span className="pokemon-textbox" style={{
+                padding: 'var(--spacing-xs) var(--spacing-sm)',
+                backgroundColor: 'var(--gb-blue)',
+                fontFamily: "'Press Start 2P', monospace",
+                fontSize: 'var(--pixel-xs)',
+                color: 'var(--gb-white)'
+              }}>
+                💬 {comments.length} COMMENTS
               </span>
             )}
           </div>
         </div>
         
-        <div className="flex-1 p-3 md:p-6 overflow-y-auto" ref={documentContainerRef}>
-          <div className="bg-white rounded-lg border-4 border-orange-300 shadow-xl p-3 md:p-6 h-full">
+        <div className="flex-1 overflow-y-auto" ref={documentContainerRef} style={{
+          padding: 'var(--spacing-xl)'
+        }}>
+          <div className="pokemon-panel--content h-full" style={{
+            backgroundColor: 'var(--gb-white)',
+            padding: 'var(--spacing-xl)'
+          }}>
             {comments.length > 0 ? (
               <div className="w-full h-full overflow-y-auto">
-                <div className="prose max-w-none font-mono text-xs md:text-sm leading-relaxed whitespace-pre-wrap">
+                <div className="prose max-w-none whitespace-pre-wrap" style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 'var(--text-base)',
+                  lineHeight: '1.6',
+                  color: 'var(--gb-dark-text)'
+                }}>
                   {renderDocumentWithHighlights()}
                 </div>
               </div>
@@ -197,8 +270,15 @@ export const DocumentInterface = ({
               <textarea
                 value={documentContent}
                 onChange={(e) => setDocumentContent(e.target.value)}
-                className="w-full h-full p-3 md:p-4 border-2 border-gray-300 rounded-lg focus:border-orange-500 focus:outline-none resize-none font-mono text-xs md:text-sm"
-                placeholder="Start writing your PRD..."
+                className="w-full h-full pokemon-textbox resize-none"
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 'var(--text-base)',
+                  backgroundColor: 'var(--gb-white)',
+                  color: 'var(--gb-dark-text)',
+                  padding: 'var(--spacing-lg)'
+                }}
+                placeholder="START WRITING YOUR PRD..."
               />
             )}
           </div>
@@ -206,83 +286,153 @@ export const DocumentInterface = ({
       </div>
 
       {/* Comments Sidebar */}
-      <div className="w-80 bg-gradient-to-b from-pink-100 to-purple-100 border-l-4 border-pink-400 overflow-y-auto flex flex-col">
-        <div className="p-4 border-b-2 border-pink-300 bg-gradient-to-r from-pink-200 to-purple-200 flex-shrink-0">
-          <h3 className="font-bold text-pink-800">Comments & Feedback</h3>
+      <div className="w-80 pokemon-panel--content overflow-y-auto flex flex-col" style={{
+        backgroundColor: 'var(--gb-medium-beige)'
+      }}>
+        <div className="pokemon-panel--header flex-shrink-0" style={{
+          backgroundColor: 'var(--gb-dark-beige)',
+          padding: 'var(--spacing-lg) var(--spacing-xl)'
+        }}>
+          <h3 className="font-bold text-primary" style={{
+            fontFamily: "'Press Start 2P', monospace",
+            fontSize: 'var(--pixel-lg)'
+          }}>💬 COMMENTS</h3>
         </div>
-        <div className="p-4 space-y-4 flex-1" ref={commentsContainerRef}>
+        <div className="flex-1" ref={commentsContainerRef} style={{
+          padding: 'var(--spacing-lg)'
+        }}>
           {comments.length === 0 ? (
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border-2 border-blue-200 text-center">
-              <h4 className="font-bold text-sm text-blue-800 mb-2">🎯 Ready for Review</h4>
-              <p className="text-xs text-blue-600 mb-3">
-                Write your PRD and click "Get Feedback" to receive AI comments.
+            <div className="pokemon-textbox text-center" style={{
+              backgroundColor: 'var(--gb-white)'
+            }}>
+              <h4 className="font-bold mb-3 text-primary" style={{
+                fontFamily: "'Press Start 2P', monospace",
+                fontSize: 'var(--pixel-sm)'
+              }}>🎯 READY FOR REVIEW</h4>
+              <p className="text-secondary" style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 'var(--text-sm)',
+                lineHeight: '1.6'
+              }}>
+                WRITE YOUR PRD AND CLICK "GET FEEDBACK" TO RECEIVE AI COMMENTS.
               </p>
             </div>
           ) : (
-            comments.map(comment => {
-              const isSelected = selectedCommentId === comment.id;
-              return (
-                <div 
-                  key={comment.id}
-                  id={`comment-${comment.id}`}
-                  className={`comment-item cursor-pointer p-3 rounded-lg border-2 shadow-md transition-all duration-200 hover:ring-2 hover:ring-purple-400 hover:shadow-lg ${
-                    isSelected 
-                      ? 'bg-purple-50 border-purple-400 ring-2 ring-purple-400 shadow-lg' 
-                      : 'bg-white border-purple-300'
-                  }`}
-                  onClick={() => handleCommentClick(comment.id)}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    {comment.avatar && (
-                      <span className="text-lg flex-shrink-0">{comment.avatar}</span>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-sm text-pink-800 truncate">{comment.author}</span>
-                        {comment.perspective && (
-                          <span className="text-xs bg-blue-100 text-blue-600 px-1 py-0.5 rounded">
-                            {comment.perspective}
-                          </span>
-                        )}
-                        {isSelected && (
-                          <span className="text-xs bg-purple-100 text-purple-700 px-1 py-0.5 rounded font-semibold">
-                            ✨ Active
-                          </span>
-                        )}
+            <div className="space-y-4">
+              {comments.map(comment => {
+                const isSelected = selectedCommentId === comment.id;
+                return (
+                  <div 
+                    key={comment.id}
+                    id={`comment-${comment.id}`}
+                    className="comment-item cursor-pointer pokemon-textbox transition-all duration-200 hover:scale-102"
+                    style={{
+                      backgroundColor: isSelected ? 'var(--gb-yellow)' : 'var(--gb-white)',
+                      boxShadow: isSelected 
+                        ? '2px 2px 0px var(--gb-darker-beige)' 
+                        : '1px 1px 0px var(--gb-darker-beige)',
+                      transform: isSelected ? 'translate(-1px, -1px)' : 'none'
+                    }}
+                    onClick={() => handleCommentClick(comment.id)}
+                  >
+                    <div className="flex items-center gap-2" style={{
+                      marginBottom: 'var(--spacing-sm)'
+                    }}>
+                      {comment.avatar && (
+                        <span className="text-lg flex-shrink-0">{comment.avatar}</span>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold truncate text-primary" style={{
+                            fontFamily: "'Press Start 2P', monospace",
+                            fontSize: 'var(--pixel-sm)'
+                          }}>{comment.author.toUpperCase()}</span>
+                          {comment.perspective && (
+                            <span className="pokemon-textbox" style={{
+                              padding: '2px 4px',
+                              backgroundColor: 'var(--gb-blue)',
+                              color: 'var(--gb-white)',
+                              fontFamily: "'Press Start 2P', monospace",
+                              fontSize: 'var(--pixel-xs)'
+                            }}>
+                              {comment.perspective.toUpperCase()}
+                            </span>
+                          )}
+                          {isSelected && (
+                            <span className="pokemon-textbox" style={{
+                              padding: '2px 4px',
+                              backgroundColor: 'var(--gb-red)',
+                              color: 'var(--gb-white)',
+                              fontFamily: "'Press Start 2P', monospace",
+                              fontSize: 'var(--pixel-xs)'
+                            }}>
+                              ✨ ACTIVE
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-muted" style={{
+                          fontFamily: "'Press Start 2P', monospace",
+                          fontSize: 'var(--pixel-xs)'
+                        }}>JUST NOW</span>
                       </div>
-                      <span className="text-xs text-gray-400">just now</span>
+                    </div>
+                    
+                    {comment.textExcerpt && (
+                      <div className="pokemon-textbox" style={{
+                        marginBottom: 'var(--spacing-sm)',
+                        padding: 'var(--spacing-sm)',
+                        backgroundColor: isSelected ? 'var(--gb-white)' : 'var(--gb-light-beige)',
+                        borderLeft: '4px solid var(--gb-darker-beige)'
+                      }}>
+                        <span className="text-secondary" style={{
+                          fontFamily: "'Press Start 2P', monospace",
+                          fontSize: 'var(--pixel-xs)'
+                        }}>RE: </span>
+                        <span className="text-primary" style={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: 'var(--text-xs)',
+                          fontStyle: 'italic'
+                        }}>"{comment.textExcerpt.length > 40 ? comment.textExcerpt.substring(0, 40) + '...' : comment.textExcerpt}"</span>
+                      </div>
+                    )}
+                    
+                    <p className="text-primary" style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 'var(--text-sm)',
+                      lineHeight: '1.6',
+                      marginBottom: 'var(--spacing-sm)'
+                    }}>{comment.text}</p>
+                    
+                    <div className="flex gap-2">
+                      <button className="pokemon-button" style={{
+                        fontFamily: "'Press Start 2P', monospace",
+                        fontSize: 'var(--pixel-xs)',
+                        backgroundColor: 'var(--gb-yellow)',
+                        color: 'var(--gb-dark-text)',
+                        padding: 'var(--spacing-xs) var(--spacing-sm)'
+                      }}>
+                        ✓ RESOLVE
+                      </button>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          generateComments();
+                        }}
+                        className="pokemon-button" style={{
+                          fontFamily: "'Press Start 2P', monospace",
+                          fontSize: 'var(--pixel-xs)',
+                          backgroundColor: 'var(--gb-blue)',
+                          color: 'var(--gb-white)',
+                          padding: 'var(--spacing-xs) var(--spacing-sm)'
+                        }}
+                      >
+                        🔄 MORE
+                      </button>
                     </div>
                   </div>
-                  
-                  {comment.textExcerpt && (
-                    <div className={`mb-2 p-2 rounded border-l-4 text-xs ${
-                      isSelected 
-                        ? 'bg-purple-100 border-purple-400' 
-                        : 'bg-gray-100 border-gray-400'
-                    }`}>
-                      <span className="text-gray-600 font-semibold">Re: </span>
-                      <span className="text-gray-800 italic">"{comment.textExcerpt.length > 40 ? comment.textExcerpt.substring(0, 40) + '...' : comment.textExcerpt}"</span>
-                    </div>
-                  )}
-                  
-                  <p className="text-sm text-gray-700">{comment.text}</p>
-                  <div className="flex gap-2 mt-2">
-                    <button className="text-xs bg-green-200 hover:bg-green-300 px-2 py-1 rounded border border-green-400">
-                      ✓ Resolve
-                    </button>
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        generateComments();
-                      }}
-                      className="text-xs bg-orange-200 hover:bg-orange-300 px-2 py-1 rounded border border-orange-400"
-                    >
-                      🔄 More Feedback
-                    </button>
-                  </div>
-                </div>
-              );
-            })
+                );
+              })}
+            </div>
           )}
         </div>
       </div>

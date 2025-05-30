@@ -123,7 +123,10 @@ Implement a personalized, widget-based dashboard that allows users to customize 
   }, [activeTab]);
   
   return (
-    <div className="h-screen bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex flex-col">
+    <div className="h-screen flex flex-col" style={{
+      backgroundColor: 'var(--gb-cream)',
+      fontFamily: "var(--font-mono)"
+    }}>
       <Header />
       <TabNavigation 
         activeTab={activeTab} 
@@ -146,17 +149,25 @@ Implement a personalized, widget-based dashboard that allows users to customize 
               onToggleStrictDataMode={handleToggleStrictDataMode}
             />
             {showInboxNotification && (
-              <div className="fixed bottom-4 right-4 bg-indigo-100 border-2 border-indigo-400 rounded-lg p-3 shadow-lg animate-bounce">
+              <div className="fixed bottom-4 right-4 pokemon-textbox shadow-lg animate-bounce">
                 <div className="flex items-center gap-2">
-                  <span className="text-indigo-800 font-bold text-sm">New document shared!</span>
+                  <span className="font-bold" style={{
+                    fontFamily: "'Press Start 2P', monospace",
+                    fontSize: 'var(--pixel-xs)'
+                  }}>NEW DOCUMENT!</span>
                   <button 
                     onClick={() => {
                       setActiveTab('inbox');
                       setShowInboxNotification(false);
                     }}
-                    className="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded text-xs font-bold"
+                    className="pokemon-button pokemon-button--primary"
+                    style={{
+                      fontFamily: "'Press Start 2P', monospace",
+                      fontSize: 'var(--pixel-xs)',
+                      padding: 'var(--spacing-xs) var(--spacing-sm)'
+                    }}
                   >
-                    View in Inbox
+                    VIEW
                   </button>
                 </div>
               </div>

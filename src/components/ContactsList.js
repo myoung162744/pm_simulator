@@ -15,46 +15,74 @@ export const ContactsList = ({
         ? `fixed left-0 top-0 h-full w-80 z-50 transform transition-transform duration-300 ${
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`
-        : 'w-72 relative'
-    } bg-gradient-to-b from-blue-100 to-blue-200 border-r-4 border-blue-400 overflow-y-auto`}>
-      <div className="p-4 border-b-2 border-blue-300 bg-gradient-to-r from-blue-200 to-purple-200">
+        : 'w-80 relative'
+    } pokemon-panel--sidebar overflow-y-auto`} style={{
+      backgroundColor: 'var(--gb-medium-beige)'
+    }}>
+      <div className="pokemon-panel--header" style={{
+        backgroundColor: 'var(--gb-dark-beige)',
+        padding: 'var(--spacing-lg) var(--spacing-xl)'
+      }}>
         <div className="flex items-center justify-between">
-          <h2 className="font-bold text-lg text-blue-800 flex items-center gap-2">
-            <Users size={20} />
-            Team Members
-          </h2>
+          <h3 className="font-bold text-primary" style={{
+            fontFamily: "'Press Start 2P', monospace",
+            fontSize: 'var(--pixel-lg)'
+          }}>👥 TEAM</h3>
           {isMobile && (
             <button
               onClick={onCloseSidebar}
-              className="p-1 hover:bg-blue-300 rounded"
+              className="pokemon-button--danger"
+              style={{
+                padding: 'var(--spacing-xs)',
+                minHeight: '32px',
+                minWidth: '32px'
+              }}
             >
-              <X size={20} className="text-blue-800" />
+              ❌
             </button>
           )}
         </div>
       </div>
-      <div className="p-2">
+      <div style={{ padding: 'var(--spacing-md)' }}>
         {contacts.map(contact => (
           <div
             key={contact.id}
             onClick={() => onSelectContact(contact.id)}
-            className={`p-3 m-1 rounded-lg cursor-pointer transition-all duration-200 border-2 ${
-              selectedContact === contact.id 
-                ? 'bg-gradient-to-r from-yellow-200 to-orange-200 border-orange-400 shadow-lg transform scale-105' 
-                : 'bg-white border-blue-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:border-purple-300'
+            className={`cursor-pointer transition-all duration-200 pokemon-textbox hover:scale-102 ${
+              selectedContact === contact.id ? 'shadow-lg' : 'shadow-md'
             }`}
+            style={{
+              backgroundColor: selectedContact === contact.id ? 'var(--gb-yellow)' : 'var(--gb-white)',
+              boxShadow: selectedContact === contact.id 
+                ? '2px 2px 0px var(--gb-darker-beige)' 
+                : '1px 1px 0px var(--gb-darker-beige)',
+              transform: selectedContact === contact.id ? 'translate(-1px, -1px)' : 'none',
+              margin: `var(--spacing-sm) 0`,
+              padding: 'var(--spacing-lg)'
+            }}
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <div className="text-2xl flex-shrink-0">{contact.avatar}</div>
               <div className="flex-1 min-w-0">
-                <div className="font-semibold text-sm text-gray-800 truncate">{contact.name}</div>
-                <div className="text-xs text-gray-600 truncate">{contact.role}</div>
-                <div className="flex items-center gap-1 mt-1">
-                  <div className={`w-2 h-2 rounded-full ${
-                    contact.status === 'online' ? 'bg-green-400' : 
-                    contact.status === 'away' ? 'bg-yellow-400' : 'bg-gray-400'
-                  }`}></div>
-                  <span className="text-xs capitalize text-gray-500">{contact.status}</span>
+                <div className="font-bold truncate text-primary" style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: 'var(--pixel-sm)',
+                  marginBottom: 'var(--spacing-xs)'
+                }}>{contact.name.toUpperCase()}</div>
+                <div className="text-xs truncate text-secondary" style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 'var(--text-xs)'
+                }}>{contact.role.toUpperCase()}</div>
+                <div className="flex items-center gap-2">
+                  <div className={`w-3 h-3 rounded-full border border-black`} style={{
+                    backgroundColor: contact.status === 'online' ? 'var(--gb-red)' : 
+                      contact.status === 'away' ? 'var(--gb-yellow)' : 'var(--gb-darker-beige)',
+                    borderColor: 'var(--gb-black)'
+                  }}></div>
+                  <span className="text-xs capitalize text-muted" style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 'var(--text-xs)'
+                  }}>{contact.status.toUpperCase()}</span>
                 </div>
               </div>
             </div>

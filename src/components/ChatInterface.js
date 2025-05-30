@@ -42,25 +42,42 @@ export const ChatInterface = ({
       />
 
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col bg-gradient-to-b from-purple-50 to-blue-50 min-w-0">
+      <div className="flex-1 flex flex-col min-w-0" style={{
+        backgroundColor: 'var(--gb-cream)'
+      }}>
         {/* Chat Header */}
-        <div className="p-3 md:p-4 border-b-4 border-purple-300 bg-gradient-to-r from-purple-200 to-blue-200 flex-shrink-0">
-          <div className="flex items-center gap-3">
+        <div className="pokemon-panel--header flex-shrink-0" style={{
+          backgroundColor: 'var(--gb-dark-beige)',
+          padding: 'var(--spacing-lg) var(--spacing-xl)'
+        }}>
+          <div className="flex items-center gap-4">
             {isMobile && (
               <button
                 onClick={() => setIsSidebarOpen(true)}
-                className="p-2 hover:bg-purple-300 rounded-lg md:hidden"
+                className="pokemon-button md:hidden"
+                style={{
+                  padding: 'var(--spacing-sm)',
+                  minHeight: '36px',
+                  minWidth: '36px'
+                }}
               >
-                <Menu size={20} className="text-purple-800" />
+                ☰
               </button>
             )}
-            <div className="text-xl md:text-2xl">{selectedContactInfo?.avatar}</div>
+            <div className="text-3xl">{selectedContactInfo?.avatar}</div>
             <div className="min-w-0 flex-1">
-              <h3 className="font-bold text-purple-800 text-sm md:text-base truncate">
-                {selectedContactInfo?.name}
+              <h3 className="font-bold truncate text-primary" style={{
+                fontFamily: "'Press Start 2P', monospace",
+                fontSize: 'var(--pixel-lg)',
+                marginBottom: 'var(--spacing-xs)'
+              }}>
+                {selectedContactInfo?.name?.toUpperCase()}
               </h3>
-              <p className="text-xs md:text-sm text-purple-600 truncate">
-                {selectedContactInfo?.role}
+              <p className="text-xs truncate text-secondary" style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 'var(--text-sm)'
+              }}>
+                {selectedContactInfo?.role?.toUpperCase()}
               </p>
             </div>
             
@@ -68,43 +85,55 @@ export const ChatInterface = ({
             <div className="flex items-center">
               <button 
                 onClick={onToggleStrictDataMode}
-                className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all ${
-                  strictDataMode 
-                    ? 'bg-blue-100 text-blue-800 border border-blue-300 hover:bg-blue-200' 
-                    : 'bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200'
-                }`}
-                title={strictDataMode ? "Strict Data Mode: ON - Agents only use their own documents" : "Strict Data Mode: OFF - Agents can be more creative"}
+                className={`pokemon-button transition-all ${strictDataMode ? 'pokemon-button--primary' : ''}`}
+                style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: 'var(--pixel-xs)',
+                  padding: 'var(--spacing-sm) var(--spacing-md)',
+                  backgroundColor: strictDataMode ? 'var(--gb-blue)' : 'var(--gb-white)',
+                  color: strictDataMode ? 'var(--gb-white)' : 'var(--gb-dark-text)'
+                }}
+                title={strictDataMode ? "Strict Data Mode: ON" : "Strict Data Mode: OFF"}
               >
-                {strictDataMode ? (
-                  <>
-                    <Lock size={12} />
-                    <span className="hidden sm:inline">Strict Data</span>
-                  </>
-                ) : (
-                  <>
-                    <Unlock size={12} />
-                    <span className="hidden sm:inline">Creative Mode</span>
-                  </>
-                )}
+                {strictDataMode ? '🔒' : '🔓'}
+                <span className="hidden sm:inline ml-2">{strictDataMode ? 'STRICT' : 'CREATIVE'}</span>
               </button>
             </div>
           </div>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3">
+        <div className="flex-1 overflow-y-auto space-y-4" style={{
+          padding: 'var(--spacing-xl)'
+        }}>
           {(chatMessages[selectedContact] || []).map((msg, idx) => (
             <div key={idx} className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[85%] sm:max-w-xs lg:max-w-md px-3 md:px-4 py-2 rounded-2xl border-2 shadow-lg ${
-                msg.isUser 
-                  ? 'bg-gradient-to-r from-green-200 to-blue-200 border-blue-400 text-blue-800' 
-                  : 'bg-gradient-to-r from-yellow-100 to-orange-100 border-orange-300 text-orange-800'
-              }`}>
-                <div className="font-semibold text-xs mb-1">{msg.sender}</div>
-                <div className="text-sm break-words">{msg.message}</div>
-                <div className="text-xs opacity-70 mt-1 flex items-center gap-1">
-                  <Clock size={10} />
-                  {msg.time}
+              <div className={`max-w-[75%] sm:max-w-md lg:max-w-lg pokemon-textbox`}
+                style={{
+                  backgroundColor: msg.isUser ? 'var(--gb-blue)' : 'var(--gb-yellow)',
+                  padding: 'var(--spacing-md) var(--spacing-lg)',
+                  boxShadow: '2px 2px 0px var(--gb-darker-beige)'
+                }}
+              >
+                <div className="font-bold" style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: 'var(--pixel-sm)',
+                  color: msg.isUser ? 'var(--gb-white)' : 'var(--gb-dark-text)',
+                  marginBottom: 'var(--spacing-sm)'
+                }}>{msg.sender.toUpperCase()}</div>
+                <div className="break-words" style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 'var(--text-base)',
+                  lineHeight: '1.6',
+                  color: msg.isUser ? 'var(--gb-white)' : 'var(--gb-dark-text)',
+                  marginBottom: 'var(--spacing-sm)'
+                }}>{msg.message}</div>
+                <div className="flex items-center gap-2 opacity-75" style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 'var(--text-xs)',
+                  color: msg.isUser ? 'var(--gb-white)' : 'var(--gb-medium-text)'
+                }}>
+                  🕐 {msg.time}
                 </div>
               </div>
             </div>
@@ -113,34 +142,62 @@ export const ChatInterface = ({
         </div>
 
         {/* Message Input */}
-        <div className="p-3 md:p-4 border-t-4 border-purple-300 bg-gradient-to-r from-purple-100 to-blue-100 flex-shrink-0">
+        <div className="pokemon-panel--header flex-shrink-0" style={{
+          backgroundColor: 'var(--gb-medium-beige)',
+          borderTop: '2px solid var(--gb-black)',
+          padding: 'var(--spacing-lg) var(--spacing-xl)'
+        }}>
           {isLoadingResponse && (
-            <div className="mb-2 text-xs text-purple-600 flex items-center gap-2">
-              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-purple-600"></div>
-              {selectedContactInfo?.name} is typing...
+            <div className="flex items-center gap-3 text-primary" style={{
+              fontFamily: "'Press Start 2P', monospace",
+              fontSize: 'var(--pixel-sm)',
+              marginBottom: 'var(--spacing-md)'
+            }}>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2" style={{
+                borderColor: 'var(--gb-dark-text)'
+              }}></div>
+              {selectedContactInfo?.name?.toUpperCase()} IS TYPING...
             </div>
           )}
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <input
               ref={messageInputRef}
               type="text"
               value={currentMessage}
               onChange={(e) => setCurrentMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && !isLoadingResponse && sendMessage()}
-              placeholder={isLoadingResponse ? "Waiting for response..." : "Type a message..."}
+              placeholder={isLoadingResponse ? "WAITING..." : "TYPE MESSAGE..."}
               disabled={isLoadingResponse}
-              className={`flex-1 p-2 md:p-3 rounded-xl border-2 border-purple-300 focus:border-purple-500 focus:outline-none bg-white shadow-inner text-sm md:text-base ${isLoadingResponse ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`flex-1 pokemon-textbox ${isLoadingResponse ? 'opacity-50 cursor-not-allowed' : ''}`}
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 'var(--text-base)',
+                backgroundColor: 'var(--gb-white)',
+                color: 'var(--gb-dark-text)',
+                padding: 'var(--spacing-md) var(--spacing-lg)',
+                minHeight: '48px'
+              }}
             />
             <button
               onClick={sendMessage}
               disabled={isLoadingResponse || !currentMessage.trim()}
-              className={`px-4 md:px-6 py-2 md:py-3 rounded-xl border-2 border-green-500 shadow-lg transition-all duration-200 flex-shrink-0 ${
+              className={`pokemon-button--danger transition-all duration-200 ${
                 isLoadingResponse || !currentMessage.trim()
-                  ? 'bg-gray-400 cursor-not-allowed opacity-50'
-                  : 'bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-500 hover:to-blue-500 text-white hover:shadow-xl transform hover:scale-105'
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'hover:scale-105'
               }`}
+              style={{
+                backgroundColor: isLoadingResponse || !currentMessage.trim() 
+                  ? 'var(--gb-darker-beige)' 
+                  : 'var(--gb-red)',
+                fontFamily: "'Press Start 2P', monospace",
+                fontSize: 'var(--pixel-lg)',
+                padding: 'var(--spacing-md) var(--spacing-lg)',
+                minHeight: '48px',
+                minWidth: '48px'
+              }}
             >
-              <Send size={16} className="md:w-[18px] md:h-[18px]" />
+              ➤
             </button>
           </div>
         </div>

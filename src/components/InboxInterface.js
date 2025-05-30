@@ -39,68 +39,121 @@ export const InboxInterface = ({ sharedDocuments }) => {
   return (
     <div className="flex h-full relative">
       {/* Document List */}
-      <div className="w-64 bg-gradient-to-b from-blue-100 to-indigo-100 border-r-4 border-indigo-300 overflow-y-auto flex flex-col">
-        <div className="p-4 border-b-2 border-indigo-300 bg-gradient-to-r from-blue-200 to-indigo-200 flex-shrink-0">
-          <h3 className="font-bold text-indigo-800 flex items-center gap-2">
-            <Inbox size={16} className="md:w-5 md:h-5" />
-            Shared Documents
+      <div className="w-80 pokemon-panel--sidebar overflow-y-auto flex flex-col" style={{
+        backgroundColor: 'var(--gb-medium-beige)'
+      }}>
+        <div className="pokemon-panel--header flex-shrink-0" style={{
+          backgroundColor: 'var(--gb-dark-beige)',
+          padding: 'var(--spacing-lg) var(--spacing-xl)'
+        }}>
+          <h3 className="font-bold text-primary flex items-center gap-3" style={{
+            fontFamily: "'Press Start 2P', monospace",
+            fontSize: 'var(--pixel-lg)'
+          }}>
+            📮 SHARED DOCS
           </h3>
         </div>
-        <div className="p-2 space-y-1 flex-1">
+        <div className="flex-1" style={{ padding: 'var(--spacing-md)' }}>
           {sharedDocuments.length === 0 ? (
-            <div className="p-3 bg-white rounded-lg border border-indigo-200 text-center">
-              <p className="text-xs text-indigo-600">
-                No documents have been shared with you yet.
+            <div className="pokemon-textbox text-center" style={{
+              backgroundColor: 'var(--gb-white)'
+            }}>
+              <p className="text-secondary" style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 'var(--text-sm)',
+                lineHeight: '1.6'
+              }}>
+                NO DOCUMENTS HAVE BEEN SHARED WITH YOU YET.
               </p>
             </div>
           ) : (
-            sharedDocuments.map((doc) => (
-              <button
-                key={doc.id}
-                onClick={() => setSelectedDocument(doc)}
-                className={`w-full text-left p-3 rounded-lg border-2 transition-all duration-200 ${
-                  selectedDocument && selectedDocument.id === doc.id
-                    ? 'bg-indigo-100 border-indigo-400 shadow-md'
-                    : 'bg-white border-indigo-200 hover:bg-indigo-50'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <FileText size={14} className="text-indigo-600 flex-shrink-0" />
-                  <div className="min-w-0 flex-1">
-                    <div className="font-medium text-xs text-indigo-800 truncate">
-                      {doc.name}
-                    </div>
-                    <div className="text-xs text-indigo-600 truncate">
-                      From: {doc.author}
+            <div className="space-y-3">
+              {sharedDocuments.map((doc) => (
+                <button
+                  key={doc.id}
+                  onClick={() => setSelectedDocument(doc)}
+                  className={`w-full text-left pokemon-textbox transition-all duration-200 hover:scale-102 ${
+                    selectedDocument && selectedDocument.id === doc.id ? 'shadow-lg' : 'shadow-md'
+                  }`}
+                  style={{
+                    backgroundColor: selectedDocument && selectedDocument.id === doc.id 
+                      ? 'var(--gb-yellow)' 
+                      : 'var(--gb-white)',
+                    boxShadow: selectedDocument && selectedDocument.id === doc.id 
+                      ? '2px 2px 0px var(--gb-darker-beige)' 
+                      : '1px 1px 0px var(--gb-darker-beige)',
+                    transform: selectedDocument && selectedDocument.id === doc.id 
+                      ? 'translate(-1px, -1px)' 
+                      : 'none',
+                    padding: 'var(--spacing-lg)'
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="text-xl">📄</div>
+                    <div className="min-w-0 flex-1">
+                      <div className="font-bold truncate text-primary" style={{
+                        fontFamily: "'Press Start 2P', monospace",
+                        fontSize: 'var(--pixel-sm)',
+                        marginBottom: 'var(--spacing-xs)'
+                      }}>
+                        {doc.name.toUpperCase()}
+                      </div>
+                      <div className="text-xs truncate text-secondary" style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 'var(--text-xs)'
+                      }}>
+                        FROM: {doc.author.toUpperCase()}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </button>
-            ))
+                </button>
+              ))}
+            </div>
           )}
         </div>
       </div>
 
       {/* Document Viewer */}
-      <div className="flex-1 bg-gradient-to-br from-indigo-50 to-purple-50 flex flex-col">
+      <div className="flex-1 flex flex-col" style={{ backgroundColor: 'var(--gb-cream)' }}>
         {selectedDocument ? (
           <>
-            <div className="p-3 md:p-4 border-b-4 border-indigo-300 bg-gradient-to-r from-indigo-200 to-purple-200 flex-shrink-0">
+            <div className="pokemon-panel--header flex-shrink-0" style={{
+              backgroundColor: 'var(--gb-dark-beige)',
+              padding: 'var(--spacing-lg) var(--spacing-xl)'
+            }}>
               <div className="flex items-center justify-between">
-                <h2 className="font-bold text-base md:text-lg text-indigo-800 flex items-center gap-2">
-                  <FileText size={16} className="md:w-5 md:h-5" />
-                  <span>{selectedDocument.name}</span>
+                <h2 className="font-bold flex items-center gap-3 text-primary" style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: 'var(--pixel-lg)'
+                }}>
+                  📄 <span>{selectedDocument.name.toUpperCase()}</span>
                 </h2>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-indigo-700">
-                    Shared by: {selectedDocument.author}
+                  <span className="pokemon-textbox" style={{
+                    padding: 'var(--spacing-xs) var(--spacing-sm)',
+                    backgroundColor: 'var(--gb-blue)',
+                    fontFamily: "'Press Start 2P', monospace",
+                    fontSize: 'var(--pixel-xs)',
+                    color: 'var(--gb-white)'
+                  }}>
+                    SHARED BY: {selectedDocument.author.toUpperCase()}
                   </span>
                 </div>
               </div>
             </div>
-            <div className="flex-1 p-3 md:p-6 overflow-y-auto">
-              <div className="bg-white rounded-lg border-4 border-indigo-300 shadow-xl p-3 md:p-6 h-full overflow-y-auto">
-                <div className="prose max-w-none markdown">
+            <div className="flex-1 overflow-y-auto" style={{
+              padding: 'var(--spacing-xl)'
+            }}>
+              <div className="pokemon-panel--content h-full overflow-y-auto" style={{
+                backgroundColor: 'var(--gb-white)',
+                padding: 'var(--spacing-xl)'
+              }}>
+                <div className="prose max-w-none markdown" style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 'var(--text-base)',
+                  lineHeight: '1.6',
+                  color: 'var(--gb-dark-text)'
+                }}>
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     rehypePlugins={[rehypeRaw, rehypeSanitize, rehypeSlug]}
@@ -112,12 +165,25 @@ export const InboxInterface = ({ sharedDocuments }) => {
             </div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center p-6 bg-white rounded-lg border-4 border-indigo-300 shadow-xl max-w-md">
-              <Inbox size={48} className="mx-auto text-indigo-400 mb-4" />
-              <h3 className="font-bold text-lg text-indigo-800 mb-2">Your Document Inbox</h3>
-              <p className="text-indigo-600 mb-4">
-                Select a document from the list to view its contents.
+          <div className="flex-1 flex items-center justify-center" style={{
+            padding: 'var(--spacing-xl)'
+          }}>
+            <div className="text-center pokemon-panel--content max-w-md" style={{
+              backgroundColor: 'var(--gb-white)',
+              padding: 'var(--spacing-3xl)'
+            }}>
+              <div className="text-6xl mb-4">📮</div>
+              <h3 className="font-bold mb-4 text-primary" style={{
+                fontFamily: "'Press Start 2P', monospace",
+                fontSize: 'var(--pixel-xl)',
+                marginBottom: 'var(--spacing-lg)'
+              }}>YOUR DOCUMENT INBOX</h3>
+              <p className="text-secondary" style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 'var(--text-sm)',
+                lineHeight: '1.6'
+              }}>
+                SELECT A DOCUMENT FROM THE LIST TO VIEW ITS CONTENTS.
               </p>
             </div>
           </div>

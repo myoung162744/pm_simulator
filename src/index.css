@@ -1,15 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+  /* Improved Pokémon Game Boy Palette with better contrast */
+  --gb-light-beige: #f8f4ec;
+  --gb-medium-beige: #e6d8c0;
+  --gb-dark-beige: #d0c2a0;
+  --gb-darker-beige: #b8a678;
+  --gb-cream: #fdfbf7;
+  --gb-blue: #3d5a96;
+  --gb-red: #b83c3c;
+  --gb-yellow: #f0c537;
+  --gb-white: #ffffff;
+  --gb-black: #1a1a1a;
+  --gb-dark-text: #2d2d2d;
+  --gb-medium-text: #5a5a5a;
+  --gb-light-text: #8a8a8a;
+  
+  /* Font families */
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  
+  /* Spacing system */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+  
+  /* Typography scale */
+  --text-xs: 10px;
+  --text-sm: 12px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 20px;
+  
+  /* Pixel font sizes (smaller for UI elements) */
+  --pixel-xs: 8px;
+  --pixel-sm: 10px;
+  --pixel-base: 12px;
+  --pixel-lg: 14px;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-mono);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  background-color: var(--gb-cream);
+  font-size: var(--text-base);
+  line-height: 1.5;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: var(--font-mono);
 }
 
 * {
@@ -19,3 +69,156 @@ code {
 .markdown > * {
   all: revert;
 }
+
+/* UI elements use pixel font */
+.pixel-font {
+  font-family: var(--font-pixel);
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+}
+
+/* Body text uses readable monospace */
+.mono-font {
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Improved Pokémon-style text box */
+.pokemon-textbox {
+  background-color: var(--gb-white);
+  border: 2px solid var(--gb-black);
+  border-radius: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  box-shadow: 1px 1px 0px var(--gb-darker-beige);
+}
+
+/* Improved Pokémon-style button */
+.pokemon-button {
+  background-color: var(--gb-light-beige);
+  border: 2px solid var(--gb-black);
+  border-radius: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-family: var(--font-pixel);
+  font-size: var(--pixel-sm);
+  font-weight: normal;
+  cursor: pointer;
+  box-shadow: 1px 1px 0px var(--gb-darker-beige);
+  transition: all 0.1s ease;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gb-dark-text);
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+}
+
+.pokemon-button:hover {
+  background-color: var(--gb-medium-beige);
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+.pokemon-button:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+.pokemon-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--gb-darker-beige);
+  color: var(--gb-light-text);
+}
+
+/* Improved Pokémon-style panel */
+.pokemon-panel {
+  background-color: var(--gb-light-beige);
+  border: 2px solid var(--gb-black);
+  border-radius: var(--spacing-xs);
+}
+
+/* Panel variants for different sections */
+.pokemon-panel--header {
+  border-bottom: 2px solid var(--gb-black);
+  border-radius: 0;
+}
+
+.pokemon-panel--sidebar {
+  border-right: 2px solid var(--gb-black);
+  border-radius: 0;
+}
+
+.pokemon-panel--content {
+  border: 2px solid var(--gb-black);
+  border-radius: var(--spacing-xs);
+}
+
+/* Enhanced button variants */
+.pokemon-button--primary {
+  background-color: var(--gb-blue);
+  color: var(--gb-white);
+  font-weight: normal;
+}
+
+.pokemon-button--primary:hover {
+  background-color: #2d4a7f;
+}
+
+.pokemon-button--secondary {
+  background-color: var(--gb-yellow);
+  color: var(--gb-dark-text);
+}
+
+.pokemon-button--danger {
+  background-color: var(--gb-red);
+  color: var(--gb-white);
+}
+
+.pokemon-button--danger:hover {
+  background-color: #a33333;
+}
+
+/* Typography utilities */
+.text-primary {
+  color: var(--gb-dark-text);
+}
+
+.text-secondary {
+  color: var(--gb-medium-text);
+}
+
+.text-muted {
+  color: var(--gb-light-text);
+}
+
+/* Font utilities */
+.font-pixel {
+  font-family: var(--font-pixel);
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Spacing utilities */
+.p-xs { padding: var(--spacing-xs); }
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+.p-xl { padding: var(--spacing-xl); }
+
+.m-xs { margin: var(--spacing-xs); }
+.m-sm { margin: var(--spacing-sm); }
+.m-md { margin: var(--spacing-md); }
+.m-lg { margin: var(--spacing-lg); }
+.m-xl { margin: var(--spacing-xl); }
