@@ -5,10 +5,11 @@
 ## 🔥 High Priority
 - [ ] Cannot view comments and edit them at the same time
 - [ ] Need full narrative of the simulation - MY working on
+- [ ] Create submit state for when they are done with their document and feedback screen - Worth probably seeing what Claude comes up with, but I also have some thoughts I can try to sketch at some point
 
 ## 🐛 Bug Fixes
 - [ ] Formatting of comments didn't adjust to the new styling well
-- [ ] Update the interstitial page to match the 
+- [ ] Update the interstitial page to match the rest of the styling
 
 ## 🚀 Post MVP
 - [ ] Project prioritization step
