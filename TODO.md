@@ -21,6 +21,7 @@
 - [ ] Voice input for messages
 - [ ] Sharable asset post simulation
 - [ ] Create community interaction points
+- [ ] How can we incorporate taste into the simulation? Add design reviews?
 
 ## 🎨 UI/UX Improvements
 - [ ] Add animation transitions
