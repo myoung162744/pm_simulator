@@ -3,7 +3,7 @@
 *Last updated: $(date)* 
 
 ## 🔥 High Priority
-- [ ] Cannot view comments and edit them at the same time
+- [ ] Currently cannot view comments and start editing the doc 
 - [ ] Need full narrative of the simulation - MY working on
 - [ ] Create submit state for when they are done with their document and feedback screen - Worth probably seeing what Claude comes up with, but I also have some thoughts I can try to sketch at some point
 
