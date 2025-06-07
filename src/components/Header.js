@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { globalVariables } from '../promptConfig';
 import { ProjectDetails } from './ProjectDetails';
 
-export const Header = () => {
+export const Header = ({ children }) => {
   const [showProjectPopover, setShowProjectPopover] = useState(false);
   return (
     <div className="pokemon-panel--header shadow-lg flex-shrink-0" style={{
       backgroundColor: 'var(--gb-medium-beige)',
       padding: 'var(--spacing-lg) var(--spacing-xl)'
     }}>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-2">
         <h1 className="font-bold text-primary" style={{
           fontFamily: "'Press Start 2P', monospace",
           fontSize: 'var(--pixel-lg)',
@@ -71,6 +71,11 @@ export const Header = () => {
           </div>
         </div>
       </div>
+      {children && (
+        <div className="border-t-2 border-gray-300 pt-2">
+          {children}
+        </div>
+      )}
     </div>
   );
 }; 
