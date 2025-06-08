@@ -15,11 +15,7 @@ export const ChatInterface = ({
   isMobile,
   isSidebarOpen,
   setIsSidebarOpen,
-  onSelectContact,
-  currentPhase,
-  canManuallyAdvance,
-  advancementRequirements,
-  onManualAdvance
+  onSelectContact
 }) => {
   const selectedContactInfo = contacts.find(c => c.id === selectedContact);
 
@@ -81,26 +77,6 @@ export const ChatInterface = ({
               }}>
                 {selectedContactInfo?.role?.toUpperCase()}
               </p>
-            </div>
-            
-            {/* Phase Advancement Button */}
-            <div className="flex items-center">
-              <button 
-                onClick={onManualAdvance}
-                disabled={!canManuallyAdvance}
-                className={`pokemon-button transition-all relative ${
-                  canManuallyAdvance ? 'pokemon-button--danger' : 'opacity-50 cursor-not-allowed'
-                }`}
-                style={{
-                  fontSize: 'var(--pixel-xs)'
-                }}
-                title={advancementRequirements?.reason || 'Advance to next phase'}
-              >
-                {currentPhase?.icon || '⏭️'}
-                <span className="hidden sm:inline ml-2">
-                  {canManuallyAdvance ? 'NEXT PHASE' : 'LOCKED'}
-                </span>
-              </button>
             </div>
           </div>
         </div>

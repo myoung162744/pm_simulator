@@ -57,17 +57,6 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
   const getAgentPrompt = (agentId) => generatePrompt(agentId, currentPhase);
   
   // Phase management functions
-  const handleActionComplete = (actionId) => {
-    const progress = phaseManager.completeAction(actionId);
-    setCurrentPhase(phaseManager.getCurrentPhase());
-    
-    // Check if we should show interstitial for phase completion
-    if (progress.percentage === 100) {
-      setShowInterstitial(true);
-      setIsNewPhase(false);
-    }
-  };
-  
   const handlePhaseAdvance = () => {
     const advanced = phaseManager.advanceToNextPhase();
     if (advanced) {
@@ -87,11 +76,7 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
   };
   
   const handleInterstitialContinue = () => {
-    if (!isNewPhase && phaseManager.canAdvancePhase()) {
-      handlePhaseAdvance();
-    } else {
-      setShowInterstitial(false);
-    }
+    setShowInterstitial(false);
   };
   
 
@@ -159,38 +144,14 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
 
   const handleSelectContact = (contactId) => {
     chatHook.selectContact(contactId, isMobile, setIsSidebarOpen);
-    
-    // Track phase actions
-    if (currentPhase.id === 'ASSIGNMENT' && contactId === 'sarah-chen') {
-      handleActionComplete('chat_with_sarah');
-    } else if (currentPhase.id === 'RESEARCH') {
-      handleActionComplete('chat_with_team');
-    }
   };
 
   // Clear inbox notification when switching to inbox tab
   useEffect(() => {
     if (activeTab === 'inbox') {
       setShowInboxNotification(false);
-      // Track document review for research phase
-      if (currentPhase.id === 'RESEARCH') {
-        handleActionComplete('review_documents');
-      }
     }
   }, [activeTab]);
-  
-  // Track document editing actions
-  useEffect(() => {
-    if (activeTab === 'docs' && documentContent.length > 500) {
-      if (currentPhase.id === 'PLANNING') {
-        handleActionComplete('draft_proposal');
-      } else if (currentPhase.id === 'COLLABORATION') {
-        handleActionComplete('revise_document');
-      } else if (currentPhase.id === 'FINALIZATION') {
-        handleActionComplete('finalize_proposal');
-      }
-    }
-  }, [documentContent, activeTab, currentPhase.id]);
   
   return (
     <div className="h-screen flex flex-col" style={{
@@ -201,7 +162,6 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
         <PhaseStatus 
           phase={currentPhase} 
           progress={phaseManager.getOverallProgress()}
-          phaseProgress={phaseManager.getPhaseProgress()}
           simulationConfig={simulationConfig}
         />
       </Header>
@@ -209,7 +169,11 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
       <TabNavigation 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
-        sharedDocuments={sharedDocuments} 
+        sharedDocuments={sharedDocuments}
+        currentPhase={currentPhase}
+        canManuallyAdvance={phaseManager.canManuallyAdvancePhase()}
+        advancementRequirements={phaseManager.getAdvancementRequirements()}
+        onManualAdvance={handleManualPhaseAdvance}
       />
       
       {/* Main Content */}
@@ -225,10 +189,6 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
                 isSidebarOpen={isSidebarOpen}
                 setIsSidebarOpen={setIsSidebarOpen}
                 onSelectContact={handleSelectContact}
-                currentPhase={currentPhase}
-                canManuallyAdvance={phaseManager.canManuallyAdvancePhase()}
-                advancementRequirements={phaseManager.getAdvancementRequirements()}
-                onManualAdvance={handleManualPhaseAdvance}
               />
               {showInboxNotification && (
                 <div className="fixed bottom-4 right-4 pokemon-textbox shadow-lg animate-bounce">
@@ -261,15 +221,6 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
               setDocumentContent={setDocumentContent}
               {...commentsHook}
               isMobile={isMobile}
-              onDocumentChange={() => {
-                if (currentPhase.id === 'PLANNING') {
-                  handleActionComplete('get_feedback');
-                } else if (currentPhase.id === 'COLLABORATION') {
-                  handleActionComplete('respond_to_comments');
-                } else if (currentPhase.id === 'FINALIZATION') {
-                  handleActionComplete('submit_to_manager');
-                }
-              }}
             />
           ) : (
             <InboxInterface

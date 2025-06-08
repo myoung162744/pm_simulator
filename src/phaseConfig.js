@@ -24,7 +24,6 @@ export const phases = {
       'Understand the problem scope and urgency',
       'Acknowledge the assignment and ask clarifying questions'
     ],
-    requiredActions: ['chat_with_sarah'],
     allowManualAdvancement: true,
     estimatedTime: '5-10 minutes',
     icon: '📧'
@@ -35,12 +34,11 @@ export const phases = {
     subtitle: 'Understanding the Problem',
     description: 'Review available documents and gather insights from your team members to understand the full scope of the mobile checkout problem.',
     objectives: [
-      'Review at least 3 documents from your inbox',
+      'Review documents from your inbox (suggestions)',
       'Chat with team members to gather their perspectives',
       'Identify key metrics and pain points',
       'Understand technical constraints and user needs'
     ],
-    requiredActions: ['review_documents', 'chat_with_team'],
     allowManualAdvancement: true,
     estimatedTime: '15-20 minutes',
     icon: '🔍'
@@ -56,8 +54,7 @@ export const phases = {
       'Prioritize features and define success metrics',
       'Address feasibility concerns and constraints'
     ],
-    requiredActions: ['draft_proposal', 'get_feedback'],
-    allowManualAdvancement: false,
+    allowManualAdvancement: true,
     estimatedTime: '20-25 minutes',
     icon: '📝'
   },
@@ -73,8 +70,7 @@ export const phases = {
       'Validate design approach with UX team',
       'Confirm metrics and success criteria'
     ],
-    requiredActions: ['respond_to_comments', 'revise_document'],
-    allowManualAdvancement: false,
+    allowManualAdvancement: true,
     estimatedTime: '15-20 minutes',
     icon: '🤝'
   },
@@ -89,8 +85,7 @@ export const phases = {
       'Submit final proposal to your manager',
       'Confirm readiness for leadership presentation'
     ],
-    requiredActions: ['finalize_proposal', 'submit_to_manager'],
-    allowManualAdvancement: false,
+    allowManualAdvancement: true,
     estimatedTime: '10-15 minutes',
     icon: '🎯'
   }
@@ -100,41 +95,12 @@ export const phases = {
 export class PhaseManager {
   constructor() {
     this.currentPhase = 'ASSIGNMENT';
-    this.completedActions = new Set();
     this.phaseStartTimes = {};
     this.phaseStartTimes[this.currentPhase] = Date.now();
   }
 
   getCurrentPhase() {
     return phases[this.currentPhase];
-  }
-
-  getPhaseProgress() {
-    const phase = phases[this.currentPhase];
-    const completedRequired = phase.requiredActions.filter(action => 
-      this.completedActions.has(action)
-    ).length;
-    return {
-      completed: completedRequired,
-      total: phase.requiredActions.length,
-      percentage: Math.round((completedRequired / phase.requiredActions.length) * 100)
-    };
-  }
-
-  completeAction(actionId) {
-    this.completedActions.add(actionId);
-    
-    // Check if current phase is complete
-    const currentPhaseObj = phases[this.currentPhase];
-    const isPhaseComplete = currentPhaseObj.requiredActions.every(action => 
-      this.completedActions.has(action)
-    );
-    
-    if (isPhaseComplete) {
-      this.advanceToNextPhase();
-    }
-    
-    return this.getPhaseProgress();
   }
 
   advanceToNextPhase() {
@@ -150,52 +116,18 @@ export class PhaseManager {
     return false; // Simulation complete
   }
 
-  canAdvancePhase() {
-    const currentPhaseObj = phases[this.currentPhase];
-    return currentPhaseObj.requiredActions.every(action => 
-      this.completedActions.has(action)
-    );
-  }
-
   canManuallyAdvancePhase() {
-    const currentPhaseObj = phases[this.currentPhase];
-    return currentPhaseObj.allowManualAdvancement || this.canAdvancePhase();
+    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION'];
+    const currentIndex = phaseOrder.indexOf(this.currentPhase);
+    return currentIndex < phaseOrder.length - 1; // Can advance if not on final phase
   }
 
   getAdvancementRequirements() {
-    const currentPhaseObj = phases[this.currentPhase];
-    if (this.canAdvancePhase()) {
-      return { canAdvance: true, reason: 'All requirements completed' };
-    }
-    
-    if (currentPhaseObj.allowManualAdvancement) {
+    if (this.canManuallyAdvancePhase()) {
       return { canAdvance: true, reason: 'Ready to advance when you are' };
     }
-
-    const pendingActions = currentPhaseObj.requiredActions.filter(action => 
-      !this.completedActions.has(action)
-    );
     
-    const actionDescriptions = {
-      'chat_with_sarah': 'Chat with Sarah Chen to receive your assignment',
-      'review_documents': 'Review documents in the Inbox tab',
-      'chat_with_team': 'Chat with team members to gather perspectives',
-      'draft_proposal': 'Draft your proposal in the Document tab',
-      'get_feedback': 'Get feedback from team members on your proposal',
-      'respond_to_comments': 'Respond to comments on your document',
-      'revise_document': 'Revise your document based on feedback',
-      'finalize_proposal': 'Finalize all sections of your proposal',
-      'submit_to_manager': 'Submit your final proposal to your manager'
-    };
-
-    const pendingDescriptions = pendingActions.map(action => 
-      actionDescriptions[action] || action
-    );
-
-    return { 
-      canAdvance: false, 
-      reason: `Complete these tasks: ${pendingDescriptions.join(', ')}` 
-    };
+    return { canAdvance: false, reason: 'Simulation complete' };
   }
 
   forceAdvancePhase() {
@@ -224,7 +156,7 @@ export class PhaseManager {
   }
 
   isSimulationComplete() {
-    return this.currentPhase === 'FINALIZATION' && this.canAdvancePhase();
+    return this.currentPhase === 'FINALIZATION';
   }
 }
 
