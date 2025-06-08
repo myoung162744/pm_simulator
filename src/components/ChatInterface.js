@@ -16,8 +16,10 @@ export const ChatInterface = ({
   isSidebarOpen,
   setIsSidebarOpen,
   onSelectContact,
-  strictDataMode,
-  onToggleStrictDataMode
+  currentPhase,
+  canManuallyAdvance,
+  advancementRequirements,
+  onManualAdvance
 }) => {
   const selectedContactInfo = contacts.find(c => c.id === selectedContact);
 
@@ -81,22 +83,23 @@ export const ChatInterface = ({
               </p>
             </div>
             
-            {/* Strict Data Mode Toggle */}
+            {/* Phase Advancement Button */}
             <div className="flex items-center">
               <button 
-                onClick={onToggleStrictDataMode}
-                className={`pokemon-button transition-all ${strictDataMode ? 'pokemon-button--primary' : ''}`}
+                onClick={onManualAdvance}
+                disabled={!canManuallyAdvance}
+                className={`pokemon-button transition-all relative ${
+                  canManuallyAdvance ? 'pokemon-button--danger' : 'opacity-50 cursor-not-allowed'
+                }`}
                 style={{
-                  fontFamily: "'Press Start 2P', monospace",
-                  fontSize: 'var(--pixel-xs)',
-                  padding: 'var(--spacing-sm) var(--spacing-md)',
-                  backgroundColor: strictDataMode ? 'var(--gb-blue)' : 'var(--gb-white)',
-                  color: strictDataMode ? 'var(--gb-white)' : 'var(--gb-dark-text)'
+                  fontSize: 'var(--pixel-xs)'
                 }}
-                title={strictDataMode ? "Strict Data Mode: ON" : "Strict Data Mode: OFF"}
+                title={advancementRequirements?.reason || 'Advance to next phase'}
               >
-                {strictDataMode ? '🔒' : '🔓'}
-                <span className="hidden sm:inline ml-2">{strictDataMode ? 'STRICT' : 'CREATIVE'}</span>
+                {currentPhase?.icon || '⏭️'}
+                <span className="hidden sm:inline ml-2">
+                  {canManuallyAdvance ? 'NEXT PHASE' : 'LOCKED'}
+                </span>
               </button>
             </div>
           </div>
@@ -181,18 +184,13 @@ export const ChatInterface = ({
             <button
               onClick={sendMessage}
               disabled={isLoadingResponse || !currentMessage.trim()}
-              className={`pokemon-button--danger transition-all duration-200 ${
+              className={`pokemon-button pokemon-button--danger transition-all duration-200 ${
                 isLoadingResponse || !currentMessage.trim()
                   ? 'opacity-50 cursor-not-allowed'
                   : 'hover:scale-105'
               }`}
               style={{
-                backgroundColor: isLoadingResponse || !currentMessage.trim() 
-                  ? 'var(--gb-darker-beige)' 
-                  : 'var(--gb-red)',
-                fontFamily: "'Press Start 2P', monospace",
                 fontSize: 'var(--pixel-lg)',
-                padding: 'var(--spacing-md) var(--spacing-lg)',
                 minHeight: '48px',
                 minWidth: '48px'
               }}

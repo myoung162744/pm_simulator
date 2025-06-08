@@ -25,6 +25,7 @@ export const phases = {
       'Acknowledge the assignment and ask clarifying questions'
     ],
     requiredActions: ['chat_with_sarah'],
+    allowManualAdvancement: true,
     estimatedTime: '5-10 minutes',
     icon: '📧'
   },
@@ -40,6 +41,7 @@ export const phases = {
       'Understand technical constraints and user needs'
     ],
     requiredActions: ['review_documents', 'chat_with_team'],
+    allowManualAdvancement: true,
     estimatedTime: '15-20 minutes',
     icon: '🔍'
   },
@@ -55,6 +57,7 @@ export const phases = {
       'Address feasibility concerns and constraints'
     ],
     requiredActions: ['draft_proposal', 'get_feedback'],
+    allowManualAdvancement: false,
     estimatedTime: '20-25 minutes',
     icon: '📝'
   },
@@ -71,6 +74,7 @@ export const phases = {
       'Confirm metrics and success criteria'
     ],
     requiredActions: ['respond_to_comments', 'revise_document'],
+    allowManualAdvancement: false,
     estimatedTime: '15-20 minutes',
     icon: '🤝'
   },
@@ -86,6 +90,7 @@ export const phases = {
       'Confirm readiness for leadership presentation'
     ],
     requiredActions: ['finalize_proposal', 'submit_to_manager'],
+    allowManualAdvancement: false,
     estimatedTime: '10-15 minutes',
     icon: '🎯'
   }
@@ -150,6 +155,51 @@ export class PhaseManager {
     return currentPhaseObj.requiredActions.every(action => 
       this.completedActions.has(action)
     );
+  }
+
+  canManuallyAdvancePhase() {
+    const currentPhaseObj = phases[this.currentPhase];
+    return currentPhaseObj.allowManualAdvancement || this.canAdvancePhase();
+  }
+
+  getAdvancementRequirements() {
+    const currentPhaseObj = phases[this.currentPhase];
+    if (this.canAdvancePhase()) {
+      return { canAdvance: true, reason: 'All requirements completed' };
+    }
+    
+    if (currentPhaseObj.allowManualAdvancement) {
+      return { canAdvance: true, reason: 'Ready to advance when you are' };
+    }
+
+    const pendingActions = currentPhaseObj.requiredActions.filter(action => 
+      !this.completedActions.has(action)
+    );
+    
+    const actionDescriptions = {
+      'chat_with_sarah': 'Chat with Sarah Chen to receive your assignment',
+      'review_documents': 'Review documents in the Inbox tab',
+      'chat_with_team': 'Chat with team members to gather perspectives',
+      'draft_proposal': 'Draft your proposal in the Document tab',
+      'get_feedback': 'Get feedback from team members on your proposal',
+      'respond_to_comments': 'Respond to comments on your document',
+      'revise_document': 'Revise your document based on feedback',
+      'finalize_proposal': 'Finalize all sections of your proposal',
+      'submit_to_manager': 'Submit your final proposal to your manager'
+    };
+
+    const pendingDescriptions = pendingActions.map(action => 
+      actionDescriptions[action] || action
+    );
+
+    return { 
+      canAdvance: false, 
+      reason: `Complete these tasks: ${pendingDescriptions.join(', ')}` 
+    };
+  }
+
+  forceAdvancePhase() {
+    return this.advanceToNextPhase();
   }
 
   getOverallProgress() {

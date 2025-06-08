@@ -168,10 +168,16 @@ export const PhaseInterstitial = ({
 };
 
 // Component for showing current phase status in header
-export const PhaseStatus = ({ phase, progress, phaseProgress }) => {
+export const PhaseStatus = ({ phase, progress, phaseProgress, simulationConfig }) => {
+  const [showTooltip, setShowTooltip] = React.useState(false);
+
   return (
     <div className="flex items-center gap-4">
-      <div className="pokemon-textbox px-3 py-1">
+      <div 
+        className="pokemon-textbox px-3 py-1 relative cursor-help"
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+      >
         <span className="font-bold mr-2" style={{
           fontFamily: "'Press Start 2P', monospace",
           fontSize: 'var(--pixel-xs)'
@@ -185,6 +191,85 @@ export const PhaseStatus = ({ phase, progress, phaseProgress }) => {
         }}>
           {phase.title}
         </span>
+        
+        {/* Tooltip */}
+        {showTooltip && (
+          <div className="absolute top-full left-0 mt-2 w-80 z-50 animate-fade-in">
+            <div className="pokemon-panel p-4 shadow-lg">
+              {/* Current Objectives */}
+              <h3 className="font-bold mb-3 text-center" style={{
+                fontFamily: "'Press Start 2P', monospace",
+                fontSize: 'var(--pixel-sm)',
+                color: 'var(--gb-dark-green)'
+              }}>
+                CURRENT OBJECTIVES
+              </h3>
+              
+              <div className="space-y-3 mb-4">
+                {phase.objectives.map((objective, index) => (
+                  <div key={index} className="flex items-start gap-2">
+                    <span className="text-green-600 font-bold mt-1">
+                      {index < phaseProgress.completed ? '✓' : '▶'}
+                    </span>
+                    <span 
+                      className={index < phaseProgress.completed ? 'line-through opacity-60' : ''}
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: '12px',
+                        lineHeight: '1.4'
+                      }}
+                    >
+                      {objective}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mb-4 pt-3 border-t-2 border-gray-300">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-bold" style={{
+                    fontFamily: "'Press Start 2P', monospace",
+                    fontSize: 'var(--pixel-xs)'
+                  }}>
+                    PHASE PROGRESS:
+                  </span>
+                  <span style={{
+                    fontFamily: "'Press Start 2P', monospace",
+                    fontSize: 'var(--pixel-xs)',
+                    color: 'var(--gb-text-medium)'
+                  }}>
+                    {phaseProgress.percentage}%
+                  </span>
+                </div>
+                
+                <div className="w-full bg-gray-300 h-2 border border-gray-600">
+                  <div 
+                    className="h-full bg-blue-500 transition-all duration-300"
+                    style={{ width: `${phaseProgress.percentage}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Mission Context */}
+              <div className="pt-3 border-t-2 border-gray-300">
+                <h3 className="font-bold mb-3 text-center" style={{
+                  fontFamily: "'Press Start 2P', monospace",
+                  fontSize: 'var(--pixel-sm)',
+                  color: 'var(--gb-dark-green)'
+                }}>
+                  MISSION CONTEXT
+                </h3>
+                <div className="space-y-2 text-xs" style={{ fontFamily: "var(--font-mono)" }}>
+                  <p><strong>Company:</strong> {simulationConfig?.company?.name || 'ShopSphere'}</p>
+                  <p><strong>Role:</strong> {simulationConfig?.userRole?.title || 'Senior Product Manager'}</p>
+                  <p><strong>Manager:</strong> {simulationConfig?.userRole?.manager || 'Sarah Chen (VP of Product)'}</p>
+                  <p><strong>Problem:</strong> 78% mobile abandonment vs 65% desktop</p>
+                  <p><strong>Impact:</strong> $2.4M monthly revenue at risk</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       
       <div className="pokemon-textbox px-3 py-1">

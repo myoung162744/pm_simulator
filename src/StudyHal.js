@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { generatePrompt, getStrictDataMode, toggleStrictDataMode, getSharedDocuments, shareDocument } from './promptConfig';
+import { generatePrompt, getSharedDocuments, shareDocument } from './promptConfig';
 import { PhaseManager, phases, simulationConfig, initialContext } from './phaseConfig';
 import { useResponsive } from './hooks/useResponsive';
 import { useChat } from './hooks/useChat';
@@ -10,11 +10,10 @@ import { ContactsList } from './components/ContactsList';
 import { ChatInterface } from './components/ChatInterface';
 import { DocumentInterface } from './components/DocumentInterface';
 import { InboxInterface } from './components/InboxInterface';
-import { PhaseInterstitial, PhaseStatus, ObjectivesSidebar } from './components/PhaseInterstitial';
+import { PhaseInterstitial, PhaseStatus } from './components/PhaseInterstitial';
 
 const StudyHal = () => {
   const [activeTab, setActiveTab] = useState('chat');
-  const [strictDataMode, setStrictDataMode] = useState(getStrictDataMode());
   const [sharedDocuments, setSharedDocuments] = useState(getSharedDocuments());
   const [showInboxNotification, setShowInboxNotification] = useState(false);
   
@@ -77,6 +76,15 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
       setShowInterstitial(true);
     }
   };
+
+  const handleManualPhaseAdvance = () => {
+    const advanced = phaseManager.forceAdvancePhase();
+    if (advanced) {
+      setCurrentPhase(phaseManager.getCurrentPhase());
+      setIsNewPhase(true);
+      setShowInterstitial(true);
+    }
+  };
   
   const handleInterstitialContinue = () => {
     if (!isNewPhase && phaseManager.canAdvancePhase()) {
@@ -86,11 +94,7 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
     }
   };
   
-  // Handle strict data mode toggle
-  const handleToggleStrictDataMode = () => {
-    const newMode = toggleStrictDataMode();
-    setStrictDataMode(newMode);
-  };
+
   
   // Handle document sharing
   const handleDocumentSharing = (message) => {
@@ -198,6 +202,7 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
           phase={currentPhase} 
           progress={phaseManager.getOverallProgress()}
           phaseProgress={phaseManager.getPhaseProgress()}
+          simulationConfig={simulationConfig}
         />
       </Header>
       
@@ -209,35 +214,6 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
       
       {/* Main Content */}
       <div className="flex-1 overflow-hidden flex">
-        {/* Objectives Sidebar (Desktop only) */}
-        {!isMobile && (
-          <div className="w-80 p-4 border-r-2 border-gray-600 overflow-y-auto">
-            <ObjectivesSidebar 
-              phase={currentPhase}
-              phaseProgress={phaseManager.getPhaseProgress()}
-              completedActions={phaseManager.completedActions}
-            />
-            
-            {/* Company Context */}
-            <div className="pokemon-panel p-4">
-              <h3 className="font-bold mb-3 text-center" style={{
-                fontFamily: "'Press Start 2P', monospace",
-                fontSize: 'var(--pixel-sm)',
-                color: 'var(--gb-dark-green)'
-              }}>
-                MISSION CONTEXT
-              </h3>
-              <div className="space-y-2 text-xs" style={{ fontFamily: "var(--font-mono)" }}>
-                <p><strong>Company:</strong> {simulationConfig.company.name}</p>
-                <p><strong>Role:</strong> {simulationConfig.userRole.title}</p>
-                <p><strong>Manager:</strong> {simulationConfig.userRole.manager}</p>
-                <p><strong>Problem:</strong> 78% mobile abandonment vs 65% desktop</p>
-                <p><strong>Impact:</strong> $2.4M monthly revenue at risk</p>
-              </div>
-            </div>
-          </div>
-        )}
-        
         {/* Main Interface */}
         <div className="flex-1 overflow-hidden">
           {activeTab === 'chat' ? (
@@ -249,8 +225,10 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
                 isSidebarOpen={isSidebarOpen}
                 setIsSidebarOpen={setIsSidebarOpen}
                 onSelectContact={handleSelectContact}
-                strictDataMode={strictDataMode}
-                onToggleStrictDataMode={handleToggleStrictDataMode}
+                currentPhase={currentPhase}
+                canManuallyAdvance={phaseManager.canManuallyAdvancePhase()}
+                advancementRequirements={phaseManager.getAdvancementRequirements()}
+                onManualAdvance={handleManualPhaseAdvance}
               />
               {showInboxNotification && (
                 <div className="fixed bottom-4 right-4 pokemon-textbox shadow-lg animate-bounce">

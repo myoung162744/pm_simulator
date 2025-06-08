@@ -1,18 +1,6 @@
-// Configuration for Strict Data mode and document sharing
+// Configuration for document sharing
 export const configOptions = {
-  strictDataMode: true, // Default to true - agents only respond with their own data or redirect
   sharedDocuments: [] // Array to track documents that have been shared with the user
-};
-
-// Function to toggle strict data mode
-export const toggleStrictDataMode = () => {
-  configOptions.strictDataMode = !configOptions.strictDataMode;
-  return configOptions.strictDataMode;
-};
-
-// Function to get current strict data mode state
-export const getStrictDataMode = () => {
-  return configOptions.strictDataMode;
 };
 
 // Function to share a document with the user
@@ -246,7 +234,6 @@ export const generatePrompt = (agentId, currentPhase = null) => {
   const agent = agentConfigs[agentId];
   const global = globalVariables;
   const document = documentConfigs[agentId];
-  const strictMode = configOptions.strictDataMode;
   
   if (!agent) return 'You are a helpful team member.';
   
@@ -315,19 +302,6 @@ PHASE-SPECIFIC BEHAVIOR:`;
     }
   }
   
-  // Add strict data mode instructions if enabled
-  let strictDataText = '';
-  if (strictMode) {
-    strictDataText = `\n\nSTRICT DATA MODE IS ENABLED:\n- You can only provide information from your own document "${document.documentName}"
-- If asked about information outside your document, politely redirect the user to the appropriate team member
-- You can mention the names and summaries of documents you're aware of when redirecting
-- Never make up information that isn't in your document
-- If asked to share your entire document, DO NOT share the full document in chat
-- Instead, if a user asks for your document, respond with: "I've shared my ${document.documentName} with you. You can now access it in the Inbox tab."
-- Then add a special marker at the end of your message: "[SHARE_DOCUMENT:${agentId}]" (the app will remove this marker)
-- Always stay in character as ${agent.personalInfo.name}`;
-  }
-  
   return `You are ${agent.personalInfo.name}, a ${agent.personalInfo.role} at ${global.company.name}.
 
 COMPANY CONTEXT:
@@ -360,7 +334,7 @@ CRITICAL PROJECT CONTEXT:
 - Urgency: ${global.urgency.level} - ${global.urgency.reason}
 - Key Deadline: ${global.urgency.timeline}
 
-YOUR DOCUMENT:\n"${document.documentName}": ${document.documentSummary}${documentAwarenessText}${phaseContext}${strictDataText}
+YOUR DOCUMENT:\n"${document.documentName}": ${document.documentSummary}${documentAwarenessText}${phaseContext}
 
 COMMUNICATION STYLE:
 - Keep responses ${global.communication.style}
