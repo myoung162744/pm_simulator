@@ -107,7 +107,7 @@ export const DocumentInterface = ({
             ...highlightStyle,
             padding: 'var(--spacing-xs)',
             borderRadius: 'var(--spacing-xs)',
-            fontFamily: "'Press Start 2P', monospace"
+            fontFamily: "var(--font-mono)"
           }}
           title={`${comment.author}: ${comment.text}`}
           onClick={() => handleHighlightClick(comment.id)}
