@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import rehypeSlug from 'rehype-slug';
+import { simulationDocuments } from '../simulationDocuments';
 
 export const InboxInterface = ({ sharedDocuments }) => {
   const [selectedDocument, setSelectedDocument] = useState(null);
@@ -17,23 +18,19 @@ export const InboxInterface = ({ sharedDocuments }) => {
     }
   }, [sharedDocuments, selectedDocument]);
 
-  // Fetch markdown content when selectedDocument changes
+  // Load document content when selectedDocument changes
   useEffect(() => {
-    const fetchMarkdown = async () => {
-      if (selectedDocument && selectedDocument.path) {
-        try {
-          const response = await fetch(selectedDocument.path);
-          if (!response.ok) throw new Error('Failed to load document');
-          const text = await response.text();
-          setMarkdownContent(text);
-        } catch (e) {
-          setMarkdownContent('Error loading document.');
-        }
+    if (selectedDocument && selectedDocument.id) {
+      // Find the document content in simulationDocuments
+      const docContent = simulationDocuments[selectedDocument.id];
+      if (docContent) {
+        setMarkdownContent(docContent.content);
       } else {
-        setMarkdownContent('');
+        setMarkdownContent('Document content not found.');
       }
-    };
-    fetchMarkdown();
+    } else {
+      setMarkdownContent('');
+    }
   }, [selectedDocument]);
 
   return (
