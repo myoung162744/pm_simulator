@@ -104,6 +104,22 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
   
   const chatHook = useChat(contacts, getAgentPrompt, handleDocumentSharing);
   const commentsHook = useComments(documentContent, contacts, getAgentPrompt);
+  
+  // Custom generateComments function that also handles phase advancement
+  const generateCommentsWithPhaseAdvancement = async () => {
+    // First generate the comments
+    await commentsHook.generateComments();
+    
+    // Then advance phase if we're in PLANNING or FINALIZATION
+    if (currentPhase.id === 'PLANNING' || currentPhase.id === 'FINALIZATION') {
+      const advanced = phaseManager.advanceToNextPhase();
+      if (advanced) {
+        setCurrentPhase(phaseManager.getCurrentPhase());
+        setIsNewPhase(true);
+        setShowInterstitial(true);
+      }
+    }
+  };
 
   // Auto-scroll for chat messages
   useEffect(() => {
@@ -220,6 +236,7 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
               documentContent={documentContent}
               setDocumentContent={setDocumentContent}
               {...commentsHook}
+              generateComments={generateCommentsWithPhaseAdvancement}
               isMobile={isMobile}
             />
           ) : (

@@ -24,7 +24,6 @@ export const phases = {
       'Understand the problem scope and urgency',
       'Acknowledge the assignment and ask clarifying questions'
     ],
-    allowManualAdvancement: true,
     estimatedTime: '5-10 minutes',
     icon: '📧'
   },
@@ -39,7 +38,6 @@ export const phases = {
       'Identify key metrics and pain points',
       'Understand technical constraints and user needs'
     ],
-    allowManualAdvancement: true,
     estimatedTime: '15-20 minutes',
     icon: '🔍'
   },
@@ -54,7 +52,6 @@ export const phases = {
       'Prioritize features and define success metrics',
       'Address feasibility concerns and constraints'
     ],
-    allowManualAdvancement: true,
     estimatedTime: '20-25 minutes',
     icon: '📝'
   },
@@ -70,7 +67,6 @@ export const phases = {
       'Validate design approach with UX team',
       'Confirm metrics and success criteria'
     ],
-    allowManualAdvancement: true,
     estimatedTime: '15-20 minutes',
     icon: '🤝'
   },
@@ -85,7 +81,6 @@ export const phases = {
       'Submit final proposal to your manager',
       'Confirm readiness for leadership presentation'
     ],
-    allowManualAdvancement: true,
     estimatedTime: '10-15 minutes',
     icon: '🎯'
   }
@@ -119,15 +114,27 @@ export class PhaseManager {
   canManuallyAdvancePhase() {
     const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
-    return currentIndex < phaseOrder.length - 1; // Can advance if not on final phase
+    
+    // Only allow manual advancement for ASSIGNMENT, RESEARCH, and COLLABORATION phases
+    // PLANNING and FINALIZATION require document submission via "Get Feedback" button
+    const phasesWithManualAdvancement = ['ASSIGNMENT', 'RESEARCH', 'COLLABORATION'];
+    
+    return currentIndex < phaseOrder.length - 1 && phasesWithManualAdvancement.includes(this.currentPhase);
   }
 
   getAdvancementRequirements() {
-    if (this.canManuallyAdvancePhase()) {
-      return { canAdvance: true, reason: 'Ready to advance when you are' };
+    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION'];
+    const currentIndex = phaseOrder.indexOf(this.currentPhase);
+    
+    if (currentIndex >= phaseOrder.length - 1) {
+      return { canAdvance: false, reason: 'Simulation complete' };
     }
     
-    return { canAdvance: false, reason: 'Simulation complete' };
+    if (this.currentPhase === 'PLANNING' || this.currentPhase === 'FINALIZATION') {
+      return { canAdvance: false, reason: 'Submit document for review to advance' };
+    }
+    
+    return { canAdvance: true, reason: 'Ready to advance when you are' };
   }
 
   forceAdvancePhase() {
