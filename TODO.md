@@ -3,7 +3,8 @@
 *Last updated: $(date)* 
 
 ## 🔥 High Priority
-- [ ] Currently cannot view comments and start editing the doc 
+- [X] Currently cannot view comments and start editing the doc 
+- [ ] Improve the interface of the document. Banner above and highlight the comment when editing.
 - [X] Need full narrative of the simulation - MY working on
 - [ ] Ensure documents, agents, and narrative are aligned
 - [ ] Do a full test run

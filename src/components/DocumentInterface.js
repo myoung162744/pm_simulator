@@ -13,7 +13,7 @@ export const DocumentInterface = ({
   const editorRef = useRef(null);
   const commentsContainerRef = useRef(null);
 
-  // Add CSS for placeholder styling
+  // Add CSS for placeholder styling and active comment animation
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = `
@@ -28,6 +28,19 @@ export const DocumentInterface = ({
       }
       [contenteditable]:focus {
         outline: none !important;
+      }
+      .comment-active {
+        animation: commentPulse 2s ease-in-out infinite;
+      }
+      @keyframes commentPulse {
+        0%, 100% { 
+          box-shadow: 1px 1px 0px var(--gb-darker-beige);
+          transform: none;
+        }
+        50% { 
+          box-shadow: 3px 3px 0px var(--gb-darker-beige);
+          transform: translate(-1px, -1px);
+        }
       }
     `;
     document.head.appendChild(style);
@@ -71,6 +84,92 @@ export const DocumentInterface = ({
     }
   };
 
+  // Get cursor position in the contentEditable div
+  const getCursorPosition = () => {
+    const selection = window.getSelection();
+    if (!selection.rangeCount || !editorRef.current) return -1;
+    
+    const range = selection.getRangeAt(0);
+    const preCaretRange = range.cloneRange();
+    preCaretRange.selectNodeContents(editorRef.current);
+    preCaretRange.setEnd(range.startContainer, range.startOffset);
+    
+    return preCaretRange.toString().length;
+  };
+
+  // Find which comment (if any) the cursor is currently within
+  const getCommentAtCursor = (cursorPos) => {
+    if (!comments.length || cursorPos === -1) return null;
+    
+    return comments.find(comment => {
+      const start = comment.textPosition;
+      const end = comment.textPosition + comment.textLength;
+      return cursorPos >= start && cursorPos <= end;
+    });
+  };
+
+  // Handle cursor movement and text selection
+  const handleCursorChange = () => {
+    const cursorPos = getCursorPosition();
+    const commentAtCursor = getCommentAtCursor(cursorPos);
+    
+    if (commentAtCursor && commentAtCursor.id !== selectedCommentId) {
+      setSelectedCommentId(commentAtCursor.id);
+      
+      // Scroll to the comment in sidebar
+      setTimeout(() => {
+        const commentElement = document.getElementById(`comment-${commentAtCursor.id}`);
+        if (commentElement && commentsContainerRef.current) {
+          const container = commentsContainerRef.current;
+          const elementTop = commentElement.offsetTop;
+          const elementHeight = commentElement.offsetHeight;
+          const containerHeight = container.clientHeight;
+          const scrollTop = elementTop - (containerHeight / 2) + (elementHeight / 2);
+          
+          container.scrollTo({
+            top: Math.max(0, scrollTop),
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    } else if (!commentAtCursor && selectedCommentId) {
+      // Optional: Clear selection when cursor moves out of comment areas
+      // setSelectedCommentId(null);
+    }
+  };
+
+  // Add event listeners for cursor tracking
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    const handleSelectionChange = () => {
+      // Only track if the selection is within our editor
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        if (editor.contains(range.commonAncestorContainer)) {
+          handleCursorChange();
+        }
+      }
+    };
+
+    // Track cursor position changes
+    document.addEventListener('selectionchange', handleSelectionChange);
+    editor.addEventListener('keyup', handleCursorChange);
+    editor.addEventListener('mouseup', handleCursorChange);
+    editor.addEventListener('focus', handleCursorChange);
+
+    return () => {
+      document.removeEventListener('selectionchange', handleSelectionChange);
+      if (editor) {
+        editor.removeEventListener('keyup', handleCursorChange);
+        editor.removeEventListener('mouseup', handleCursorChange);
+        editor.removeEventListener('focus', handleCursorChange);
+      }
+    };
+  }, [comments, selectedCommentId]);
+
   // Update the editor content when documentContent changes from outside
   useEffect(() => {
     if (editorRef.current && comments.length === 0) {
@@ -83,7 +182,9 @@ export const DocumentInterface = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (!event.target.closest('.comment-item') && !event.target.closest('.highlight')) {
+      if (!event.target.closest('.comment-item') && 
+          !event.target.closest('.highlight') && 
+          !editorRef.current?.contains(event.target)) {
         setSelectedCommentId(null);
       }
     };
@@ -307,14 +408,18 @@ export const DocumentInterface = ({
           {comments.length > 0 && (
             <div className="pokemon-textbox" style={{
               marginTop: 'var(--spacing-md)',
-              backgroundColor: 'var(--gb-white)'
+              backgroundColor: selectedCommentId ? 'var(--gb-yellow)' : 'var(--gb-white)',
+              transition: 'background-color 0.2s ease'
             }}>
               <div className="flex items-center justify-center">
                 <span className="text-primary" style={{
                   fontFamily: "'Press Start 2P', monospace",
                   fontSize: 'var(--pixel-sm)'
                 }}>
-                  ✏️ EDIT MODE - CLICK HIGHLIGHTS TO VIEW COMMENTS
+                  {selectedCommentId 
+                    ? '🔗 EDITING COMMENTED TEXT - VIEW FEEDBACK BELOW' 
+                    : '✏️ EDIT MODE - CLICK HIGHLIGHTS TO VIEW COMMENTS'
+                  }
                 </span>
               </div>
             </div>
@@ -396,7 +501,7 @@ export const DocumentInterface = ({
                   <div 
                     key={comment.id}
                     id={`comment-${comment.id}`}
-                    className="comment-item cursor-pointer pokemon-textbox transition-all duration-200 hover:scale-102"
+                    className={`comment-item cursor-pointer pokemon-textbox transition-all duration-200 hover:scale-102 ${isSelected ? 'comment-active' : ''}`}
                     style={{
                       backgroundColor: isSelected ? 'var(--gb-yellow)' : 'var(--gb-white)',
                       boxShadow: isSelected 
