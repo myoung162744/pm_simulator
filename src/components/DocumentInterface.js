@@ -10,143 +10,249 @@ export const DocumentInterface = ({
   clearComments
 }) => {
   const [selectedCommentId, setSelectedCommentId] = useState(null);
+  const editorRef = useRef(null);
   const commentsContainerRef = useRef(null);
-  const documentContainerRef = useRef(null);
 
-  // Function to handle clicking on highlighted text
+  // Add CSS for placeholder styling
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      [contenteditable][data-placeholder]:empty::before {
+        content: attr(data-placeholder);
+        color: var(--gb-text-medium);
+        pointer-events: none;
+        position: absolute;
+      }
+      [contenteditable] {
+        outline: none !important;
+      }
+      [contenteditable]:focus {
+        outline: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   const handleHighlightClick = (commentId) => {
     setSelectedCommentId(commentId);
     
-    // Scroll to the corresponding comment in the sidebar
-    const commentElement = document.getElementById(`comment-${commentId}`);
-    if (commentElement && commentsContainerRef.current) {
-      commentElement.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'center',
-        inline: 'nearest'
-      });
-    }
+    setTimeout(() => {
+      const commentElement = document.getElementById(`comment-${commentId}`);
+      if (commentElement && commentsContainerRef.current) {
+        const container = commentsContainerRef.current;
+        const elementTop = commentElement.offsetTop;
+        const elementHeight = commentElement.offsetHeight;
+        const containerHeight = container.clientHeight;
+        const scrollTop = elementTop - (containerHeight / 2) + (elementHeight / 2);
+        
+        container.scrollTo({
+          top: Math.max(0, scrollTop),
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
   };
 
-  // Function to handle clicking on a comment
   const handleCommentClick = (commentId) => {
-    setSelectedCommentId(commentId);
-    
-    // Scroll to the corresponding highlighted text in the document
-    const highlightElement = document.getElementById(`highlight-${commentId}`);
-    if (highlightElement && documentContainerRef.current) {
-      highlightElement.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'center',
-        inline: 'nearest'
-      });
+    setSelectedCommentId(selectedCommentId === commentId ? null : commentId);
+  };
+
+  // Handle text changes in the contentEditable div
+  const handleContentChange = () => {
+    if (editorRef.current) {
+      const newContent = editorRef.current.innerText || editorRef.current.textContent || '';
+      if (newContent !== documentContent) {
+        setDocumentContent(newContent);
+      }
     }
   };
 
-  // Clear selection when clicking elsewhere
+  // Update the editor content when documentContent changes from outside
+  useEffect(() => {
+    if (editorRef.current && comments.length === 0) {
+      const currentContent = editorRef.current.innerText || editorRef.current.textContent || '';
+      if (currentContent !== documentContent) {
+        editorRef.current.textContent = documentContent;
+      }
+    }
+  }, [documentContent, comments.length]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (!event.target.closest('.comment-item') && !event.target.closest('.highlight-item')) {
+      if (!event.target.closest('.comment-item') && !event.target.closest('.highlight')) {
         setSelectedCommentId(null);
       }
     };
-
+    
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const renderDocumentWithHighlights = () => {
-    if (comments.length === 0) {
-      return documentContent;
+  const renderEditableContentWithHighlights = () => {
+    if (!documentContent || comments.length === 0) {
+      return (
+        <div
+          ref={editorRef}
+          contentEditable
+          onInput={handleContentChange}
+          onBlur={handleContentChange}
+          className="w-full h-full outline-none"
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 'var(--text-base)',
+            lineHeight: '1.6',
+            color: 'var(--gb-dark-text)',
+            padding: 'var(--spacing-lg)',
+            minHeight: '100%',
+            whiteSpace: 'pre-wrap',
+            wordWrap: 'break-word',
+            border: 'none',
+            background: 'transparent'
+          }}
+          data-placeholder="START WRITING YOUR PRD..."
+          suppressContentEditableWarning={true}
+        >
+          {documentContent}
+        </div>
+      );
     }
 
-    // Sort comments by position and resolve overlaps
-    const sortedComments = [...comments]
-      .sort((a, b) => a.textPosition - b.textPosition)
-      .filter((comment, index, arr) => {
-        // Remove overlapping comments (keep the first one)
-        if (index === 0) return true;
-        const prev = arr[index - 1];
-        return comment.textPosition >= prev.textPosition + prev.textLength;
-      });
+    // When we have comments, we need to be more careful about rendering
+    // to allow inline editing while preserving highlights
+    const sortedComments = [...comments].sort((a, b) => a.textPosition - b.textPosition);
     
-    let result = [];
     let lastIndex = 0;
-
+    const parts = [];
+    
     sortedComments.forEach((comment, index) => {
-      // Add text before this comment
-      if (comment.textPosition > lastIndex) {
-        result.push(
-          <span key={`text-${index}`}>
-            {documentContent.substring(lastIndex, comment.textPosition)}
-          </span>
-        );
+      const { textPosition, textLength, id } = comment;
+      const isSelected = selectedCommentId === id;
+      
+      // Add text before highlight
+      if (textPosition > lastIndex) {
+        const textBefore = documentContent.slice(lastIndex, textPosition);
+        if (textBefore) {
+          parts.push({
+            type: 'text',
+            content: textBefore,
+            key: `text-${lastIndex}`
+          });
+        }
       }
-
-      // Add highlighted text for this comment
-      const isSelected = selectedCommentId === comment.id;
-      const highlightStyle = isSelected 
-        ? {
-            backgroundColor: 'var(--gb-yellow)',
-            border: '2px solid var(--gb-black)',
-            boxShadow: '2px 2px 0px var(--gb-darker-beige)'
-          }
-        : {
-            backgroundColor: 'var(--gb-light-beige)',
-            border: '2px solid var(--gb-darker-beige)'
-          };
       
-      const endPosition = Math.min(comment.textPosition + comment.textLength, documentContent.length);
+      // Add highlighted text
+      const highlightedText = documentContent.slice(textPosition, textPosition + textLength);
+      if (highlightedText) {
+        parts.push({
+          type: 'highlight',
+          content: highlightedText,
+          commentId: id,
+          isSelected,
+          comment,
+          key: `highlight-${id}`
+        });
+      }
       
-      result.push(
-        <span
-          key={`highlight-${comment.id}`}
-          id={`highlight-${comment.id}`}
-          className="highlight-item cursor-pointer transition-all duration-200 hover:scale-105"
-          style={{
-            ...highlightStyle,
-            padding: 'var(--spacing-xs)',
-            borderRadius: 'var(--spacing-xs)',
-            fontFamily: "var(--font-mono)"
-          }}
-          title={`${comment.author}: ${comment.text}`}
-          onClick={() => handleHighlightClick(comment.id)}
-        >
-          {documentContent.substring(comment.textPosition, endPosition)}
-        </span>
-      );
-
-      lastIndex = endPosition;
+      lastIndex = Math.max(lastIndex, textPosition + textLength);
     });
-
+    
     // Add remaining text
     if (lastIndex < documentContent.length) {
-      result.push(
-        <span key="remaining-text">
-          {documentContent.substring(lastIndex)}
-        </span>
-      );
+      const remainingText = documentContent.slice(lastIndex);
+      if (remainingText) {
+        parts.push({
+          type: 'text',
+          content: remainingText,
+          key: `text-${lastIndex}`
+        });
+      }
     }
 
-    return result;
+    return (
+      <div
+        ref={editorRef}
+        contentEditable
+        onInput={handleContentChange}
+        onBlur={handleContentChange}
+        className="w-full h-full outline-none"
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 'var(--text-base)',
+          lineHeight: '1.6',
+          color: 'var(--gb-dark-text)',
+          padding: 'var(--spacing-lg)',
+          minHeight: '100%',
+          whiteSpace: 'pre-wrap',
+          wordWrap: 'break-word',
+          border: 'none',
+          background: 'transparent'
+        }}
+        suppressContentEditableWarning={true}
+        dangerouslySetInnerHTML={{
+          __html: parts.map(part => {
+            if (part.type === 'text') {
+              return part.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+            } else {
+              const escapedContent = part.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              return `<span 
+                class="highlight cursor-pointer transition-all duration-200" 
+                data-comment-id="${part.commentId}"
+                style="
+                  background-color: ${part.isSelected ? 'var(--gb-yellow)' : 'var(--gb-light-beige)'};
+                  padding: 2px 4px;
+                  border-radius: 2px;
+                  border: ${part.isSelected ? '2px solid var(--gb-darker-beige)' : '1px solid var(--gb-darker-beige)'};
+                  margin: 0 1px;
+                  box-shadow: ${part.isSelected ? '2px 2px 0px var(--gb-darker-beige)' : 'none'};
+                  transform: ${part.isSelected ? 'translate(-1px, -1px)' : 'none'};
+                "
+                title="${part.comment.author}: ${part.comment.text.replace(/"/g, '&quot;')}"
+              >${escapedContent}</span>`;
+            }
+          }).join('')
+        }}
+      />
+    );
   };
 
+  // Handle clicks on highlights within the contentEditable div
+  useEffect(() => {
+    const handleHighlightClickInEditor = (event) => {
+      const highlightElement = event.target.closest('.highlight');
+      if (highlightElement) {
+        const commentId = highlightElement.getAttribute('data-comment-id');
+        if (commentId) {
+          event.stopPropagation();
+          handleHighlightClick(commentId);
+        }
+      }
+    };
+
+    if (editorRef.current) {
+      editorRef.current.addEventListener('click', handleHighlightClickInEditor);
+      return () => {
+        if (editorRef.current) {
+          editorRef.current.removeEventListener('click', handleHighlightClickInEditor);
+        }
+      };
+    }
+  }, []);
+
   return (
-    <div className="flex h-full relative">
+    <div className="h-full flex">
       {/* Document Editor */}
-      <div className="flex-1 flex flex-col" style={{ backgroundColor: 'var(--gb-cream)' }}>
+      <div className="flex-1 flex flex-col overflow-hidden">
         <div className="pokemon-panel--header flex-shrink-0" style={{
           backgroundColor: 'var(--gb-dark-beige)',
-          padding: 'var(--spacing-lg) var(--spacing-xl)',
-          borderBottom: '2px solid var(--gb-black)'
+          padding: 'var(--spacing-md) var(--spacing-lg)'
         }}>
           <div className="flex items-center justify-between">
-            <div className="pokemon-textbox" style={{
-              backgroundColor: 'var(--gb-yellow)',
-              padding: 'var(--spacing-sm) var(--spacing-lg)',
-              borderLeft: '4px solid var(--gb-black)'
-            }}>
-              <h2 className="font-bold flex items-center gap-3 text-primary" style={{
+            <div className="flex items-center gap-3">
+              <h2 className="font-bold" style={{
                 fontFamily: "'Press Start 2P', monospace",
                 fontSize: 'var(--pixel-lg)',
                 margin: 0
@@ -203,24 +309,13 @@ export const DocumentInterface = ({
               marginTop: 'var(--spacing-md)',
               backgroundColor: 'var(--gb-white)'
             }}>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-center">
                 <span className="text-primary" style={{
                   fontFamily: "'Press Start 2P', monospace",
                   fontSize: 'var(--pixel-sm)'
                 }}>
-                  📝 REVIEW MODE - CLICK HIGHLIGHTS OR COMMENTS
+                  ✏️ EDIT MODE - CLICK HIGHLIGHTS TO VIEW COMMENTS
                 </span>
-                <button
-                  onClick={clearComments}
-                  className="pokemon-button"
-                  style={{
-                    fontFamily: "'Press Start 2P', monospace",
-                    fontSize: 'var(--pixel-xs)',
-                    padding: 'var(--spacing-xs) var(--spacing-sm)'
-                  }}
-                >
-                  ✏️ EDIT
-                </button>
               </div>
             </div>
           )}
@@ -248,39 +343,15 @@ export const DocumentInterface = ({
           </div>
         </div>
         
-        <div className="flex-1 overflow-y-auto" ref={documentContainerRef} style={{
+        <div className="flex-1 overflow-y-auto" style={{
           padding: 'var(--spacing-xl)'
         }}>
           <div className="pokemon-panel--content h-full" style={{
             backgroundColor: 'var(--gb-white)',
-            padding: 'var(--spacing-xl)'
+            padding: 0,
+            overflow: 'hidden'
           }}>
-            {comments.length > 0 ? (
-              <div className="w-full h-full overflow-y-auto">
-                <div className="prose max-w-none whitespace-pre-wrap" style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 'var(--text-base)',
-                  lineHeight: '1.6',
-                  color: 'var(--gb-dark-text)'
-                }}>
-                  {renderDocumentWithHighlights()}
-                </div>
-              </div>
-            ) : (
-              <textarea
-                value={documentContent}
-                onChange={(e) => setDocumentContent(e.target.value)}
-                className="w-full h-full pokemon-textbox resize-none"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 'var(--text-base)',
-                  backgroundColor: 'var(--gb-white)',
-                  color: 'var(--gb-dark-text)',
-                  padding: 'var(--spacing-lg)'
-                }}
-                placeholder="START WRITING YOUR PRD..."
-              />
-            )}
+            {renderEditableContentWithHighlights()}
           </div>
         </div>
       </div>
