@@ -83,6 +83,20 @@ export const phases = {
     ],
     estimatedTime: '10-15 minutes',
     icon: '🎯'
+  },
+  EVALUATION: {
+    id: 'EVALUATION',
+    title: 'Performance Review',
+    subtitle: 'Your Results',
+    description: 'Review your comprehensive performance evaluation with detailed feedback from leadership.',
+    objectives: [
+      'Review your overall score and grade',
+      'Understand strengths and improvement areas',
+      'Read leadership feedback and next steps',
+      'Assess presentation readiness'
+    ],
+    estimatedTime: '5-10 minutes',
+    icon: '📊'
   }
 };
 
@@ -99,7 +113,7 @@ export class PhaseManager {
   }
 
   advanceToNextPhase() {
-    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION'];
+    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
     
     if (currentIndex < phaseOrder.length - 1) {
@@ -112,18 +126,19 @@ export class PhaseManager {
   }
 
   canManuallyAdvancePhase() {
-    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION'];
+    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
     
     // Only allow manual advancement for ASSIGNMENT, RESEARCH, and COLLABORATION phases
     // PLANNING and FINALIZATION require document submission via "Get Feedback" button
+    // EVALUATION cannot be advanced (it's the final phase)
     const phasesWithManualAdvancement = ['ASSIGNMENT', 'RESEARCH', 'COLLABORATION'];
     
     return currentIndex < phaseOrder.length - 1 && phasesWithManualAdvancement.includes(this.currentPhase);
   }
 
   getAdvancementRequirements() {
-    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION'];
+    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
     
     if (currentIndex >= phaseOrder.length - 1) {
@@ -143,7 +158,7 @@ export class PhaseManager {
 
   getOverallProgress() {
     const totalPhases = Object.keys(phases).length;
-    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION'];
+    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
     
     return {
@@ -163,7 +178,20 @@ export class PhaseManager {
   }
 
   isSimulationComplete() {
-    return this.currentPhase === 'FINALIZATION';
+    return this.currentPhase === 'EVALUATION';
+  }
+
+  isEvaluationPhase() {
+    return this.currentPhase === 'EVALUATION';
+  }
+
+  moveToEvaluation() {
+    if (this.currentPhase === 'FINALIZATION') {
+      this.currentPhase = 'EVALUATION';
+      this.phaseStartTimes[this.currentPhase] = Date.now();
+      return true;
+    }
+    return false;
   }
 }
 

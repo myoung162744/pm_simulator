@@ -11,6 +11,7 @@ import { ChatInterface } from './components/ChatInterface';
 import { DocumentInterface } from './components/DocumentInterface';
 import { InboxInterface } from './components/InboxInterface';
 import { PhaseInterstitial, PhaseStatus } from './components/PhaseInterstitial';
+import { EvaluationScreen } from './components/EvaluationScreen';
 
 const StudyHal = () => {
   const [activeTab, setActiveTab] = useState('chat');
@@ -22,6 +23,7 @@ const StudyHal = () => {
   const [currentPhase, setCurrentPhase] = useState(phaseManager.getCurrentPhase());
   const [showInterstitial, setShowInterstitial] = useState(true);
   const [isNewPhase, setIsNewPhase] = useState(true);
+  const [simulationCompleted, setSimulationCompleted] = useState(false);
   
   const [documentContent, setDocumentContent] = useState(`# Mobile Checkout Optimization Proposal
 
@@ -78,6 +80,10 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
   const handleInterstitialContinue = () => {
     setShowInterstitial(false);
   };
+
+  const handleEvaluationComplete = () => {
+    setSimulationCompleted(true);
+  };
   
 
   
@@ -117,6 +123,11 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
         setCurrentPhase(phaseManager.getCurrentPhase());
         setIsNewPhase(true);
         setShowInterstitial(true);
+        
+        // If we just moved to EVALUATION phase, skip the interstitial and show evaluation directly
+        if (phaseManager.getCurrentPhase().id === 'EVALUATION') {
+          setShowInterstitial(false);
+        }
       }
     }
   };
@@ -169,6 +180,69 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
     }
   }, [activeTab]);
   
+  // Show completion screen if simulation is done
+  if (simulationCompleted) {
+    return (
+      <div className="h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--gb-cream)' }}>
+        <div className="text-center pokemon-panel" style={{ maxWidth: '600px', padding: 'var(--spacing-xl)' }}>
+          <h1 className="font-bold mb-6" style={{
+            fontFamily: "'Press Start 2P', monospace",
+            fontSize: 'var(--pixel-lg)',
+            color: 'var(--gb-green)'
+          }}>
+            🎉 SIMULATION COMPLETE!
+          </h1>
+          <p className="mb-6" style={{
+            fontFamily: "'Press Start 2P', monospace",
+            fontSize: 'var(--pixel-sm)',
+            color: 'var(--gb-dark-blue)',
+            lineHeight: '1.6'
+          }}>
+            Congratulations! You've successfully completed the ShopSphere Product Management Simulation. 
+            Your mobile checkout optimization proposal has been submitted and evaluated.
+          </p>
+          <p style={{
+            fontFamily: "'Press Start 2P', monospace",
+            fontSize: 'var(--pixel-xs)',
+            color: 'var(--gb-dark-blue)',
+            lineHeight: '1.6'
+          }}>
+            Thank you for participating in this immersive PM experience. Use the insights from your evaluation 
+            to continue growing as a product manager.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show evaluation screen if in evaluation phase
+  if (currentPhase.id === 'EVALUATION' && !showInterstitial) {
+    return (
+      <div className="h-screen flex flex-col" style={{
+        backgroundColor: 'var(--gb-cream)',
+        fontFamily: "var(--font-mono)"
+      }}>
+        <Header>
+          <PhaseStatus 
+            phase={currentPhase} 
+            progress={phaseManager.getOverallProgress()}
+            simulationConfig={simulationConfig}
+          />
+        </Header>
+        
+        <EvaluationScreen
+          documentContent={documentContent}
+          simulationData={{
+            phase: currentPhase,
+            progress: phaseManager.getOverallProgress(),
+            timeSpent: phaseManager.getTimeSpentInPhase('FINALIZATION')
+          }}
+          onComplete={handleEvaluationComplete}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen flex flex-col" style={{
       backgroundColor: 'var(--gb-cream)',
