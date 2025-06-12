@@ -293,30 +293,26 @@ export const DocumentInterface = ({
               {comments.length > 0 && (
                 <button
                   onClick={clearComments}
-                  className="pokemon-button--danger"
+                  className="pokemon-button pokemon-button--danger"
                   style={{
                     fontFamily: "'Press Start 2P', monospace",
                     fontSize: 'var(--pixel-xs)'
                   }}
                 >
-                  CLEAR
+                  🗑️ CLEAR
                 </button>
               )}
             </div>
           </div>
           {comments.length > 0 && (
-            <div className="pokemon-textbox" style={{
-              marginTop: 'var(--spacing-md)',
-              backgroundColor: 'var(--gb-white)'
-            }}>
-              <div className="flex items-center justify-center">
-                <span className="text-primary" style={{
-                  fontFamily: "'Press Start 2P', monospace",
-                  fontSize: 'var(--pixel-sm)'
-                }}>
-                  ✏️ EDIT MODE - CLICK HIGHLIGHTS TO VIEW COMMENTS
-                </span>
-              </div>
+            <div className="text-center mt-2 mb-2">
+              <span className="text-gray-600" style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: '12px',
+                fontStyle: 'italic'
+              }}>
+                💡 Click highlighted text to view comments
+              </span>
             </div>
           )}
           <div className="flex gap-2 flex-wrap" style={{ marginTop: 'var(--spacing-md)' }}>

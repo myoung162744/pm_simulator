@@ -7,78 +7,69 @@ import { globalVariables } from '../promptConfig';
  * @param {boolean} props.compact - Whether to show a compact version (for popover)
  */
 export const ProjectDetails = ({ compact = false }) => {
-  // Use different styles based on whether this is compact (popover) or full view
-  const gridClass = compact 
-    ? "grid grid-cols-2 gap-sm" // Adjusted gap
-    : "grid grid-cols-1 md:grid-cols-2 gap-md mb-lg"; // Adjusted gap and margin
-  const itemClass = compact ? "p-sm" : "p-md"; // Adjusted padding
-  const outcomeClass = compact 
-    ? "pokemon-textbox mb-md p-sm text-sm" // Adjusted styles
-    : "pokemon-textbox mb-lg p-md"; // Adjusted styles
   
   return (
     <>
       {!compact && (
         <h1
-          className="font-pixel text-2xl md:text-3xl text-center mb-lg"
+          className="font-pixel text-2xl md:text-3xl text-center mb-8"
           style={{ color: 'var(--gb-dark-text)' }}
         >
           {globalVariables.project.name}
         </h1>
       )}
       
-      {/* Desired Outcome */}
-      <div className={outcomeClass}>
-        {compact ? (
-          <>
-            <div className="font-pixel" style={{ color: 'var(--gb-dark-text)' }}>Desired Outcome:</div>
-            <div className="font-mono" style={{ color: 'var(--gb-medium-text)' }}>{globalVariables.project.desiredOutcome}</div>
-          </>
-        ) : (
-          <div className="flex items-center gap-md"> {/* Adjusted gap */}
-            <div className="text-3xl">🎯</div>
+      {/* Single unified container for better cohesion */}
+      <div className="pokemon-textbox mb-6">
+        {/* Desired Outcome Section */}
+        <div className="flex items-center gap-4 mb-6 pb-4 border-b-2 border-gray-200">
+          <div className="text-3xl">🎯</div>
+          <div className="flex-1">
+            <h2
+              className="font-pixel text-lg md:text-xl mb-2"
+              style={{ color: 'var(--gb-dark-text)' }}
+            >
+              Desired Outcome
+            </h2>
+            <p className="font-mono text-sm leading-relaxed" style={{ color: 'var(--gb-medium-text)' }}>
+              {globalVariables.project.desiredOutcome}
+            </p>
+          </div>
+        </div>
+        
+        {/* Project Details Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4">
             <div>
-              <h2
-                className="font-pixel text-lg md:text-xl mb-sm"
-                style={{ color: 'var(--gb-dark-text)' }}
-              >
-                Desired Outcome
-              </h2>
-              <p className="font-mono" style={{ color: 'var(--gb-medium-text)' }}>{globalVariables.project.desiredOutcome}</p>
+              <div className="font-pixel text-sm mb-2 text-gray-600 uppercase tracking-wide">Timeline</div>
+              <div className="font-mono bg-gray-50 p-3 border-l-4 border-blue-500" style={{ color: 'var(--gb-dark-text)' }}>
+                {globalVariables.project.timeline}
+              </div>
+            </div>
+            
+            <div>
+              <div className="font-pixel text-sm mb-2 text-gray-600 uppercase tracking-wide">Priority</div>
+              <div className="font-mono bg-gray-50 p-3 border-l-4 border-red-500" style={{ color: 'var(--gb-dark-text)' }}>
+                {globalVariables.project.priority}
+              </div>
             </div>
           </div>
-        )}
-      </div>
-      
-      {/* Project Details */}
-      <div className={gridClass}>
-        <div
-          className={`${itemClass} border-2 border-black rounded`}
-          style={{ backgroundColor: 'var(--gb-white)' }}
-        >
-          <div className="font-pixel mb-sm" style={{ color: 'var(--gb-dark-text)' }}>Timeline</div>
-          <div className="font-mono" style={{ color: 'var(--gb-medium-text)' }}>{globalVariables.project.timeline}</div>
-        </div>
-        <div
-          className={`${itemClass} border-2 border-black rounded`}
-          style={{ backgroundColor: 'var(--gb-white)' }}
-        >
-          <div className="font-pixel mb-sm" style={{ color: 'var(--gb-dark-text)' }}>Budget</div>
-          <div className="font-mono" style={{ color: 'var(--gb-medium-text)' }}>{globalVariables.project.budget}</div>
-        </div>
-        <div
-          className={`${itemClass} border-2 border-black rounded`}
-          style={{ backgroundColor: 'var(--gb-white)' }}
-        >
-          <div className="font-pixel mb-sm" style={{ color: 'var(--gb-dark-text)' }}>Priority</div>
-          <div className="font-mono" style={{ color: 'var(--gb-medium-text)' }}>{globalVariables.project.priority}</div>
-        </div>
-        <div
-          className={`${itemClass} border-2 border-black rounded`}
-          style={{ backgroundColor: 'var(--gb-white)' }}
-        >
-          <div className="font-pixel mb-sm" style={{ color: 'var(--gb-dark-text)' }}>Stakeholders</div>
-          <div className="font-mono" style={{ color: 'var(--gb-medium-text)' }}>{globalVariables.project.stakeholders}</div>
+          
+          <div className="space-y-4">
+            <div>
+              <div className="font-pixel text-sm mb-2 text-gray-600 uppercase tracking-wide">Budget</div>
+              <div className="font-mono bg-gray-50 p-3 border-l-4 border-green-500" style={{ color: 'var(--gb-dark-text)' }}>
+                {globalVariables.project.budget}
+              </div>
+            </div>
+            
+            <div>
+              <div className="font-pixel text-sm mb-2 text-gray-600 uppercase tracking-wide">Stakeholders</div>
+              <div className="font-mono bg-gray-50 p-3 border-l-4 border-purple-500 text-sm leading-relaxed" style={{ color: 'var(--gb-dark-text)' }}>
+                {globalVariables.project.stakeholders}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>
