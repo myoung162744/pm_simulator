@@ -60,7 +60,7 @@ export const InboxInterface = ({ sharedDocuments }) => {
                 fontSize: 'var(--text-sm)',
                 lineHeight: '1.6'
               }}>
-                NO DOCUMENTS HAVE BEEN SHARED WITH YOU YET.
+                NO DOCUMENTS HAVE BEEN SHARED WITH YOU YET. MAYBE YOUR TEAMMATES HAVE SOMETHING THEY CAN SEND YOU.
               </p>
             </div>
           ) : (

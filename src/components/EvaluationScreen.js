@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { sendMessageToAPI } from '../services/api';
+import { jsonrepair } from 'jsonrepair';
 
 export const EvaluationScreen = ({ documentContent, simulationData, onComplete }) => {
   const [evaluation, setEvaluation] = useState(null);
@@ -10,148 +11,183 @@ export const EvaluationScreen = ({ documentContent, simulationData, onComplete }
     generateEvaluation();
   }, [documentContent]);
 
+  const extractJSON = (response, label) => {
+    // Remove code block markers if present
+    const cleaned = response.replace(/```json|```/g, '');
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      try {
+        return JSON.parse(jsonMatch[0]);
+      } catch (err) {
+        // Try to repair the JSON if parsing fails
+        try {
+          const repaired = jsonrepair(jsonMatch[0]);
+          return JSON.parse(repaired);
+        } catch (repairErr) {
+          console.error(`JSON parse/repair error in ${label}:`, repairErr, 'Raw:', jsonMatch[0]);
+          throw repairErr;
+        }
+      }
+    } else {
+      console.error(`No JSON object found in ${label} response:`, response);
+      throw new Error('Could not parse evaluation response');
+    }
+  };
+
   const generateEvaluation = async () => {
     setIsLoading(true);
     setError(null);
 
-    const evaluationPrompt = `You are Sarah Chen, VP of Product at ShopSphere, evaluating a mobile checkout optimization proposal.
+    try {
+      // Run all evaluations in parallel
+      const [
+        overallEvaluation,
+        categoriesEvaluation,
+        leadershipFeedback,
+        readinessEvaluation
+      ] = await Promise.all([
+        // Overall Score and Grade
+        sendMessageToAPI({
+          message: 'Please evaluate the overall quality of this proposal.',
+          history: [],
+          systemPrompt: `You are Sarah Chen, VP of Product at ShopSphere, evaluating a mobile checkout optimization proposal.
 
 CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. Need solution by Q2.
 
 DOCUMENT EXCERPT (first 1000 chars):
-${documentContent.substring(0, 1000)}...
+${documentContent.substring(0, 1000)}
 
-Provide evaluation as JSON only:
-
+Return ONLY a JSON object with this exact structure:
 {
-  "overall_score": 85,
-  "overall_grade": "B+",
-  "executive_summary": "Solid proposal with good problem understanding and practical solutions",
+  "overall_score": number (0-100),
+  "overall_grade": string (A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F),
+  "executive_summary": string (2-3 sentences summarizing the proposal's strengths and areas for improvement)
+}`,
+          characterName: 'Sarah Chen',
+          characterRole: 'VP of Product'
+        }),
+
+        // Categories Evaluation
+        sendMessageToAPI({
+          message: 'Please evaluate each category of this proposal.',
+          history: [],
+          systemPrompt: `You are Sarah Chen, VP of Product at ShopSphere, evaluating a mobile checkout optimization proposal.
+
+CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. Need solution by Q2.
+
+DOCUMENT EXCERPT (first 1000 chars):
+${documentContent.substring(0, 1000)}
+
+Return ONLY a JSON object with this exact structure:
+{
   "categories": [
     {
       "name": "Problem Understanding",
-      "score": 85,
-      "feedback": "Good grasp of mobile checkout issues",
-      "strengths": ["Clear problem statement", "Used provided metrics"],
-      "areas_for_improvement": ["More user perspective", "Deeper analysis"]
+      "score": number (0-100),
+      "feedback": string (2-3 sentences),
+      "strengths": string[],
+      "areas_for_improvement": string[]
     },
     {
       "name": "Solution Quality",
-      "score": 80,
-      "feedback": "Practical approach with room for innovation",
-      "strengths": ["Feasible solutions", "Addresses core issues"],
-      "areas_for_improvement": ["More creative solutions", "Better prioritization"]
+      "score": number (0-100),
+      "feedback": string (2-3 sentences),
+      "strengths": string[],
+      "areas_for_improvement": string[]
+    },
+    {
+      "name": "Data-Driven Approach",
+      "score": number (0-100),
+      "feedback": string (2-3 sentences),
+      "strengths": string[],
+      "areas_for_improvement": string[]
+    },
+    {
+      "name": "Implementation Planning",
+      "score": number (0-100),
+      "feedback": string (2-3 sentences),
+      "strengths": string[],
+      "areas_for_improvement": string[]
     },
     {
       "name": "Business Impact",
-      "score": 88,
-      "feedback": "Strong connection to business metrics",
-      "strengths": ["Revenue focus", "Clear metrics"],
-      "areas_for_improvement": ["ROI analysis", "Risk assessment"]
+      "score": number (0-100),
+      "feedback": string (2-3 sentences),
+      "strengths": string[],
+      "areas_for_improvement": string[]
     }
-  ],
+  ]
+}`,
+          characterName: 'Sarah Chen',
+          characterRole: 'VP of Product'
+        }),
+
+        // Leadership Feedback
+        sendMessageToAPI({
+          message: 'Please provide leadership feedback for this proposal.',
+          history: [],
+          systemPrompt: `You are Sarah Chen, VP of Product at ShopSphere, evaluating a mobile checkout optimization proposal.
+
+CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. Need solution by Q2.
+
+DOCUMENT EXCERPT (first 1000 chars):
+${documentContent.substring(0, 1000)}
+
+Return ONLY a JSON object with this exact structure:
+{
   "leadership_feedback": {
-    "what_went_well": "You demonstrated strong analytical thinking and practical problem-solving skills throughout this project.",
-    "growth_opportunities": "Focus on more innovative solutions and deeper user empathy to elevate your PM impact.",
-    "next_steps": "Continue developing your strategic thinking and stakeholder management skills."
-  },
-  "readiness_for_presentation": {
-    "ready": true,
-    "confidence_level": "High",
-    "key_talking_points": ["Revenue impact", "User pain points", "Implementation timeline"],
-    "potential_questions": ["What about budget?", "How will you measure success?"]
+    "what_went_well": string (2-3 sentences),
+    "growth_opportunities": string (2-3 sentences),
+    "next_steps": string (2-3 sentences)
   }
-}
+}`,
+          characterName: 'Sarah Chen',
+          characterRole: 'VP of Product'
+        }),
 
-Provide specific, actionable feedback that would help them grow as a product manager.`;
+        // Readiness for Presentation
+        sendMessageToAPI({
+          message: 'Please evaluate the readiness for presentation.',
+          history: [],
+          systemPrompt: `You are Sarah Chen, VP of Product at ShopSphere, evaluating a mobile checkout optimization proposal.
 
-    try {
-      const response = await sendMessageToAPI({
-        message: 'Please evaluate my product requirements document.',
-        history: [],
-        systemPrompt: evaluationPrompt,
-        characterName: 'Sarah Chen',
-        characterRole: 'VP of Product'
-      });
+CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. Need solution by Q2.
 
-      // Extract JSON from response
-      const jsonMatch = response.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        const evaluationData = JSON.parse(jsonMatch[0]);
-        setEvaluation(evaluationData);
-      } else {
-        throw new Error('Could not parse evaluation response');
-      }
+DOCUMENT EXCERPT (first 1000 chars):
+${documentContent.substring(0, 1000)}
+
+Return ONLY a JSON object with this exact structure:
+{
+  "readiness_for_presentation": {
+    "ready": boolean,
+    "confidence_level": string ("High", "Medium", "Low"),
+    "key_talking_points": string[],
+    "potential_questions": string[]
+  }
+}`,
+          characterName: 'Sarah Chen',
+          characterRole: 'VP of Product'
+        })
+      ]);
+
+      // Parse and combine all responses robustly
+      const overallData = extractJSON(overallEvaluation, 'overallEvaluation');
+      const categoriesData = extractJSON(categoriesEvaluation, 'categoriesEvaluation');
+      const leadershipData = extractJSON(leadershipFeedback, 'leadershipFeedback');
+      const readinessData = extractJSON(readinessEvaluation, 'readinessEvaluation');
+
+      const combinedEvaluation = {
+        ...overallData,
+        ...categoriesData,
+        ...leadershipData,
+        ...readinessData
+      };
+
+      console.log('Combined Evaluation:', combinedEvaluation);
+      setEvaluation(combinedEvaluation);
     } catch (err) {
       console.error('Evaluation generation error:', err);
-      
-      // Fallback to mock evaluation for testing
-      console.log('Using mock evaluation data for testing...');
-      const mockEvaluation = {
-        overall_score: 82,
-        overall_grade: "B+",
-        executive_summary: "Strong proposal that demonstrates good understanding of the mobile checkout problem and offers practical solutions. Your analytical approach and focus on user experience show promise as a product manager.",
-        categories: [
-          {
-            name: "Problem Understanding",
-            score: 85,
-            feedback: "You clearly grasped the core issue of mobile checkout abandonment and its revenue impact. Good use of the provided metrics and data.",
-            strengths: ["Clear problem statement", "Used quantitative data effectively", "Understood business impact"],
-            areas_for_improvement: ["Could explore more user psychology", "Deeper competitive analysis"]
-          },
-          {
-            name: "Solution Quality",
-            score: 78,
-            feedback: "Your solutions are practical and feasible, addressing the main pain points identified. Room for more innovative approaches.",
-            strengths: ["Realistic solutions", "Addresses core issues", "Implementation-focused"],
-            areas_for_improvement: ["More creative approaches", "Better solution prioritization", "Consider edge cases"]
-          },
-          {
-            name: "Data-Driven Approach",
-            score: 88,
-            feedback: "Excellent use of the analytics data and research findings. You connected insights to actionable solutions effectively.",
-            strengths: ["Leveraged team research", "Quantified impact", "Evidence-based decisions"],
-            areas_for_improvement: ["More A/B testing ideas", "Additional metrics tracking"]
-          },
-          {
-            name: "Implementation Planning",
-            score: 75,
-            feedback: "Good basic timeline and resource considerations. Could be more detailed in execution planning.",
-            strengths: ["Realistic timeline", "Resource awareness", "Phased approach"],
-            areas_for_improvement: ["More detailed milestones", "Risk mitigation plans", "Success criteria"]
-          },
-          {
-            name: "Business Impact",
-            score: 90,
-            feedback: "Strong connection between proposed solutions and business outcomes. Clear understanding of revenue implications.",
-            strengths: ["Revenue focus", "Clear ROI potential", "Executive-level thinking"],
-            areas_for_improvement: ["Long-term strategic view", "Market positioning"]
-          }
-        ],
-        leadership_feedback: {
-          what_went_well: "You demonstrated strong analytical thinking and practical problem-solving skills throughout this project. Your ability to synthesize input from multiple team members and translate technical constraints into business solutions shows real PM potential. The way you balanced user needs with business requirements was particularly impressive.",
-          growth_opportunities: "Focus on developing more innovative solutions and deeper user empathy to elevate your impact. Consider spending more time on strategic thinking and competitive positioning. Your next challenge will be to think beyond immediate fixes to longer-term competitive advantages.",
-          next_steps: "Continue building your stakeholder management skills and practice presenting complex solutions simply. I recommend diving deeper into user research methods and developing your product intuition through more customer interactions."
-        },
-        readiness_for_presentation: {
-          ready: true,
-          confidence_level: "High",
-          key_talking_points: [
-            "$2.4M monthly revenue opportunity through mobile optimization",
-            "User research shows clear pain points in checkout flow",
-            "Phased implementation reduces risk and shows quick wins",
-            "Cross-team collaboration ensures technical feasibility"
-          ],
-          potential_questions: [
-            "What's our budget for this initiative?",
-            "How will you measure success beyond conversion rates?",
-            "What if Apple/Google change their payment policies?",
-            "How does this fit with our annual roadmap?"
-          ]
-        }
-      };
-      
-      setEvaluation(mockEvaluation);
+      setError('Failed to generate evaluation. Please try again.');
     } finally {
       setIsLoading(false);
     }
