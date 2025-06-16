@@ -37,9 +37,7 @@ export const TabNavigation = ({
               transform: activeTab === 'chat' ? 'translate(1px, 1px)' : 'none'
             }}
           >
-            💬 <span className="hidden sm:inline ml-2">TEAM </span>
-            <span className="sm:hidden">CHAT</span>
-            <span className="hidden sm:inline">CHAT</span>
+            💬 <span className="ml-2">CHAT</span>
           </button>
           
           <button

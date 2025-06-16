@@ -354,8 +354,9 @@ export const DocumentInterface = ({
       </div>
 
       {/* Comments Sidebar */}
-      <div className="w-80 pokemon-panel--content overflow-y-auto flex flex-col" style={{
-        backgroundColor: 'var(--gb-medium-beige)'
+      <div className="w-80 overflow-y-auto flex flex-col" style={{
+        backgroundColor: 'var(--gb-cream)',
+        borderLeft: '2px solid var(--gb-black)'
       }}>
         <div className="pokemon-panel--header flex-shrink-0" style={{
           backgroundColor: 'var(--gb-dark-beige)',
@@ -367,7 +368,8 @@ export const DocumentInterface = ({
           }}>💬 COMMENTS</h3>
         </div>
         <div className="flex-1" ref={commentsContainerRef} style={{
-          padding: 'var(--spacing-lg)'
+          padding: 'var(--spacing-lg)',
+          backgroundColor: 'var(--gb-medium-beige)'
         }}>
           {comments.length === 0 ? (
             <div className="pokemon-textbox text-center" style={{
