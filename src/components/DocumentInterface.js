@@ -7,7 +7,8 @@ export const DocumentInterface = ({
   comments,
   generateComments,
   isGeneratingComments,
-  clearComments
+  clearComments,
+  phase
 }) => {
   const [selectedCommentId, setSelectedCommentId] = useState(null);
   const editorRef = useRef(null);
@@ -287,7 +288,7 @@ export const DocumentInterface = ({
                     REVIEWING...
                   </>
                 ) : (
-                  '📝 GET FEEDBACK'
+                  `📝 ${phase?.id === 'FINALIZATION' ? 'SUBMIT' : 'GET FEEDBACK'}`
                 )}
               </button>
               {comments.length > 0 && (
@@ -381,7 +382,7 @@ export const DocumentInterface = ({
                 fontSize: 'var(--text-sm)',
                 lineHeight: '1.6'
               }}>
-                WRITE YOUR PRD AND CLICK "GET FEEDBACK" TO RECEIVE AI COMMENTS.
+                WRITE YOUR PRD AND CLICK "{phase?.id === 'FINALIZATION' ? 'SUBMIT' : 'GET FEEDBACK'}" TO RECEIVE AI COMMENTS.
               </p>
             </div>
           ) : (

@@ -4,7 +4,8 @@
 
 ## 🔥 High Priority
 - [X] Improve the interface of the document. Banner above and highlight the comment when editing.
-- [ ] Change Get Feedback to Submit for the last phase.
+- [X] Create tests
+- [X] Change Get Feedback to Submit for the last phase.
 - [ ] Ensure documents, agents, and narrative are aligned
 - [ ] Do a full test run
 - [ ] Hone prompts for agents
@@ -13,7 +14,7 @@
 - [X] Phases needing honing. Phase 3 isn't action triggered anymore. Should only allow you to get to the next phase if you submit a proposal for review.
 
 ## 🐛 Bug Fixes
-- [ ] Hint about being able to get docs from teammates in inbox
+- [X] Hint about being able to get docs from teammates in inbox
 - [ ] Make the "Team" header the same height as the chat name header so its one fluid line. 
 - [X] Improve formatting of intro screen (spacing)
 

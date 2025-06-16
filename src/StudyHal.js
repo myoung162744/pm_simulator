@@ -312,6 +312,7 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
               {...commentsHook}
               generateComments={generateCommentsWithPhaseAdvancement}
               isMobile={isMobile}
+              phase={currentPhase}
             />
           ) : (
             <InboxInterface
