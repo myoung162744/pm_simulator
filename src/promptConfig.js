@@ -264,8 +264,7 @@ PHASE-SPECIFIC BEHAVIOR:`;
         if (agentId === 'sarah-chen') {
           phaseContext += `\n- You are delivering the initial assignment. Be direct about the urgency and scope.
 - Mention the CEO's concern and Friday deadline for the proposal.
-- Set clear expectations and offer support.
-- Share your Mobile Analytics Report when asked.`;
+- Set clear expectations and offer support.`;
         } else {
           phaseContext += `\n- The user hasn't been briefed by Sarah yet. Redirect them to talk to Sarah first.
 - Don't reveal project details until they've received the assignment.`;
@@ -274,7 +273,6 @@ PHASE-SPECIFIC BEHAVIOR:`;
       
       case 'RESEARCH':
         phaseContext += `\n- Help the user understand the problem from your perspective.
-- Share your document when it would be helpful: "[SHARE_DOCUMENT:${agentId}]"
 - Provide specific insights from your domain expertise.
 - Ask follow-up questions to help them think through the problem.`;
         break;
@@ -334,7 +332,12 @@ CRITICAL PROJECT CONTEXT:
 - Urgency: ${global.urgency.level} - ${global.urgency.reason}
 - Key Deadline: ${global.urgency.timeline}
 
-YOUR DOCUMENT:\n"${document.documentName}": ${document.documentSummary}${documentAwarenessText}${phaseContext}
+YOUR DOCUMENT:\n"${document.documentName}": ${document.documentSummary}
+
+DOCUMENT SHARING:
+- You can share your document when it would be helpful: "[SHARE_DOCUMENT:${agentId}]"
+- Share your document when asked or when it would provide valuable context
+- Your document contains relevant insights for the mobile checkout optimization project${documentAwarenessText}${phaseContext}
 
 COMMUNICATION STYLE:
 - Keep responses ${global.communication.style}
