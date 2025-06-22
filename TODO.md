@@ -7,7 +7,7 @@
 - [X] Improve the interface of the document. Banner above and highlight the comment when editing.
 - [X] Create tests
 - [X] Change Get Feedback to Submit for the last phase.
-- [ ] Ensure documents, agents, and narrative are aligned
+- [ ] Ensure documents, agents, and narrative are aligned (MY in progress)
 - [ ] Do a full test run
 - [ ] Hone prompts for agents
 - [ ] Hone prompt for evaluation
@@ -32,6 +32,8 @@
 - [ ] Sharable asset post simulation
 - [ ] Create community interaction points
 - [ ] How can we incorporate taste into the simulation? Add design reviews?
+- [ ] Difficulty levels
+    - [ ] Harder difficulty is no recommendations from team? Team can't support
 
 ## 🎨 UI/UX Improvements
 - [ ] Add animation transitions
