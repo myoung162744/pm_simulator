@@ -1,6 +1,6 @@
 # StudyHal - Claude PM Simulator
 
-A Pokémon Game Boy-styled product management simulation application where users can interact with AI team members, collaborate on documents, and manage product requirements.
+A retro game-styled product management simulation application where users can interact with AI team members, collaborate on documents, and manage product requirements.
 
 ## 🎮 Features
 
