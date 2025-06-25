@@ -1,3 +1,5 @@
+import { shopSphereCompany } from './companyConfig';
+
 // Configuration for document sharing
 export const configOptions = {
   sharedDocuments: [] // Array to track documents that have been shared with the user
@@ -36,14 +38,7 @@ export const getSharedDocuments = () => {
 
 // Global variables that can be shared across all agents
 export const globalVariables = {
-  company: {
-    name: "ShopSphere",
-    industry: "E-commerce Marketplace",
-    size: "350 employees",
-    valuation: "$2B",
-    mission: "Making online shopping seamless and delightful for everyone",
-    culture: "fast-paced, data-driven, customer-obsessed"
-  },
+  company: shopSphereCompany,
   project: {
     name: "Mobile Checkout Optimization",
     timeline: "Q2 delivery (8-10 weeks)",
@@ -65,15 +60,11 @@ export const globalVariables = {
   }
 };
 
-
+// Scenario for the simulation (for Sarah Chen)
+export const scenario = `## Problem Statement\n\n**Mobile checkout abandonment rate is 78% vs 65% on desktop, costing $2.4M monthly in lost commission revenue**\n\n## Background Context\n\nWhile ShopSphere's overall mobile experience maintains a 4.8-star rating, the checkout funnel shows significant drop-off that's impacting business growth.\n\n### Key Points\n\n- **Mobile Traffic:** 62% of total site visits\n- **Mobile Conversion Rate:** 2.1% vs 3.8% desktop\n- **Mobile Abandonment Rate:** 78% vs 65% desktop\n- **Revenue Impact:** $2.4M monthly lost commission revenue\n- **Checkout Process:** 6-step mobile checkout vs 4-step desktop process\n\n## Your Challenge\n\nAs the Product Manager, you need to:\n\n- **Prioritize** which issues to tackle first given limited resources\n- **Define** a phased approach balancing quick wins vs long-term solutions\n- **Coordinate** with design, engineering, and data science\n\nWhat's your strategy to address this $2.4M monthly revenue gap while managing competing priorities and stakeholder expectations?`;
 
 // Document information for each agent
 export const documentConfigs = {
-  'sarah-chen': {
-    documentPath: '/documents/mobile_analytics_report_q4.pdf',
-    documentName: 'Mobile Analytics Report Q4',
-    documentSummary: 'Checkout funnel analysis showing 45% drop at shipping address, 30% at payment. Device breakdown: 60% iOS, 40% Android. Mobile cart value averages $67 vs $95 desktop. Guest checkout = 60% of mobile purchases.'
-  },
   'mike-dev': {
     documentPath: '/documents/technical_architecture_overview.pdf',
     documentName: 'Technical Architecture Overview',
@@ -81,28 +72,22 @@ export const documentConfigs = {
   },
   'lisa-design': {
     documentPath: '/documents/user_research_summary.pdf',
-    documentName: 'User Research Summary',
-    documentSummary: '20 user interviews about mobile experience. Top quote: "I always switch to my laptop for checkout". Pain points: form filling, trust signals, slow loading. Users want: saved info, digital wallets, faster process.'
+    documentName: 'User Personas & Checkout Research',
+    documentSummary: `User Personas: Based on 15,200 surveys, 48 interviews, 12 focus groups, analytics, and 2,400 support tickets. Key finding: 4 primary personas (Mobile Maven, Deliberate Buyer, Social Shopper, Established Collector) make up 89% of buyers, each with distinct shopping and checkout behaviors.\n\nPersona Insights: Mobile Maven (34%)—impulse mobile shopper, high abandonment; Deliberate Buyer (31%)—desktop-focused, high AOV, low abandonment; Social Shopper (19%)—trend-driven, mobile-first, budget-conscious; Established Collector (16%)—desktop, high AOV, prefers simplicity.\n\nDesign Implications: Mobile checkout complexity, performance issues, and form difficulties are pain points for all. Persona-specific recommendations: streamline mobile checkout, enable guest/social login, improve trust signals, and tailor features to each persona's needs.`
   },
   'alex-data': {
     documentPath: '/documents/competitive_benchmark_analysis.xlsx',
-    documentName: 'Competitive Benchmark Analysis',
-    documentSummary: 'Amazon: 55% mobile completion rate, Target: 48%. Industry features: one-click, biometric auth, digital wallets. We are 20-30% behind industry leaders in mobile checkout performance.'
-  },
-  'jen-marketing': {
-    documentPath: '/documents/customer_support_tickets_export.csv',
-    documentName: 'Customer Support Tickets Export',
-    documentSummary: '"Can\'t edit shipping address" - 847 tickets, "Payment screen freezes" - 623 tickets, "Want Apple Pay" - 492 tickets, "Address format confusing" - 384 tickets.'
+    documentName: 'Mobile Funnel & Persona Conversion Analysis',
+    documentSummary: `Executive Summary: This report analyzes conversion performance across ShopSphere's shopping funnel, highlighting key trends, device performance differences, and persona-specific behaviors. Key finding: Mobile checkout conversion continues to lag desktop performance, representing our largest conversion optimization opportunity.\n\nCritical Metrics (Last 90 Days):\n- Overall Conversion Rate: 2.9% (blended across devices)\n- Mobile Conversion Rate: 2.1%\n- Desktop Conversion Rate: 3.8%\n- Revenue Impact: $2.4M monthly opportunity gap in mobile conversion\n\nFunnel & Persona Insights: Mobile represents 53% of checkout starts but only 45% of completions. Largest mobile drop-offs: product page to cart (72%), account/guest selection (28%), payment form (31%). Persona analysis: 'Mobile Maven' is highest volume but lowest mobile conversion (1.8%), 'Deliberate Buyer' is cross-device champion, 'Social Shopper' faces payment step friction, 'Established Collector' is desktop dependent.\n\nTrend Analysis: Mobile traffic is rising, but conversion is declining slightly, amplifying the revenue gap. Monthly opportunity: $2.4M additional commission revenue if mobile matches desktop conversion.`
   }
 };
 
 // Document awareness - which agents know about which other documents
 export const documentAwareness = {
-  'sarah-chen': ['mike-dev', 'lisa-design', 'alex-data', 'jen-marketing'], // PM knows about all documents
+  'sarah-chen': ['mike-dev', 'lisa-design', 'alex-data'], // PM knows about all documents
   'mike-dev': ['sarah-chen', 'lisa-design'], // Developer knows about PM and Design docs
   'lisa-design': ['sarah-chen', 'alex-data'], // Designer knows about PM and Data Analysis docs
-  'alex-data': ['sarah-chen', 'jen-marketing'], // Data Analyst knows about PM and Marketing docs
-  'jen-marketing': ['sarah-chen', 'alex-data'] // Marketing knows about PM and Data Analysis docs
+  'alex-data': ['sarah-chen'] // Data Analyst knows about PM doc
 };
 
 // Agent-specific configurations
@@ -202,30 +187,6 @@ export const agentConfigs = {
       'Revenue Impact Modeling'
     ],
     narrativeRole: 'Data Expert - Provides metrics insights and measurement framework'
-  },
-  'jen-marketing': {
-    personalInfo: {
-      name: 'Priya Sharma',
-      role: 'Customer Success Manager',
-      experience: '4 years',
-      background: 'Customer support and success at e-commerce companies',
-      education: 'Business degree from UC Berkeley',
-      relationship: 'Your Customer Voice - knows user pain points'
-    },
-    personality: {
-      traits: 'customer-empathetic, problem-solving, practical',
-      workStyle: 'customer-first thinking, shares real user feedback',
-      quirks: 'quotes customer tickets, mentions specific pain points, talks about international users',
-      strengths: 'customer insights, user pain point analysis, support ticket trends'
-    },
-    expertise: [
-      'Customer Pain Point Analysis',
-      'Support Ticket Insights',
-      'User Journey Issues',
-      'International User Challenges',
-      'Customer Feedback Analysis'
-    ],
-    narrativeRole: 'Customer Voice - Represents user needs and pain points'
   }
 };
 
@@ -302,12 +263,13 @@ PHASE-SPECIFIC BEHAVIOR:`;
     }
   }
   
+  // Inject scenario for Sarah Chen only
+  const scenarioSection = agentId === 'sarah-chen' ? `\n\nSCENARIO:\n${scenario}` : '';
+
   return `You are ${agent.personalInfo.name}, a ${agent.personalInfo.role} at ${global.company.name}.
 
 COMPANY CONTEXT:
-- Company: ${global.company.name} (${global.company.industry}, ${global.company.size}, ${global.company.valuation})
-- Mission: ${global.company.mission}
-- Culture: ${global.company.culture}
+${global.company.description}
 
 YOUR BACKGROUND:
 - Role: ${agent.personalInfo.role}
@@ -332,7 +294,7 @@ CRITICAL PROJECT CONTEXT:
 - Problem Context: ${global.project.context}
 - Desired Outcome: ${global.project.desiredOutcome}
 - Urgency: ${global.urgency.level} - ${global.urgency.reason}
-- Key Deadline: ${global.urgency.timeline}
+- Key Deadline: ${global.urgency.timeline}${scenarioSection}
 
 YOUR DOCUMENT:\n"${document.documentName}": ${document.documentSummary}${documentAwarenessText}${phaseContext}
 

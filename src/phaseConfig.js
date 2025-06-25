@@ -1,10 +1,13 @@
+import { shopSphereCompany } from './companyConfig';
+
 // Phase Configuration for Narrative-Driven Simulation
 export const simulationConfig = {
   title: "Product Management Simulation: Mobile Checkout Optimization",
   company: {
-    name: "ShopSphere",
-    valuation: "$2B",
-    type: "Mid-sized e-commerce marketplace"
+    name: shopSphereCompany.name,
+    valuation: shopSphereCompany.valuation,
+    type: shopSphereCompany.industry,
+    description: shopSphereCompany.description
   },
   userRole: {
     title: "Senior Product Manager",
@@ -209,13 +212,6 @@ export const initialContext = {
     stakeholders: ["CEO", "VP Product", "Mobile Team", "Engineering", "UX"]
   },
   documents: [
-    {
-      id: 'mobile-analytics',
-      title: 'Mobile Analytics Report Q4',
-      type: 'report',
-      priority: 'high',
-      description: 'Checkout funnel analysis showing 45% drop at shipping address, 30% at payment'
-    },
     {
       id: 'user-research',
       title: 'User Research Summary',
