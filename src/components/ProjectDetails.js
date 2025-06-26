@@ -54,22 +54,6 @@ export const ProjectDetails = ({ compact = false }) => {
               </div>
             </div>
           </div>
-          
-          <div className="space-y-4">
-            <div>
-              <div className="font-pixel text-sm mb-2 text-gray-600 uppercase tracking-wide">Budget</div>
-              <div className="font-mono bg-gray-50 p-3 border-l-4 border-green-500" style={{ color: 'var(--gb-dark-text)' }}>
-                {globalVariables.project.budget}
-              </div>
-            </div>
-            
-            <div>
-              <div className="font-pixel text-sm mb-2 text-gray-600 uppercase tracking-wide">Stakeholders</div>
-              <div className="font-mono bg-gray-50 p-3 border-l-4 border-purple-500 text-sm leading-relaxed" style={{ color: 'var(--gb-dark-text)' }}>
-                {globalVariables.project.stakeholders}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </>

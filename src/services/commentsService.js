@@ -1,4 +1,5 @@
 import { sendMessageToAPI } from './api';
+import { getCompanyContextForReviews } from '../companyConfig';
 
 // Helper to find all matches of a substring, ignoring case, and return their line and char positions
 const findMatches = (document, searchText) => {
@@ -34,6 +35,9 @@ export const generateCommentsFromAPI = async (documentContent, contacts, getAgen
   // TODO: Generate comments from all reviewers
   for (const reviewer of selectedReviewers) {
     const reviewPrompt = `${getAgentPrompt(reviewer.id)}
+
+COMPANY CONTEXT:
+${getCompanyContextForReviews()}
 
 You are reviewing a Product Requirements Document. Analyze the document and identify 1 specific areas where you have feedback from your professional perspective.
 

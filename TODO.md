@@ -4,10 +4,18 @@
 
 ## 🔥 High Priority
 - [ ] Add a copyable version of the PRD with a grade and/or summary of the feedback at the end
+- [ ] Fix look of first interstitial
 - [X] Improve the interface of the document. Banner above and highlight the comment when editing.
 - [X] Create tests
 - [X] Change Get Feedback to Submit for the last phase.
 - [ ] Ensure documents, agents, and narrative are aligned (MY in progress)
+    - [X] Documents
+    - [X] Company context
+    - [X] Scenario
+    - [X] Remove marketing agent
+    - [ ] Update agent JSONs to be more prompt like
+    - [X] Update object names to reflect names
+    - [X] Remove manager's document
 - [ ] Do a full test run
 - [ ] Hone prompts for agents
 - [ ] Hone prompt for evaluation

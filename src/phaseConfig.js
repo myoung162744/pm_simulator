@@ -202,14 +202,12 @@ export class PhaseManager {
 export const initialContext = {
   problem: {
     title: "Mobile Checkout Abandonment Crisis",
-    urgency: "HIGH",
     metrics: {
       current: "78% mobile abandonment rate",
       target: "65% or lower (matching desktop)",
       impact: "$2.4M monthly revenue at risk"
     },
-    timeline: "Solution needed by Q2",
-    stakeholders: ["CEO", "VP Product", "Mobile Team", "Engineering", "UX"]
+    timeline: "Solution needed by Q2"
   },
   documents: [
     {
