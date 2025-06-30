@@ -10,6 +10,7 @@ A retro game-styled product management simulation application where users can in
 - **Strict Data Mode**: Toggle between creative and data-focused AI responses
 - **Responsive Design**: Works on desktop and mobile devices
 - **Retro Game Boy Aesthetic**: Complete pixel-art themed UI with authentic colors and fonts
+- **Company Context Integration**: All agents have comprehensive knowledge of ShopSphere company details
 
 ## 🏗 Architecture
 
@@ -20,7 +21,9 @@ src/
 ├── index.js                 # Entry point with routing
 ├── StudyHal.js             # Main application component
 ├── index.css               # Global styles with Game Boy theme
+├── companyConfig.js        # Centralized company context configuration
 ├── promptConfig.js         # AI agent configurations
+├── phaseConfig.js          # Simulation phase management
 │
 ├── components/
 │   ├── Header.js           # Top navigation bar
@@ -30,7 +33,8 @@ src/
 │   ├── DocumentInterface.js # Document editor with comments
 │   ├── InboxInterface.js   # Shared documents viewer
 │   ├── ProjectOverview.js  # Landing page
-│   └── ProjectDetails.js   # Project info component
+│   ├── ProjectDetails.js   # Project info component
+│   └── EvaluationScreen.js # Performance evaluation component
 │
 ├── hooks/
 │   ├── useChat.js          # Chat state management
@@ -42,6 +46,22 @@ src/
     └── commentsService.js  # AI comment generation
 
 ```
+
+### Company Context Integration
+
+The application includes comprehensive ShopSphere company context that is shared across all AI agents and document review processes:
+
+- **Centralized Configuration**: Company details stored in `src/companyConfig.js`
+- **Agent Knowledge**: All team members have access to company metrics, technology stack, and operational context
+- **Document Review**: Company context included in all document feedback and evaluation processes
+- **Consistent Context**: Ensures all AI interactions maintain company-specific knowledge and terminology
+
+**ShopSphere Company Details**:
+- E-commerce marketplace valued at $2B with 350 employees
+- $3.2B GMV, $445M revenue, 15.2M active buyers
+- SphereMatch AI recommendation engine (94% accuracy)
+- Bi-weekly sprints, quarterly OKRs, A/B testing required
+- North America and 12 European countries
 
 ### Key Technologies
 
@@ -102,8 +122,10 @@ export const ComponentName = ({ props }) => {
 - Use `var(--font-pixel)` for UI text, `var(--font-mono)` for content
 
 ### AI Agent Configuration
-Agents are configured in `promptConfig.js`:
+Agents are configured in `promptConfig.js` and automatically receive company context:
 ```javascript
+import { shopSphereCompany } from './companyConfig';
+
 export const agentConfigs = {
   'agent-id': {
     systemPrompt: "Agent personality and expertise",
@@ -112,6 +134,18 @@ export const agentConfigs = {
     documentPath: "/documents/agent_document.md"
   }
 };
+```
+
+### Company Context Usage
+To use company context in new components or services:
+```javascript
+import { getCompanyContext, getCompanyContextForReviews } from './companyConfig';
+
+// For agent prompts
+const companyContext = getCompanyContext();
+
+// For document reviews
+const reviewContext = getCompanyContextForReviews();
 ```
 
 ## 📝 License

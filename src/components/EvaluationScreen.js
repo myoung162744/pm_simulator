@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { sendMessageToAPI } from '../services/api';
 import { jsonrepair } from 'jsonrepair';
+import { getCompanyContextForReviews } from '../companyConfig';
 
 export const EvaluationScreen = ({ documentContent, simulationData, onComplete }) => {
   const [evaluation, setEvaluation] = useState(null);
@@ -52,7 +53,10 @@ export const EvaluationScreen = ({ documentContent, simulationData, onComplete }
           history: [],
           systemPrompt: `You are Sarah Chen, VP of Product at ShopSphere, evaluating a mobile checkout optimization proposal.
 
-CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. Need solution by Q2.
+COMPANY CONTEXT:
+${getCompanyContextForReviews()}
+
+PROJECT CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. Need solution by Q2.
 
 DOCUMENT EXCERPT (first 1000 chars):
 ${documentContent.substring(0, 1000)}
@@ -73,7 +77,10 @@ Return ONLY a JSON object with this exact structure:
           history: [],
           systemPrompt: `You are Sarah Chen, VP of Product at ShopSphere, evaluating a mobile checkout optimization proposal.
 
-CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. Need solution by Q2.
+COMPANY CONTEXT:
+${getCompanyContextForReviews()}
+
+PROJECT CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. Need solution by Q2.
 
 DOCUMENT EXCERPT (first 1000 chars):
 ${documentContent.substring(0, 1000)}
@@ -128,7 +135,10 @@ Return ONLY a JSON object with this exact structure:
           history: [],
           systemPrompt: `You are Sarah Chen, VP of Product at ShopSphere, evaluating a mobile checkout optimization proposal.
 
-CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. Need solution by Q2.
+COMPANY CONTEXT:
+${getCompanyContextForReviews()}
+
+PROJECT CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. Need solution by Q2.
 
 DOCUMENT EXCERPT (first 1000 chars):
 ${documentContent.substring(0, 1000)}
@@ -151,7 +161,10 @@ Return ONLY a JSON object with this exact structure:
           history: [],
           systemPrompt: `You are Sarah Chen, VP of Product at ShopSphere, evaluating a mobile checkout optimization proposal.
 
-CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. Need solution by Q2.
+COMPANY CONTEXT:
+${getCompanyContextForReviews()}
+
+PROJECT CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. Need solution by Q2.
 
 DOCUMENT EXCERPT (first 1000 chars):
 ${documentContent.substring(0, 1000)}

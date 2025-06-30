@@ -1,10 +1,13 @@
+import { shopSphereCompany } from './companyConfig';
+
 // Phase Configuration for Narrative-Driven Simulation
 export const simulationConfig = {
   title: "Product Management Simulation: Mobile Checkout Optimization",
   company: {
-    name: "ShopSphere",
-    valuation: "$2B",
-    type: "Mid-sized e-commerce marketplace"
+    name: shopSphereCompany.name,
+    valuation: shopSphereCompany.valuation,
+    type: shopSphereCompany.industry,
+    description: shopSphereCompany.description
   },
   userRole: {
     title: "Senior Product Manager",
@@ -199,23 +202,14 @@ export class PhaseManager {
 export const initialContext = {
   problem: {
     title: "Mobile Checkout Abandonment Crisis",
-    urgency: "HIGH",
     metrics: {
       current: "78% mobile abandonment rate",
       target: "65% or lower (matching desktop)",
       impact: "$2.4M monthly revenue at risk"
     },
-    timeline: "Solution needed by Q2",
-    stakeholders: ["CEO", "VP Product", "Mobile Team", "Engineering", "UX"]
+    timeline: "Solution needed by Q2"
   },
   documents: [
-    {
-      id: 'mobile-analytics',
-      title: 'Mobile Analytics Report Q4',
-      type: 'report',
-      priority: 'high',
-      description: 'Checkout funnel analysis showing 45% drop at shipping address, 30% at payment'
-    },
     {
       id: 'user-research',
       title: 'User Research Summary',

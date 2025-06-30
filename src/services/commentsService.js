@@ -1,4 +1,26 @@
 import { sendMessageToAPI } from './api';
+import { getCompanyContextForReviews } from '../companyConfig';
+
+// Helper to find all matches of a substring, ignoring case, and return their line and char positions
+const findMatches = (document, searchText) => {
+  const lines = document.split('\n');
+  const results = [];
+  const searchLower = searchText.toLowerCase();
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const lineLower = line.toLowerCase();
+    let lastIndex = -1;
+    while ((lastIndex = lineLower.indexOf(searchLower, lastIndex + 1)) !== -1) {
+      results.push({
+        line: i,
+        start: lastIndex,
+        end: lastIndex + searchText.length,
+      });
+    }
+  }
+  return results;
+};
 
 export const generateCommentsFromAPI = async (documentContent, contacts, getAgentPrompt) => {
   const newComments = [];
@@ -10,10 +32,14 @@ export const generateCommentsFromAPI = async (documentContent, contacts, getAgen
     .slice(0, Math.min(4, availableContacts.length));
   
   // Generate comments from each selected reviewer
+  // TODO: Generate comments from all reviewers
   for (const reviewer of selectedReviewers) {
     const reviewPrompt = `${getAgentPrompt(reviewer.id)}
 
-You are reviewing a Product Requirements Document. Analyze the document and identify 1-3 specific areas where you have feedback from your professional perspective.
+COMPANY CONTEXT:
+${getCompanyContextForReviews()}
+
+You are reviewing a Product Requirements Document. Analyze the document and identify 1 specific areas where you have feedback from your professional perspective.
 
 Respond ONLY with valid JSON in this exact format (no additional text):
 
@@ -26,7 +52,7 @@ Respond ONLY with valid JSON in this exact format (no additional text):
   ]
 }
 
-Focus on areas most relevant to your role. Each text_excerpt must be found exactly in the document.
+Focus on areas most relevant to your role. Each text_excerpt must be found exactly in the document. Ensure selected text is all within the same line.
 
 Document to review:
 ${documentContent}`;
@@ -42,82 +68,38 @@ ${documentContent}`;
 
       try {
         // Try to extract JSON from response (may have extra text)
-        let jsonMatch = response.match(/\{[\s\S]*"comments"[\s\S]*\]/);
+        const jsonMatch = response.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
-          // Find the complete JSON object
-          let jsonStr = jsonMatch[0];
-          // Add closing brace if needed
-          if (!jsonStr.endsWith('}')) {
-            jsonStr += '}';
-          }
-          
-          const parsed = JSON.parse(jsonStr);
+          const parsed = JSON.parse(jsonMatch[0]);
           if (parsed.comments && Array.isArray(parsed.comments)) {
             parsed.comments.forEach((commentData, index) => {
-              // Find the position of the excerpted text in the document
-              let textPosition = -1;
-              let actualExcerpt = commentData.text_excerpt;
-              
-              // Try exact match first
-              textPosition = documentContent.toLowerCase().indexOf(actualExcerpt.toLowerCase());
-              
-              // If not found, try to find similar text
-              if (textPosition === -1) {
-                // Try matching first few words
-                const words = actualExcerpt.split(' ').slice(0, 3).join(' ');
-                textPosition = documentContent.toLowerCase().indexOf(words.toLowerCase());
-                if (textPosition > -1) {
-                  actualExcerpt = words;
-                }
+              const excerpt = commentData.text_excerpt;
+              const matches = findMatches(documentContent, excerpt);
+
+              if (matches.length > 0) {
+                // For simplicity, we'll just take the first match.
+                // A more complex implementation could let the user choose or try to be smarter.
+                const match = matches[0]; 
+
+                newComments.push({
+                  id: `${Date.now()}-${reviewer.id}-${index}`,
+                  author: reviewer.name,
+                  text: commentData.comment,
+                  textExcerpt: excerpt,
+                  lineOffset: match.line,
+                  charRange: [match.start, match.end],
+                  perspective: reviewer.role,
+                  resolved: false,
+                  avatar: reviewer.avatar
+                });
               }
-              
-              // If still not found, place at a reasonable location
-              if (textPosition === -1) {
-                textPosition = Math.floor(documentContent.length * (index + 1) / (parsed.comments.length + 1));
-                actualExcerpt = documentContent.substring(textPosition, Math.min(textPosition + 30, documentContent.length));
-              }
-              
-              newComments.push({
-                id: Date.now() + Math.random() * 1000 + index,
-                author: reviewer.name,
-                text: commentData.comment,
-                textExcerpt: actualExcerpt,
-                textPosition: textPosition,
-                textLength: actualExcerpt.length,
-                perspective: reviewer.role,
-                resolved: false,
-                avatar: reviewer.avatar
-              });
+              // If no match is found, we simply drop the comment as requested.
             });
           }
-        } else {
-          // Fallback: create a general comment if no JSON found
-          newComments.push({
-            id: Date.now() + Math.random(),
-            author: reviewer.name,
-            text: response,
-            textExcerpt: documentContent.substring(0, 50) + '...',
-            textPosition: 0,
-            textLength: 50,
-            perspective: reviewer.role,
-            resolved: false,
-            avatar: reviewer.avatar
-          });
         }
       } catch (parseError) {
-        console.error('JSON parsing error:', parseError);
-        // Fallback: create a general comment if JSON parsing fails
-        newComments.push({
-          id: Date.now() + Math.random(),
-          author: reviewer.name,
-          text: response,
-          textExcerpt: documentContent.substring(0, 50) + '...',
-          textPosition: 0,
-          textLength: 50,
-          perspective: reviewer.role,
-          resolved: false,
-          avatar: reviewer.avatar
-        });
+        console.error('JSON parsing error:', parseError, 'for response:', response);
+        // Fallback or error handling can be improved if needed, but for now, we just log.
       }
     } catch (reviewerError) {
       console.error(`Error getting comment from ${reviewer.name}:`, reviewerError);
