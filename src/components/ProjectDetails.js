@@ -39,19 +39,17 @@ export const ProjectDetails = ({ compact = false }) => {
         
         {/* Project Details Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div>
-              <div className="font-pixel text-sm mb-2 text-gray-600 uppercase tracking-wide">Timeline</div>
-              <div className="font-mono bg-gray-50 p-3 border-l-4 border-blue-500" style={{ color: 'var(--gb-dark-text)' }}>
-                {globalVariables.project.timeline}
-              </div>
+          <div>
+            <div className="font-pixel text-sm mb-2 text-gray-600 uppercase tracking-wide">Timeline</div>
+            <div className="font-mono bg-gray-50 p-3 border-l-4 border-blue-500" style={{ color: 'var(--gb-dark-text)' }}>
+              {globalVariables.project.timeline}
             </div>
-            
-            <div>
-              <div className="font-pixel text-sm mb-2 text-gray-600 uppercase tracking-wide">Priority</div>
-              <div className="font-mono bg-gray-50 p-3 border-l-4 border-red-500" style={{ color: 'var(--gb-dark-text)' }}>
-                {globalVariables.project.priority}
-              </div>
+          </div>
+          
+          <div>
+            <div className="font-pixel text-sm mb-2 text-gray-600 uppercase tracking-wide">Priority</div>
+            <div className="font-mono bg-gray-50 p-3 border-l-4 border-red-500" style={{ color: 'var(--gb-dark-text)' }}>
+              {globalVariables.project.priority}
             </div>
           </div>
         </div>

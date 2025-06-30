@@ -4,13 +4,13 @@
 
 ## 🔥 High Priority
 - [ ] Add a copyable version of the PRD with a grade and/or summary of the feedback at the end
-- [ ] Fix look of first interstitial
+- [X] Fix look of first interstitial
 - [X] Improve the interface of the document. Banner above and highlight the comment when editing.
 - [X] Create tests
 - [X] Change Get Feedback to Submit for the last phase.
 - [X] Ensure documents, agents, and narrative are aligned (MY in progress)
 - [ ] Do a full test run
-- [ ] Hone prompts for agents
+- [X] Hone prompts for agents
 - [ ] Hone prompt for evaluation
 - [X] Create submit state for when they are done with their document and feedback screen - Worth probably seeing what Claude comes up with, but I also have some thoughts I can try to sketch at some point
 - [X] Phases needing honing. Phase 3 isn't action triggered anymore. Should only allow you to get to the next phase if you submit a proposal for review.
