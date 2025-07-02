@@ -3,7 +3,7 @@
 *Last updated: $(date)* 
 
 ## 🔥 High Priority
-- [ ] Add a copyable version of the PRD with a grade and/or summary of the feedback at the end
+- [X] Add a copyable version of the PRD with a grade and/or summary of the feedback at the end
 - [X] Fix look of first interstitial
 - [X] Improve the interface of the document. Banner above and highlight the comment when editing.
 - [X] Create tests
