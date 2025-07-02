@@ -12,6 +12,7 @@ import { DocumentInterface } from './components/DocumentInterface';
 import { InboxInterface } from './components/InboxInterface';
 import { PhaseInterstitial, PhaseStatus } from './components/PhaseInterstitial';
 import { EvaluationScreen } from './components/EvaluationScreen';
+import { PortfolioPage } from './components/PortfolioPage';
 
 const StudyHal = () => {
   const [activeTab, setActiveTab] = useState('chat');
@@ -23,6 +24,7 @@ const StudyHal = () => {
   const [currentPhase, setCurrentPhase] = useState(phaseManager.getCurrentPhase());
   const [showInterstitial, setShowInterstitial] = useState(true);
   const [isNewPhase, setIsNewPhase] = useState(true);
+  const [showPortfolio, setShowPortfolio] = useState(false);
   const [simulationCompleted, setSimulationCompleted] = useState(false);
   
   const [documentContent, setDocumentContent] = useState(`# Mobile Checkout Optimization Proposal
@@ -81,6 +83,10 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
   };
 
   const handleEvaluationComplete = () => {
+    setShowPortfolio(true);
+  };
+  
+  const handlePortfolioComplete = () => {
     setSimulationCompleted(true);
   };
   
@@ -179,6 +185,16 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
     }
   }, [activeTab]);
   
+  // Show portfolio page after evaluation
+  if (showPortfolio && !simulationCompleted) {
+    return (
+      <PortfolioPage 
+        documentContent={documentContent}
+        onContinue={handlePortfolioComplete}
+      />
+    );
+  }
+
   // Show completion screen if simulation is done
   if (simulationCompleted) {
     return (
