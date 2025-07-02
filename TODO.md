@@ -21,6 +21,7 @@
 - [X] Improve formatting of intro screen (spacing)
 
 ## 🚀 Post MVP
+- [ ] Summarize chats in the evaluation or portfolio step
 - [X] Convert the evaluation to parallel LLM calls
 - [ ] Doc editor can be improved with viewing/editing comments. Fine for now.
 - [ ] Project prioritization step
