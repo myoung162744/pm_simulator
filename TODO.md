@@ -19,6 +19,7 @@
 - [X] Hint about being able to get docs from teammates in inbox
 - [ ] Make the "Team" header the same height as the chat name header so its one fluid line. 
 - [X] Improve formatting of intro screen (spacing)
+- [ ] Fix mobile
 
 ## 🚀 Post MVP
 - [ ] Summarize chats in the evaluation or portfolio step

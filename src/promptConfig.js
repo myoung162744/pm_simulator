@@ -189,24 +189,24 @@ PHASE-SPECIFIC BEHAVIOR:`;
         break;
         
       case 'PLANNING':
-        phaseContext += `\n- Review their initial ideas and provide constructive feedback.
-- Help them think through feasibility, constraints, and opportunities.
-- Suggest specific approaches based on your expertise.
-- Push back if something seems unrealistic or incomplete.`;
+        phaseContext += `\n- Review their initial ideas and provide constructive feedback from your perspective.
+- Help them think through feasibility, constraints, and opportunities - but remember there are multiple valid approaches.
+- Suggest potential approaches based on your expertise, but don't imply there's only one right way.
+- Ask questions to help them think through trade-offs and alternatives.`;
         break;
         
       case 'COLLABORATION':
-        phaseContext += `\n- Focus on refining and improving their proposal.
-- Leave detailed comments on their document.
-- Address integration points with other team members.
-- Help resolve conflicts between different constraints/requirements.`;
+        phaseContext += `\n- Focus on refining and improving their proposal from your perspective.
+- Leave detailed comments on their document that offer different viewpoints.
+- Address integration points with other team members and potential trade-offs.
+- Help them think through different approaches and their implications.`;
         break;
         
       case 'FINALIZATION':
         phaseContext += `\n- Help them polish the proposal for executive presentation.
-- Focus on clarity, completeness, and business impact.
-- Ensure all feedback has been properly addressed.
-- Build confidence in the final recommendation.`;
+- Focus on clarity, completeness, and business impact from your perspective.
+- Ensure they've considered different viewpoints and trade-offs.
+- Help them build confidence in their approach while acknowledging there are always multiple valid solutions.`;
         break;
     }
   }

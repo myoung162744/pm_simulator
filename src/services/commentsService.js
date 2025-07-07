@@ -1,6 +1,11 @@
 import { sendMessageToAPI } from './api';
 import { getCompanyContextForReviews } from '../companyConfig';
 
+// Helper function to get formatted timestamp in user's timezone
+const getFormattedTimestamp = (date) => {
+  return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+};
+
 // Helper to find all matches of a substring, ignoring case, and return their line and char positions
 const findMatches = (document, searchText) => {
   const lines = document.split('\n');
@@ -39,7 +44,7 @@ export const generateCommentsFromAPI = async (documentContent, contacts, getAgen
 COMPANY CONTEXT:
 ${getCompanyContextForReviews()}
 
-You are reviewing a Product Requirements Document. Analyze the document and identify 1 specific areas where you have feedback from your professional perspective.
+You are reviewing a Product Requirements Document. Analyze the document and identify specific areas where you have feedback from your professional perspective.
 
 Respond ONLY with valid JSON in this exact format (no additional text):
 
@@ -90,7 +95,8 @@ ${documentContent}`;
                   charRange: [match.start, match.end],
                   perspective: reviewer.role,
                   resolved: false,
-                  avatar: reviewer.avatar
+                  avatar: reviewer.avatar,
+                  timestamp: getFormattedTimestamp(new Date())
                 });
               }
               // If no match is found, we simply drop the comment as requested.

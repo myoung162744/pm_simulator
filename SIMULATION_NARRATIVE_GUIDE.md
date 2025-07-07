@@ -29,10 +29,6 @@ The simulation has been transformed into a structured, narrative-driven experien
    - Competitive analysis and metrics
    - Conversion optimization data
 
-5. **Priya Sharma** - Customer Success Manager
-   - Customer pain points and support tickets
-   - Real user feedback and complaints
-
 ## Phase Structure
 
 ### Phase 1: Task Assignment (5-10 minutes)

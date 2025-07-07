@@ -397,7 +397,7 @@ export const DocumentInterface = ({
                         <span className="text-muted" style={{
                           fontFamily: "'Press Start 2P', monospace",
                           fontSize: 'var(--pixel-xs)'
-                        }}>JUST NOW</span>
+                        }}>{comment.timestamp || 'JUST NOW'}</span>
                       </div>
                     </div>
                     {/* DEBUG INFO - REMOVE BEFORE PRODUCTION */}

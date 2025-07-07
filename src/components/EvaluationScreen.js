@@ -61,6 +61,8 @@ PROJECT CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. N
 DOCUMENT EXCERPT (first 1000 chars):
 ${documentContent.substring(0, 1000)}
 
+IMPORTANT: Remember that there are multiple valid approaches to solving this problem. Focus on evaluating how well they've thought through their approach, not whether they chose the "right" solution. Consider their reasoning, data usage, and consideration of trade-offs.
+
 Return ONLY a JSON object with this exact structure:
 {
   "overall_score": number (0-100),
@@ -84,6 +86,8 @@ PROJECT CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. N
 
 DOCUMENT EXCERPT (first 1000 chars):
 ${documentContent.substring(0, 1000)}
+
+IMPORTANT: Remember that there are multiple valid approaches to solving this problem. Focus on evaluating how well they've thought through their approach, not whether they chose the "right" solution. Consider their reasoning, data usage, and consideration of trade-offs.
 
 Return ONLY a JSON object with this exact structure:
 {
@@ -143,6 +147,8 @@ PROJECT CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. N
 DOCUMENT EXCERPT (first 1000 chars):
 ${documentContent.substring(0, 1000)}
 
+IMPORTANT: Remember that there are multiple valid approaches to solving this problem. Focus on their process and reasoning, not whether they chose the "right" solution. Consider how well they've thought through trade-offs and alternatives.
+
 Return ONLY a JSON object with this exact structure:
 {
   "leadership_feedback": {
@@ -168,6 +174,8 @@ PROJECT CONTEXT: 78% mobile abandonment vs 65% desktop costs us $2.4M monthly. N
 
 DOCUMENT EXCERPT (first 1000 chars):
 ${documentContent.substring(0, 1000)}
+
+IMPORTANT: Remember that there are multiple valid approaches to solving this problem. Focus on their preparation and ability to defend their reasoning, not whether they chose the "right" solution. Consider how well they can articulate their approach and handle questions about alternatives.
 
 Return ONLY a JSON object with this exact structure:
 {

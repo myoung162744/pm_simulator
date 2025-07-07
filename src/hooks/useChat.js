@@ -1,19 +1,34 @@
 import { useState, useRef, useEffect } from 'react';
 import { sendMessageToAPI } from '../services/api';
 
+// Helper function to get formatted timestamp in user's timezone
+const getFormattedTimestamp = (date) => {
+  return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+};
+
+// Helper function to get timestamp for a specific time today
+const getTimestampForTime = (hours, minutes) => {
+  const now = new Date();
+  const timestamp = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+  return getFormattedTimestamp(timestamp);
+};
+
 export const useChat = (contacts, getAgentPrompt, processMessage = null) => {
   const [selectedContact, setSelectedContact] = useState('sarah-chen');
   const [isLoadingResponse, setIsLoadingResponse] = useState(false);
   const [currentMessage, setCurrentMessage] = useState('');
   const [chatMessages, setChatMessages] = useState({
     'sarah-chen': [
-      { sender: 'Sarah Chen', message: 'Hi! I wanted to discuss the critical mobile checkout optimization project I assigned you. The CEO is particularly interested in improving our conversion rates. How are you thinking about approaching this?', time: '10:30 AM', isUser: false }
+      { sender: 'Sarah Chen', message: 'Hi! I wanted to discuss the critical mobile checkout optimization project I assigned you. The CEO is particularly interested in improving our conversion rates. How are you thinking about approaching this?', time: getTimestampForTime(10, 30), isUser: false }
     ],
     'mike-dev': [
-      { sender: 'Mike Rodriguez', message: 'Hey! I\'m your technical partner for the mobile checkout project. I\'ve got deep experience with mobile payment SDKs and performance optimization. What specific technical challenges are you seeing in the current implementation?', time: '9:45 AM', isUser: false }
+      { sender: 'Mike Rodriguez', message: 'Hey! I\'m your technical partner for the mobile checkout project. I\'ve got deep experience with mobile payment SDKs and performance optimization. What specific technical challenges are you seeing in the current implementation?', time: getTimestampForTime(9, 45), isUser: false }
     ],
     'lisa-design': [
-      { sender: 'Lisa Kim', message: 'Hello! I\'m the UX lead for the mobile checkout redesign. I can help ensure we maintain a great user experience while optimizing for conversion. Would you like to review some of the current pain points in the checkout flow?', time: '11:15 AM', isUser: false }
+      { sender: 'Lisa Kim', message: 'Hello! I\'m the UX lead for the mobile checkout redesign. I can help ensure we maintain a great user experience while optimizing for conversion. Would you like to review some of the current pain points in the checkout flow?', time: getTimestampForTime(11, 15), isUser: false }
+    ],
+    'alex-data': [
+      { sender: 'Jordan Kim', message: 'Hi there! I\'m your data partner for the mobile checkout optimization project.', time: getTimestampForTime(10, 0), isUser: false }
     ]
   });
 
@@ -42,7 +57,7 @@ export const useChat = (contacts, getAgentPrompt, processMessage = null) => {
         ...prev,
         [selectedContact]: [
           ...(prev[selectedContact] || []),
-          { sender: 'You', message: userMessage, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), isUser: true }
+          { sender: 'You', message: userMessage, time: getFormattedTimestamp(new Date()), isUser: true }
         ]
       }));
       setCurrentMessage('');
@@ -83,7 +98,7 @@ export const useChat = (contacts, getAgentPrompt, processMessage = null) => {
             { 
               sender: contactInfo?.name || 'Unknown', 
               message: processedResponse, 
-              time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), 
+              time: getFormattedTimestamp(new Date()), 
               isUser: false 
             }
           ]
@@ -98,7 +113,7 @@ export const useChat = (contacts, getAgentPrompt, processMessage = null) => {
             { 
               sender: contacts.find(c => c.id === selectedContact)?.name || 'Unknown', 
               message: "Sorry, I'm having trouble responding right now. Please try again.", 
-              time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), 
+              time: getFormattedTimestamp(new Date()), 
               isUser: false 
             }
           ]
