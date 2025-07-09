@@ -13,6 +13,7 @@ import { InboxInterface } from './components/InboxInterface';
 import { PhaseInterstitial, PhaseStatus } from './components/PhaseInterstitial';
 import { EvaluationScreen } from './components/EvaluationScreen';
 import { PortfolioPage } from './components/PortfolioPage';
+import { CommunicationFeedback } from './components/CommunicationFeedback';
 
 const StudyHal = () => {
   const [activeTab, setActiveTab] = useState('chat');
@@ -26,6 +27,7 @@ const StudyHal = () => {
   const [isNewPhase, setIsNewPhase] = useState(true);
   const [showPortfolio, setShowPortfolio] = useState(false);
   const [simulationCompleted, setSimulationCompleted] = useState(false);
+  const [showCommunicationFeedback, setShowCommunicationFeedback] = useState(false);
   
   const [documentContent, setDocumentContent] = useState(`# Mobile Checkout Optimization Proposal
 
@@ -50,9 +52,9 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
   // Generate contacts from configuration
   const contacts = [
     { id: 'sarah-chen', name: 'Sarah Chen', role: 'VP of Product', status: 'online', avatar: '👩‍💼' },
-    { id: 'mike-dev', name: 'Alex Rodriguez', role: 'Senior Mobile Tech Lead', status: 'online', avatar: '👨‍💻' },
-    { id: 'lisa-design', name: 'Maya Patel', role: 'Senior UX Designer', status: 'online', avatar: '👩‍🎨' },
-    { id: 'alex-data', name: 'Jordan Kim', role: 'Senior Data Analyst', status: 'online', avatar: '📊' }
+    { id: 'mike-dev', name: 'Mike Rodriguez', role: 'Senior Mobile Tech Lead', status: 'online', avatar: '👨‍💻' },
+    { id: 'lisa-design', name: 'Lisa Meyer', role: 'Senior UX Designer', status: 'online', avatar: '👩‍🎨' },
+    { id: 'alex-data', name: 'Alex Kim', role: 'Senior Data Analyst', status: 'online', avatar: '📊' }
   ];
 
   // Custom hooks
@@ -63,18 +65,36 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
   const handlePhaseAdvance = () => {
     const advanced = phaseManager.advanceToNextPhase();
     if (advanced) {
-      setCurrentPhase(phaseManager.getCurrentPhase());
-      setIsNewPhase(true);
-      setShowInterstitial(true);
+      const newPhase = phaseManager.getCurrentPhase();
+      setCurrentPhase(newPhase);
+      
+      // Check if we should show communication feedback
+      if (newPhase.id === 'COMMUNICATION_FEEDBACK') {
+        setShowCommunicationFeedback(true);
+        setIsNewPhase(false);
+        setShowInterstitial(false);
+      } else {
+        setIsNewPhase(true);
+        setShowInterstitial(true);
+      }
     }
   };
 
   const handleManualPhaseAdvance = () => {
     const advanced = phaseManager.forceAdvancePhase();
     if (advanced) {
-      setCurrentPhase(phaseManager.getCurrentPhase());
-      setIsNewPhase(true);
-      setShowInterstitial(true);
+      const newPhase = phaseManager.getCurrentPhase();
+      setCurrentPhase(newPhase);
+      
+      // Check if we should show communication feedback
+      if (newPhase.id === 'COMMUNICATION_FEEDBACK') {
+        setShowCommunicationFeedback(true);
+        setIsNewPhase(false);
+        setShowInterstitial(false);
+      } else {
+        setIsNewPhase(true);
+        setShowInterstitial(true);
+      }
     }
   };
   
@@ -88,6 +108,17 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
   
   const handlePortfolioComplete = () => {
     setSimulationCompleted(true);
+  };
+
+  const handleCommunicationFeedbackComplete = () => {
+    setShowCommunicationFeedback(false);
+    // Advance to next phase after feedback
+    const advanced = phaseManager.advanceToNextPhase();
+    if (advanced) {
+      setCurrentPhase(phaseManager.getCurrentPhase());
+      setIsNewPhase(true);
+      setShowInterstitial(true);
+    }
   };
   
 
@@ -227,6 +258,18 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
           </p>
         </div>
       </div>
+    );
+  }
+
+  // Show communication feedback screen
+  if (showCommunicationFeedback) {
+    return (
+      <CommunicationFeedback
+        chatMessages={chatHook.chatMessages}
+        sharedDocuments={sharedDocuments}
+        timeSpent={phaseManager.getTimeSpentInPhase('ASSIGNMENT') + phaseManager.getTimeSpentInPhase('RESEARCH')}
+        onContinue={handleCommunicationFeedbackComplete}
+      />
     );
   }
 

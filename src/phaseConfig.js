@@ -44,6 +44,20 @@ export const phases = {
     estimatedTime: '15-20 minutes',
     icon: '🔍'
   },
+  COMMUNICATION_FEEDBACK: {
+    id: 'COMMUNICATION_FEEDBACK',
+    title: 'Communication Checkpoint',
+    subtitle: 'Your Research & Communication Skills',
+    description: 'Get feedback on how well you gathered information and communicated with your team during the research phase.',
+    objectives: [
+      'Review your communication effectiveness',
+      'See how well you gathered key insights',
+      'Understand your research approach strengths',
+      'Identify areas for improvement'
+    ],
+    estimatedTime: '3-5 minutes',
+    icon: '💬'
+  },
   PLANNING: {
     id: 'PLANNING',
     title: 'Solution Planning',
@@ -116,7 +130,7 @@ export class PhaseManager {
   }
 
   advanceToNextPhase() {
-    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
+    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'COMMUNICATION_FEEDBACK', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
     
     if (currentIndex < phaseOrder.length - 1) {
@@ -129,19 +143,19 @@ export class PhaseManager {
   }
 
   canManuallyAdvancePhase() {
-    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
+    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'COMMUNICATION_FEEDBACK', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
     
     // Only allow manual advancement for ASSIGNMENT, RESEARCH, and COLLABORATION phases
     // PLANNING and FINALIZATION require document submission via "Get Feedback" button
     // EVALUATION cannot be advanced (it's the final phase)
-    const phasesWithManualAdvancement = ['ASSIGNMENT', 'RESEARCH', 'COLLABORATION'];
+    const phasesWithManualAdvancement = ['ASSIGNMENT', 'RESEARCH', 'COMMUNICATION_FEEDBACK', 'COLLABORATION'];
     
     return currentIndex < phaseOrder.length - 1 && phasesWithManualAdvancement.includes(this.currentPhase);
   }
 
   getAdvancementRequirements() {
-    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
+    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'COMMUNICATION_FEEDBACK', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
     
     if (currentIndex >= phaseOrder.length - 1) {
@@ -161,7 +175,7 @@ export class PhaseManager {
 
   getOverallProgress() {
     const totalPhases = Object.keys(phases).length;
-    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
+    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'COMMUNICATION_FEEDBACK', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
     
     return {
