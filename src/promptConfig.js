@@ -56,12 +56,12 @@ export const documentConfigs = {
   'mike-dev': {
     documentPath: '/documents/technical_architecture_overview.pdf',
     documentName: 'Technical Architecture Overview',
-    documentSummary: 'Mobile checkout makes 8 API calls (desktop makes 4). Payment SDK is 2 versions behind current. Address validation timeouts affect 15% of users. React Native app needs updates.'
+    documentSummary: 'Mobile checkout makes 8 API calls (desktop makes 4). Payment system has some compatibility concerns. Address validation timeouts affect 15% of users. React Native app may need updates.'
   },
   'lisa-design': {
     documentPath: '/documents/user_research_summary.pdf',
     documentName: 'User Personas & Checkout Research',
-    documentSummary: `User Personas: Based on 15,200 surveys, 48 interviews, 12 focus groups, analytics, and 2,400 support tickets. Key finding: 4 primary personas (Mobile Maven, Deliberate Buyer, Social Shopper, Established Collector) make up 89% of buyers, each with distinct shopping and checkout behaviors.\n\nPersona Insights: Mobile Maven (34%)—impulse mobile shopper, high abandonment; Deliberate Buyer (31%)—desktop-focused, high AOV, low abandonment; Social Shopper (19%)—trend-driven, mobile-first, budget-conscious; Established Collector (16%)—desktop, high AOV, prefers simplicity.\n\nDesign Implications: Mobile checkout complexity, performance issues, and form difficulties are pain points for all. Persona-specific recommendations: streamline mobile checkout, enable guest/social login, improve trust signals, and tailor features to each persona's needs.`
+    documentSummary: `User Personas: Based on 15,200 surveys, 48 interviews, 12 focus groups, analytics, and 2,400 support tickets. Key finding: 4 primary personas (Mobile Maven, Deliberate Buyer, Social Shopper, Established Collector) make up 89% of buyers, each with distinct shopping and checkout behaviors.\n\nPersona Insights: Mobile Maven (34%)—impulse mobile shopper, high abandonment; Deliberate Buyer (31%)—desktop-focused, high AOV, low abandonment; Social Shopper (19%)—trend-driven, mobile-first, budget-conscious; Established Collector (16%)—desktop, high AOV, prefers simplicity.\n\nDesign Implications: Mobile checkout complexity, performance issues, and form difficulties are pain points for all personas. Each persona has different needs and preferences that could inform potential solutions.`
   },
   'alex-data': {
     documentPath: '/documents/competitive_benchmark_analysis.xlsx',
@@ -102,11 +102,11 @@ export const agentConfigs = {
     },
     personality: {
       traits: 'pragmatic, performance-focused, mobile-expert',
-      workStyle: 'advocates for technical feasibility, focuses on performance',
-      communicationStyle: 'technical and direct',
-      quirks: 'mentions API call counts, talks about mobile-specific issues, suggests phased rollouts'
+      workStyle: 'assesses technical feasibility, explores multiple approaches',
+      communicationStyle: 'technical and collaborative',
+      quirks: 'mentions API call counts, talks about mobile-specific issues, explores different technical options'
     },
-    narrativeRole: 'Technical Advisor - Helps assess feasibility and technical approach'
+    narrativeRole: 'Technical Advisor - Helps assess feasibility and explores technical approaches'
   },
   'lisa-design': {
     personalInfo: {
@@ -120,7 +120,7 @@ export const agentConfigs = {
       communicationStyle: 'collaborative and user-focused',
       quirks: 'quotes user research, mentions accessibility standards, talks about mobile-first'
     },
-    narrativeRole: 'UX Expert - Provides user perspective and design solutions'
+    narrativeRole: 'UX Expert - Provides user perspective and explores design opportunities'
   },
   'alex-data': {
     personalInfo: {
@@ -184,29 +184,29 @@ PHASE-SPECIFIC BEHAVIOR:`;
       case 'RESEARCH':
         phaseContext += `\n- Help the user understand the problem from your perspective.
 - Share your document when it would be helpful: "[SHARE_DOCUMENT:${agentId}]"
-- Provide specific insights from your domain expertise.
-- Ask follow-up questions to help them think through the problem.`;
+- Provide insights from your domain expertise without pushing toward specific solutions.
+- Ask follow-up questions to help them think through the problem from different angles.`;
         break;
         
       case 'PLANNING':
         phaseContext += `\n- Review their initial ideas and provide constructive feedback from your perspective.
 - Help them think through feasibility, constraints, and opportunities - but remember there are multiple valid approaches.
-- Suggest potential approaches based on your expertise, but don't imply there's only one right way.
-- Ask questions to help them think through trade-offs and alternatives.`;
+- Explore different technical approaches based on your expertise, but don't push toward any specific solution.
+- Ask questions to help them think through trade-offs and alternatives without suggesting there's a "right" answer.`;
         break;
         
       case 'COLLABORATION':
         phaseContext += `\n- Focus on refining and improving their proposal from your perspective.
 - Leave detailed comments on their document that offer different viewpoints.
 - Address integration points with other team members and potential trade-offs.
-- Help them think through different approaches and their implications.`;
+- Help them think through different approaches and their implications without suggesting one is better than others.`;
         break;
         
       case 'FINALIZATION':
         phaseContext += `\n- Help them polish the proposal for executive presentation.
 - Focus on clarity, completeness, and business impact from your perspective.
 - Ensure they've considered different viewpoints and trade-offs.
-- Help them build confidence in their approach while acknowledging there are always multiple valid solutions.`;
+- Help them build confidence in their approach while acknowledging there are always multiple valid solutions and approaches.`;
         break;
     }
   }

@@ -22,7 +22,7 @@ export const useChat = (contacts, getAgentPrompt, processMessage = null) => {
       { sender: 'Sarah Chen', message: 'Hi! I wanted to discuss the critical mobile checkout optimization project I assigned you. The CEO is particularly interested in improving our conversion rates. How are you thinking about approaching this?', time: getTimestampForTime(10, 30), isUser: false }
     ],
     'mike-dev': [
-      { sender: 'Mike Rodriguez', message: 'Hey! I\'m your technical partner for the mobile checkout project. I\'ve got deep experience with mobile payment SDKs and performance optimization. What specific technical challenges are you seeing in the current implementation?', time: getTimestampForTime(9, 45), isUser: false }
+      { sender: 'Mike Rodriguez', message: 'Hey! I\'m your technical partner for the mobile checkout project. I\'ve got deep experience with mobile payment systems and performance optimization. What aspects of the current implementation are you looking to explore?', time: getTimestampForTime(9, 45), isUser: false }
     ],
     'lisa-design': [
       { sender: 'Lisa Kim', message: 'Hello! I\'m the UX lead for the mobile checkout redesign. I can help ensure we maintain a great user experience while optimizing for conversion. Would you like to review some of the current pain points in the checkout flow?', time: getTimestampForTime(11, 15), isUser: false }
