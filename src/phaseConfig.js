@@ -17,32 +17,21 @@ export const simulationConfig = {
 };
 
 export const phases = {
-  ASSIGNMENT: {
-    id: 'ASSIGNMENT',
-    title: 'Task Assignment',
-    subtitle: 'Receiving Your Mission',
-    description: 'Your manager has assigned you a critical project. Review the initial task and understand the scope.',
+  ASSIGNMENT_AND_RESEARCH: {
+    id: 'ASSIGNMENT_AND_RESEARCH',
+    title: 'Task Assignment & Information Gathering',
+    subtitle: 'Understanding Your Mission',
+    description: 'Your manager has assigned you a critical project. Review the initial task, understand the scope, and gather insights from available documents and team members.',
     objectives: [
       'Read the initial task assignment from your manager',
       'Understand the problem scope and urgency',
-      'Acknowledge the assignment and ask clarifying questions'
-    ],
-    estimatedTime: '5-10 minutes',
-    icon: '📧'
-  },
-  RESEARCH: {
-    id: 'RESEARCH',
-    title: 'Information Gathering',
-    subtitle: 'Understanding the Problem',
-    description: 'Review available documents and gather insights from your team members to understand the full scope of the mobile checkout problem.',
-    objectives: [
       'Review documents from your inbox (suggestions)',
       'Chat with team members to gather their perspectives',
       'Identify key metrics and pain points',
       'Understand technical constraints and user needs'
     ],
     estimatedTime: '15-20 minutes',
-    icon: '🔍'
+    icon: '📧🔍'
   },
   COMMUNICATION_FEEDBACK: {
     id: 'COMMUNICATION_FEEDBACK',
@@ -120,7 +109,7 @@ export const phases = {
 // Phase progression logic
 export class PhaseManager {
   constructor() {
-    this.currentPhase = 'ASSIGNMENT';
+    this.currentPhase = 'ASSIGNMENT_AND_RESEARCH';
     this.phaseStartTimes = {};
     this.phaseStartTimes[this.currentPhase] = Date.now();
   }
@@ -130,7 +119,7 @@ export class PhaseManager {
   }
 
   advanceToNextPhase() {
-    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'COMMUNICATION_FEEDBACK', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
+    const phaseOrder = ['ASSIGNMENT_AND_RESEARCH', 'COMMUNICATION_FEEDBACK', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
     
     if (currentIndex < phaseOrder.length - 1) {
@@ -143,19 +132,19 @@ export class PhaseManager {
   }
 
   canManuallyAdvancePhase() {
-    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'COMMUNICATION_FEEDBACK', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
+    const phaseOrder = ['ASSIGNMENT_AND_RESEARCH', 'COMMUNICATION_FEEDBACK', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
     
-    // Only allow manual advancement for ASSIGNMENT, RESEARCH, and COLLABORATION phases
+    // Only allow manual advancement for ASSIGNMENT_AND_RESEARCH, COMMUNICATION_FEEDBACK, and COLLABORATION phases
     // PLANNING and FINALIZATION require document submission via "Get Feedback" button
     // EVALUATION cannot be advanced (it's the final phase)
-    const phasesWithManualAdvancement = ['ASSIGNMENT', 'RESEARCH', 'COMMUNICATION_FEEDBACK', 'COLLABORATION'];
+    const phasesWithManualAdvancement = ['ASSIGNMENT_AND_RESEARCH', 'COMMUNICATION_FEEDBACK', 'COLLABORATION'];
     
     return currentIndex < phaseOrder.length - 1 && phasesWithManualAdvancement.includes(this.currentPhase);
   }
 
   getAdvancementRequirements() {
-    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'COMMUNICATION_FEEDBACK', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
+    const phaseOrder = ['ASSIGNMENT_AND_RESEARCH', 'COMMUNICATION_FEEDBACK', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
     
     if (currentIndex >= phaseOrder.length - 1) {
@@ -175,7 +164,7 @@ export class PhaseManager {
 
   getOverallProgress() {
     const totalPhases = Object.keys(phases).length;
-    const phaseOrder = ['ASSIGNMENT', 'RESEARCH', 'COMMUNICATION_FEEDBACK', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
+    const phaseOrder = ['ASSIGNMENT_AND_RESEARCH', 'COMMUNICATION_FEEDBACK', 'PLANNING', 'COLLABORATION', 'FINALIZATION', 'EVALUATION'];
     const currentIndex = phaseOrder.indexOf(this.currentPhase);
     
     return {
