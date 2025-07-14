@@ -10,6 +10,8 @@
 - [X] Change Get Feedback to Submit for the last phase.
 - [X] Ensure documents, agents, and narrative are aligned (MY in progress)
 - [ ] Do a full test run
+- [ ] Update prompts to not lead users to an answer
+- [ ] Combine phase 1 & 2
 - [X] Hone prompts for agents
 - [ ] Hone prompt for evaluation
 - [X] Create submit state for when they are done with their document and feedback screen - Worth probably seeing what Claude comes up with, but I also have some thoughts I can try to sketch at some point
