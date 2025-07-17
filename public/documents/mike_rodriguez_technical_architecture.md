@@ -135,3 +135,13 @@ We support 12 regional payment providers to serve international markets includin
 - Auto-scaling infrastructure adjusts to demand
 - Database optimizations ensure consistent performance
 - CDN delivers static content globally
+
+## Technical Challenges and Trade-Offs
+
+- The mobile checkout flow currently involves more API calls and steps than desktop, which may contribute to higher abandonment rates and longer load times. However, these additional steps were designed to simplify each screen for mobile users.
+- Address validation and payment system compatibility have been identified as areas with potential bottlenecks, but there are multiple ways these could be addressed, each with its own trade-offs (e.g., reducing API calls, optimizing validation logic, or rethinking the step structure).
+- React Native implementation and integration with third-party services present both opportunities and constraints, depending on the approach taken.
+
+**There is no single "right" technical solution to these challenges.** Multiple approaches could be considered, such as streamlining the number of API calls, reordering steps, or improving error handling. Each option has implications for user experience, technical complexity, and business outcomes.
+
+**I encourage you to explore different technical and process solutions, weigh their trade-offs, and consider how they align with our business goals and user needs. If you want to discuss specific bottlenecks or brainstorm alternative approaches, let me know!**

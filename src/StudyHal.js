@@ -263,9 +263,16 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
 
   // Show communication feedback screen
   if (showCommunicationFeedback) {
+    // Flatten chatMessages into a single array with role/content for CommunicationFeedback
+    const allChatMessages = Object.values(chatHook.chatMessages)
+      .flat()
+      .map(msg => ({
+        role: msg.isUser ? 'user' : 'assistant',
+        content: msg.message
+      }));
     return (
       <CommunicationFeedback
-        chatMessages={chatHook.chatMessages}
+        chatMessages={allChatMessages}
         sharedDocuments={sharedDocuments}
         timeSpent={phaseManager.getTimeSpentInPhase('ASSIGNMENT') + phaseManager.getTimeSpentInPhase('RESEARCH')}
         onContinue={handleCommunicationFeedbackComplete}
