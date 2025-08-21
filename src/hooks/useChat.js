@@ -69,11 +69,28 @@ export const useChat = (contacts, getAgentPrompt, processMessage = null) => {
       }
       
       try {
-        // Get chat history for context
-        const history = (chatMessages[selectedContact] || []).map(msg => ({
+        // Get chat history for context - limit to prevent token overflow
+        const allHistory = (chatMessages[selectedContact] || []).map(msg => ({
           role: msg.isUser ? 'user' : 'assistant',
           content: msg.message
         }));
+        
+        // Keep only the most recent messages to stay within token limits
+        // Rough estimate: ~4 chars per token, limit to ~6000 tokens for history
+        const MAX_HISTORY_CHARS = 24000;
+        let history = [];
+        let charCount = 0;
+        
+        // Add messages from most recent backwards until we hit the limit
+        for (let i = allHistory.length - 1; i >= 0; i--) {
+          const messageChars = allHistory[i].content.length;
+          if (charCount + messageChars <= MAX_HISTORY_CHARS) {
+            history.unshift(allHistory[i]);
+            charCount += messageChars;
+          } else {
+            break;
+          }
+        }
 
         // Add the agent's personality prompt as system context
         const contactInfo = contacts.find(c => c.id === selectedContact);
@@ -105,14 +122,29 @@ export const useChat = (contacts, getAgentPrompt, processMessage = null) => {
         }));
       } catch (error) {
         console.error('Error sending message:', error);
-        // Fallback to a generic response
+        
+        // Determine error message based on error type
+        let errorMessage = "Sorry, I'm having trouble responding right now. Please try again.";
+        
+        if (error.message?.includes('Failed to fetch') || error.name === 'NetworkError') {
+          errorMessage = "Network connection issue. Please check your connection and try again.";
+        } else if (error.status === 413 || error.message?.includes('too long')) {
+          errorMessage = "Conversation too long. Please start a new conversation.";
+        } else if (error.status === 429 || error.message?.includes('Rate limit')) {
+          errorMessage = "Too many requests. Please wait a moment and try again.";
+        } else if (error.status === 401 || error.status === 403 || error.message?.includes('Authentication')) {
+          errorMessage = "Authentication issue. Please refresh the page and try again.";
+        } else if (error.status === 400 || error.message?.includes('Invalid request')) {
+          errorMessage = "Invalid message format. Please try rephrasing your message.";
+        }
+        
         setChatMessages(prev => ({
           ...prev,
           [selectedContact]: [
             ...(prev[selectedContact] || []),
             { 
               sender: contacts.find(c => c.id === selectedContact)?.name || 'Unknown', 
-              message: "Sorry, I'm having trouble responding right now. Please try again.", 
+              message: errorMessage, 
               time: getFormattedTimestamp(new Date()), 
               isUser: false 
             }

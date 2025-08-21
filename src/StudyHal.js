@@ -50,9 +50,9 @@ ShopSphere is experiencing a critical mobile checkout abandonment issue with a 7
   // Generate contacts from configuration
   const contacts = [
     { id: 'sarah-chen', name: 'Sarah Chen', role: 'VP of Product', status: 'online', avatar: '👩‍💼' },
-    { id: 'mike-dev', name: 'Alex Rodriguez', role: 'Senior Mobile Tech Lead', status: 'online', avatar: '👨‍💻' },
-    { id: 'lisa-design', name: 'Maya Patel', role: 'Senior UX Designer', status: 'online', avatar: '👩‍🎨' },
-    { id: 'alex-data', name: 'Jordan Kim', role: 'Senior Data Analyst', status: 'online', avatar: '📊' }
+    { id: 'mike-dev', name: 'Mike Rodriguez', role: 'Senior Mobile Tech Lead', status: 'online', avatar: '👨‍💻' },
+    { id: 'lisa-design', name: 'Lisa Meyer', role: 'Senior UX Designer', status: 'online', avatar: '👩‍🎨' },
+    { id: 'alex-data', name: 'Alex Kim', role: 'Senior Data Analyst', status: 'online', avatar: '📊' }
   ];
 
   // Custom hooks

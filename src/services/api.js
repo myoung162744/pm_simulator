@@ -16,7 +16,10 @@ export const sendMessageToAPI = async ({ message, history, systemPrompt, charact
   });
 
   if (!response.ok) {
-    throw new Error('Failed to get response from Claude');
+    const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+    const error = new Error(errorData.error || 'Failed to get response from Claude');
+    error.status = response.status;
+    throw error;
   }
 
   const data = await response.json();

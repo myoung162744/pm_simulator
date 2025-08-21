@@ -72,9 +72,9 @@ export const documentConfigs = {
 
 // Document awareness - which agents know about which other documents
 export const documentAwareness = {
-  'sarah-chen': ['mike-dev', 'lisa-design', 'alex-data'], // PM knows about all documents
-  'mike-dev': ['sarah-chen', 'lisa-design'], // Developer knows about PM and Design docs
-  'lisa-design': ['sarah-chen', 'alex-data'], // Designer knows about PM and Data Analysis docs
+  'sarah-chen': [], // Manager doesn't know about other documents until they're shared
+  'mike-dev': ['sarah-chen'], // Developer knows about PM doc
+  'lisa-design': ['sarah-chen'], // Designer knows about PM doc
   'alex-data': ['sarah-chen'] // Data Analyst knows about PM doc
 };
 
@@ -92,7 +92,14 @@ export const agentConfigs = {
       communicationStyle: 'professional and executive-focused',
       quirks: 'mentions CEO meetings, talks about business impact, uses metrics'
     },
-    narrativeRole: 'Task Assigner - Gives you the initial assignment and expects regular updates'
+    narrativeRole: 'Task Assigner - Gives you the initial assignment and expects regular updates. As a busy executive, you must delegate detailed, tactical questions to your direct reports (Mike for engineering, Lisa for design, Alex for data). Point the user to the right expert on the team. DO NOT offer to make introductions or answer detailed questions yourself. Assume the user can contact teammates directly.',
+    simulationConstraints: {
+      teamScope: 'Work only with the defined team members: Mike Rodriguez (Tech Lead), Lisa Meyer (UX Designer), Alex Kim (Data Analyst). Do not mention any other colleagues.',
+      dataScope: 'Use only the predefined documents and metrics provided in the simulation. Do not invent or reference any past analyses, reports, or data that are not explicitly available in the provided documents.',
+      meetingScope: 'Discussions, feedback, and approvals happen exclusively through the chat interface. Do not schedule or reference any real-world meetings, calls, or presentations.',
+      communicationScope: 'All communication with the user must occur within this chat interface. Do not ask the user to send emails, Slack messages, or use any other communication method.',
+      resourceScope: 'Work within the defined ShopSphere context and team. Do not suggest involving external consultants, other internal teams, or additional team members.'
+    }
   },
   'mike-dev': {
     personalInfo: {
@@ -173,8 +180,7 @@ PHASE-SPECIFIC BEHAVIOR:`;
         if (agentId === 'sarah-chen') {
           phaseContext += `\n- You are delivering the initial assignment. Be direct about the urgency and scope.
 - Mention the CEO's concern and Friday deadline for the proposal.
-- Set clear expectations and offer support.
-- Share your Mobile Analytics Report when asked.`;
+- Set clear expectations and offer support.`;
         } else {
           phaseContext += `\n- The user hasn't been briefed by Sarah yet. Redirect them to talk to Sarah first.
 - Don't reveal project details until they've received the assignment.`;
@@ -217,6 +223,19 @@ PHASE-SPECIFIC BEHAVIOR:`;
   // Create document section with safety check
   const documentSection = document ? `\n\nYOUR DOCUMENT:\n"${document.documentName}": ${document.documentSummary}` : '';
 
+  // Add simulation constraints for agents that have them
+  let constraintsSection = '';
+  if (agent.simulationConstraints) {
+    constraintsSection = `\n\nSIMULATION BOUNDARIES - IMPORTANT:
+- Team Scope: ${agent.simulationConstraints.teamScope}
+- Data Scope: ${agent.simulationConstraints.dataScope}
+- Meeting Scope: ${agent.simulationConstraints.meetingScope}
+- Communication Scope: ${agent.simulationConstraints.communicationScope}
+- Resource Scope: ${agent.simulationConstraints.resourceScope}
+
+CRITICAL: Stay within these boundaries. Do not suggest external resources, real meetings, other communication channels (like email), or data sources not provided in the simulation. Work only with the defined team members and documents. Your entire interaction must take place in this chat.`;
+  }
+
   return `You are ${agent.personalInfo.name}, a ${agent.personalInfo.role} at ${global.company.name}.
 
 COMPANY CONTEXT:
@@ -237,7 +256,7 @@ CRITICAL PROJECT CONTEXT:
 - Timeline: ${global.project.timeline}
 - Priority: ${global.project.priority}
 - Problem Context: ${global.project.context}
-- Desired Outcome: ${global.project.desiredOutcome}${scenarioSection}${documentSection}${documentAwarenessText}${phaseContext}
+- Desired Outcome: ${global.project.desiredOutcome}${scenarioSection}${documentSection}${documentAwarenessText}${phaseContext}${constraintsSection}
 
 COMMUNICATION STYLE:
 - Keep responses ${agent.personality.communicationStyle}
@@ -245,6 +264,8 @@ COMMUNICATION STYLE:
 - Reference your expertise and background naturally
 - Stay true to your personality traits and quirks
 - Remember your narrative role: ${agent.narrativeRole}
+
+IMPORTANT RESPONSE FORMAT: Your response should be formatted as a professional chat message (like in Slack or Microsoft Teams). Do not include actions or stage directions (e.g., *sighs*, *looks at watch*). Your response must only contain the text you would type into a chat window.
 
 Respond as ${agent.personalInfo.name} would, drawing from your experience and personality while staying true to the simulation narrative.`;
 };
