@@ -53,6 +53,11 @@ export const scenario = `## Problem Statement\n\n**Mobile checkout abandonment r
 
 // Document information for each agent
 export const documentConfigs = {
+  'sarah-chen': {
+    documentPath: '/documents/mobile_analytics_report_q4.pdf',
+    documentName: 'Mobile Analytics Report Q4',
+    documentSummary: 'Mobile checkout abandonment is 78% vs 65% desktop, a $2.4M monthly revenue loss. Top drop-off points: shipping address entry (45%), payment info (30%), order review (15%). Guest checkout outperforms registered users. Competitors complete checkout at 45-55% vs our 22%. Proposal due Friday, leadership presentation Monday.'
+  },
   'mike-dev': {
     documentPath: '/documents/technical_architecture_overview.pdf',
     documentName: 'Technical Architecture Overview',
@@ -60,13 +65,13 @@ export const documentConfigs = {
   },
   'lisa-design': {
     documentPath: '/documents/user_research_summary.pdf',
-    documentName: 'User Personas & Checkout Research',
-    documentSummary: `User Personas: Based on 15,200 surveys, 48 interviews, 12 focus groups, analytics, and 2,400 support tickets. Key finding: 4 primary personas (Mobile Maven, Deliberate Buyer, Social Shopper, Established Collector) make up 89% of buyers, each with distinct shopping and checkout behaviors.\n\nPersona Insights: Mobile Maven (34%)—impulse mobile shopper, high abandonment; Deliberate Buyer (31%)—desktop-focused, high AOV, low abandonment; Social Shopper (19%)—trend-driven, mobile-first, budget-conscious; Established Collector (16%)—desktop, high AOV, prefers simplicity.\n\nDesign Implications: Mobile checkout complexity, performance issues, and form difficulties are pain points for all. Persona-specific recommendations: streamline mobile checkout, enable guest/social login, improve trust signals, and tailor features to each persona's needs.`
+    documentName: 'User Research Summary',
+    documentSummary: `Research: Moderated usability testing and interviews with 20 users (12 iOS, 8 Android) in December 2024, completing a mobile checkout on their own devices.\n\nTop Pain Points: (1) Form-filling frustration — touch targets too small (36pt vs 44pt minimum), keyboard covering fields, no autofill, late validation errors. (2) Trust and security concerns — missing trust signals, payment page looks inconsistent with the rest of the app, no biometric auth. (3) Navigation issues — no progress indicator, can't edit previous steps.\n\nAbandonment Triggers: Keyboard issues (40% of abandonments), performance problems (35%), form complexity (25%).\n\nUser Preferences: 85% would use Apple Pay/Google Pay, 90% want address autocomplete, 75% would use biometric auth, 95% want progress indicators. Guest checkout and upfront pricing work well today.\n\nRecommendations: Quick fixes (44pt touch targets, progress indicator, inline validation, keyboard fixes), then digital wallets, address autocomplete, and trust signals; long-term one-click checkout and biometric payments.`
   },
   'alex-data': {
     documentPath: '/documents/competitive_benchmark_analysis.xlsx',
-    documentName: 'Mobile Funnel & Persona Conversion Analysis',
-    documentSummary: `Executive Summary: This report analyzes conversion performance across ShopSphere's shopping funnel, highlighting key trends, device performance differences, and persona-specific behaviors. Key finding: Mobile checkout conversion continues to lag desktop performance, representing our largest conversion optimization opportunity.\n\nCritical Metrics (Last 90 Days):\n- Overall Conversion Rate: 2.9% (blended across devices)\n- Mobile Conversion Rate: 2.1%\n- Desktop Conversion Rate: 3.8%\n- Revenue Impact: $2.4M monthly opportunity gap in mobile conversion\n\nFunnel & Persona Insights: Mobile represents 53% of checkout starts but only 45% of completions. Largest mobile drop-offs: product page to cart (72%), account/guest selection (28%), payment form (31%). Persona analysis: 'Mobile Maven' is highest volume but lowest mobile conversion (1.8%), 'Deliberate Buyer' is cross-device champion, 'Social Shopper' faces payment step friction, 'Established Collector' is desktop dependent.\n\nTrend Analysis: Mobile traffic is rising, but conversion is declining slightly, amplifying the revenue gap. Monthly opportunity: $2.4M additional commission revenue if mobile matches desktop conversion.`
+    documentName: 'Competitive Benchmark Analysis',
+    documentSummary: `Methodology: Mystery shopping plus public data analysis of competitor mobile checkouts, Q4 2024.\n\nCompletion Rates: ShopSphere 22% vs Amazon 55%, Target 48%, Walmart 42%, industry average 45-50% — we are 23-28 points behind the industry standard.\n\nFeature Gaps: No Apple Pay/Google Pay, no address autocomplete, no progress indicator, no biometric auth, can't edit previous steps. Our checkout has 8-9 form fields (Amazon: 3-4), 3.2s load time (industry average 1.6s), 35% error rate, and takes 252s to complete vs 102s industry average.\n\nRevenue Impact: Matching the industry average (~47%) is worth roughly +$3.0M monthly; matching Amazon (55%) is +$3.9M. Feature-level estimates: digital wallets +15-20% conversion (+$1.8-2.4M monthly), one-click checkout +12-18% for returning customers, address autocomplete +5-8%.\n\nPriority Matrix: Highest ROI is Apple Pay/Google Pay integration and progress indicators (high impact, low effort), then address autocomplete and form optimization, then one-click checkout and biometric auth.`
   }
 };
 

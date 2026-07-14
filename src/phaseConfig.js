@@ -211,7 +211,14 @@ export const initialContext = {
   },
   documents: [
     {
-      id: 'user-research',
+      id: 'mobile-analytics-report',
+      title: 'Mobile Analytics Report Q4',
+      type: 'data',
+      priority: 'high',
+      description: 'Checkout funnel drop-off points, device breakdown, and $2.4M revenue impact'
+    },
+    {
+      id: 'user-research-summary',
       title: 'User Research Summary',
       type: 'research',
       priority: 'high',
@@ -225,18 +232,11 @@ export const initialContext = {
       description: 'Current system making 8 API calls vs 4 on desktop, SDK issues'
     },
     {
-      id: 'competitive-analysis',
+      id: 'competitive-benchmark-analysis',
       title: 'Competitive Benchmark Analysis',
       type: 'market',
       priority: 'medium',
       description: 'Amazon 55%, Target 48% completion rates vs our performance'
-    },
-    {
-      id: 'support-tickets',
-      title: 'Customer Support Tickets Export',
-      type: 'data',
-      priority: 'low',
-      description: 'Top issues: address editing, payment freezes, Apple Pay requests'
     }
   ]
 };

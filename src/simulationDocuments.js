@@ -94,7 +94,7 @@ Our mobile checkout experience is significantly underperforming compared to desk
     id: 'technical-architecture-overview',
     title: 'Technical Architecture Overview',
     content: `# Mobile Checkout Technical Architecture Analysis
-**Prepared by:** Alex Rodriguez, Senior Mobile Tech Lead  
+**Prepared by:** Mike Rodriguez, Senior Mobile Tech Lead  
 **Date:** January 16, 2025  
 **Classification:** Technical Team Internal
 
@@ -198,7 +198,7 @@ Our mobile checkout experience is significantly underperforming compared to desk
 ## Resource Requirements
 
 ### Development Team
-- **Mobile Engineers:** 2 full-time (Alex + 1 additional)
+- **Mobile Engineers:** 2 full-time (Mike + 1 additional)
 - **Backend Engineer:** 1 part-time for API optimization
 - **QA Engineer:** 1 full-time for testing
 - **DevOps Support:** 0.5 FTE for deployment
@@ -222,7 +222,7 @@ Our mobile checkout experience is significantly underperforming compared to desk
     id: 'user-research-summary',
     title: 'User Research Summary',
     content: `# Mobile Checkout User Research Summary
-**Prepared by:** Maya Patel, Senior UX Designer  
+**Prepared by:** Lisa Meyer, Senior UX Designer  
 **Date:** January 14, 2025  
 **Research Period:** December 2024  
 **Participants:** 20 users (12 iOS, 8 Android)
@@ -247,7 +247,7 @@ Our mobile checkout experience is significantly underperforming compared to desk
 
 #### 1. Form Filling Frustration
 > *"I always switch to my laptop for checkout. The forms are just too painful on mobile."*  
-> — Sarah, 32, iOS user
+> — Rachel, 32, iOS user
 
 **Issues Identified:**
 - Touch targets too small (current: 36pt, need: 44pt minimum)
@@ -314,7 +314,7 @@ Our mobile checkout experience is significantly underperforming compared to desk
 > — David, 38, Android user
 
 > *"The mobile checkout feels like an afterthought. Like they just shrunk the desktop version."*  
-> — Lisa, 29, iOS user
+> — Nina, 29, iOS user
 
 ### On Payment Security
 > *"I wish I could just use my fingerprint to pay. That would feel more secure than typing my card number."*  
@@ -392,7 +392,7 @@ Our mobile checkout experience is significantly underperforming compared to desk
     id: 'competitive-benchmark-analysis',
     title: 'Competitive Benchmark Analysis',
     content: `# Mobile Checkout Competitive Benchmark Analysis
-**Prepared by:** Jordan Kim, Senior Data Analyst  
+**Prepared by:** Alex Kim, Senior Data Analyst  
 **Date:** January 13, 2025  
 **Analysis Period:** Q4 2024  
 **Methodology:** Mystery shopping + public data analysis

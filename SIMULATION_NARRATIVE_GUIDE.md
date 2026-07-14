@@ -17,15 +17,15 @@ The simulation has been transformed into a structured, narrative-driven experien
    - Assigns the project and sets expectations
    - Has mobile analytics data
 
-2. **Alex Rodriguez** - Senior Mobile Tech Lead
+2. **Mike Rodriguez** - Senior Mobile Tech Lead
    - Technical constraints and feasibility
    - Mobile architecture expertise
 
-3. **Maya Patel** - Senior UX Designer
+3. **Lisa Meyer** - Senior UX Designer
    - User research insights and design solutions
    - Mobile UX optimization expertise
 
-4. **Jordan Kim** - Senior Data Analyst
+4. **Alex Kim** - Senior Data Analyst
    - Competitive analysis and metrics
    - Conversion optimization data
 
@@ -106,25 +106,20 @@ Each team member can share detailed, realistic documents:
    - Device breakdown and performance metrics
    - Competitive benchmarking preview
 
-2. **Technical Architecture Overview** (Alex)
+2. **Technical Architecture Overview** (Mike)
    - Current system limitations
    - API call overhead analysis
    - Implementation timeline and risks
 
-3. **User Research Summary** (Maya)
+3. **User Research Summary** (Lisa)
    - 20 user interviews with quotes
    - Pain point analysis
    - Design recommendations
 
-4. **Competitive Benchmark Analysis** (Jordan)
+4. **Competitive Benchmark Analysis** (Alex)
    - Amazon, Target, Walmart comparison
    - Feature gap analysis
    - Revenue impact projections
-
-5. **Customer Support Tickets Export** (Priya)
-   - Real customer complaints and quotes
-   - Issue categorization and frequency
-   - Support team insights
 
 ## AI Agent Behavior
 

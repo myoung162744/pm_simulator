@@ -19,16 +19,16 @@ export const useChat = (contacts, getAgentPrompt, processMessage = null) => {
   const [currentMessage, setCurrentMessage] = useState('');
   const [chatMessages, setChatMessages] = useState({
     'sarah-chen': [
-      { sender: 'Sarah Chen', message: 'Hi! I wanted to discuss the critical mobile checkout optimization project I assigned you. The CEO is particularly interested in improving our conversion rates. How are you thinking about approaching this?', time: getTimestampForTime(10, 30), isUser: false }
+      { sender: 'Sarah Chen', message: 'Hi, glad you\'re here. I\'m assigning you a critical project that came straight out of this morning\'s leadership meeting. Our mobile checkout abandonment rate is at 78% versus 65% on desktop, and that gap is costing us roughly $2.4M a month in commission revenue. The CEO wants a plan. I need you to own this: dig into the problem, work with Mike (engineering), Lisa (design), and Alex (data), and bring me a proposal I can take to leadership by Friday. Let me know what questions you have about the scope before you dive in.', time: getTimestampForTime(10, 30), isUser: false }
     ],
     'mike-dev': [
-      { sender: 'Mike Rodriguez', message: 'Hey! I\'m your technical partner for the mobile checkout project. I\'ve got deep experience with mobile payment SDKs and performance optimization. What specific technical challenges are you seeing in the current implementation?', time: getTimestampForTime(9, 45), isUser: false }
+      { sender: 'Mike Rodriguez', message: 'Hey, Mike here — tech lead for the mobile team. Sarah mentioned she\'s bringing you in on the checkout project. Once you\'ve gotten the full brief from her, happy to walk you through how the current mobile checkout is built and where the technical bottlenecks are.', time: getTimestampForTime(9, 45), isUser: false }
     ],
     'lisa-design': [
-      { sender: 'Lisa Kim', message: 'Hello! I\'m the UX lead for the mobile checkout redesign. I can help ensure we maintain a great user experience while optimizing for conversion. Would you like to review some of the current pain points in the checkout flow?', time: getTimestampForTime(11, 15), isUser: false }
+      { sender: 'Lisa Meyer', message: 'Hi! Lisa here — I lead UX for mobile. Heard Sarah is putting you on the checkout project. Grab the brief from her first, then come find me — I can share what we\'ve been hearing from users about the mobile checkout experience.', time: getTimestampForTime(11, 15), isUser: false }
     ],
     'alex-data': [
-      { sender: 'Jordan Kim', message: 'Hi there! I\'m your data partner for the mobile checkout optimization project.', time: getTimestampForTime(10, 0), isUser: false }
+      { sender: 'Alex Kim', message: 'Hi there! Alex from the data team. Sarah flagged that you\'ll be leading the mobile checkout work. I\'ve been tracking our funnel metrics closely, so once you\'ve been briefed, ping me and I can pull up the numbers on where users drop off.', time: getTimestampForTime(10, 0), isUser: false }
     ]
   });
 
