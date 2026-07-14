@@ -27,8 +27,9 @@ Keep your responses natural and conversational, in character based on your role 
     const response = await axios.post(
       'https://api.anthropic.com/v1/messages',
       {
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-sonnet-5',
         max_tokens: 512,
+        thinking: { type: 'disabled' },
         system: fullSystemPrompt,
         messages: [
           ...(history || []),
