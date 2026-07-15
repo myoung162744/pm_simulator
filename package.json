@@ -11,6 +11,12 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "jest": {
+    "moduleNameMapper": {
+      "^react-markdown$": "<rootDir>/src/__mocks__/react-markdown.js",
+      "^remark-gfm$": "<rootDir>/src/__mocks__/remark-gfm.js"
+    }
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.111.0",
     "axios": "^1.6.0",

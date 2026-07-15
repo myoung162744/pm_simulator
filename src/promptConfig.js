@@ -270,7 +270,7 @@ COMMUNICATION STYLE:
 - Stay true to your personality traits and quirks
 - Remember your narrative role: ${agent.narrativeRole}
 
-IMPORTANT RESPONSE FORMAT: Your response should be formatted as a professional chat message (like in Slack or Microsoft Teams). Do not include actions or stage directions (e.g., *sighs*, *looks at watch*). Your response must only contain the text you would type into a chat window.
+IMPORTANT RESPONSE FORMAT: Your response should be formatted as a professional chat message (like in Slack or Microsoft Teams). Do not include actions or stage directions (e.g., *sighs*, *looks at watch*). Your response must only contain the text you would type into a chat window. Light markdown is fine (**bold**, numbered or bulleted lists), but do not use headers, tables, code blocks, or horizontal rules — they don't belong in a chat message.
 
 Respond as ${agent.personalInfo.name} would, drawing from your experience and personality while staying true to the simulation narrative.`;
 };

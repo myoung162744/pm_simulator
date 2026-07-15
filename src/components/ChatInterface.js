@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Send, Menu, Clock, Database, Lock, Unlock } from 'lucide-react';
 import { ContactsList } from './ContactsList';
 
@@ -100,13 +102,17 @@ export const ChatInterface = ({
                   color: msg.isUser ? 'var(--gb-white)' : 'var(--gb-dark-text)',
                   marginBottom: 'var(--spacing-sm)'
                 }}>{msg.sender.toUpperCase()}</div>
-                <div className="break-words" style={{
+                <div className="break-words chat-markdown" style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: 'var(--text-base)',
                   lineHeight: '1.6',
                   color: msg.isUser ? 'var(--gb-white)' : 'var(--gb-dark-text)',
                   marginBottom: 'var(--spacing-sm)'
-                }}>{msg.message}</div>
+                }}>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {msg.message}
+                  </ReactMarkdown>
+                </div>
                 <div className="flex items-center gap-2 opacity-75" style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: 'var(--text-xs)',
